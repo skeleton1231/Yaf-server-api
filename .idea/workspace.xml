@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="127574ac-6df5-4dd7-8739-d052df018055" name="Default" comment="" />
+    <ignored path="bibi-framework.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_TOOLBAR" value="true" />
+    <option name="FLATTEN" value="false" />
+    <option name="GROUP_BY_TYPE" value="true" />
+    <option name="SORT_CHILDREN" value="false" />
+    <option name="SHOW_TABLE_CONSTRAINTS" value="true" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="bibi-framework" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="App.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/controllers/App.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-10.0" vertical-offset="270" max-vertical-offset="1215">
+              <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+              <folding>
+                <element signature="e#6#92#0#PHP" expanded="true" />
+                <marker date="1445267244000" expanded="true" signature="531:611" placeholder="SELECT id FR..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Error_Code_Msg.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/configs/Error_Code_Msg.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.0" vertical-offset="0" max-vertical-offset="480">
+              <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+              <folding>
+                <element signature="e#6#92#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Constants.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/configs/Constants.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-21.25" vertical-offset="0" max-vertical-offset="705">
+              <caret line="34" column="35" selection-start-line="34" selection-start-column="35" selection-end-line="34" selection-end-column="35" />
+              <folding>
+                <element signature="e#6#92#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/modules/V1/controllers/User.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-19.791666" vertical-offset="1595" max-vertical-offset="2235">
+              <caret line="138" column="22" selection-start-line="138" selection-start-column="22" selection-end-line="138" selection-end-column="22" />
+              <folding>
+                <element signature="e#6#93#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Common.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/library/Common.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-16.125" vertical-offset="9078" max-vertical-offset="11085">
+              <caret line="631" column="47" selection-start-line="631" selection-start-column="47" selection-end-line="631" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApiYafControllerAbstract.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/library/ApiYafControllerAbstract.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.765625" vertical-offset="830" max-vertical-offset="1500">
+              <caret line="93" column="49" selection-start-line="93" selection-start-column="49" selection-end-line="93" selection-end-column="49" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Profile.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/models/Profile.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-17.916666" vertical-offset="35" max-vertical-offset="675">
+              <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+              <folding>
+                <element signature="e#6#93#0#PHP" expanded="true" />
+                <marker date="1445273942000" expanded="true" signature="648:661" placeholder="SELECT * FRO..." />
+                <marker date="1445273942000" expanded="true" signature="648:662" placeholder="SELECT * FRO..table_..." />
+                <marker date="1445273942000" expanded="true" signature="648:697" placeholder="SELECT * FRO.._table_ WHERE..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PdoDb.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/library/PdoDb.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="37.541668" vertical-offset="3346" max-vertical-offset="4290">
+              <caret line="163" column="20" selection-start-line="163" selection-start-column="20" selection-end-line="163" selection-end-column="20" />
+              <folding>
+                <element signature="e#6#93#0#PHP" expanded="true" />
+                <marker date="1445243894000" expanded="true" signature="3148:3204" placeholder="INSERT INTO ..." />
+                <marker date="1445243894000" expanded="true" signature="3979:4024" placeholder="INSERT INTO ..." />
+                <marker date="1445243894000" expanded="true" signature="5472:5539" placeholder="DELETE FROM ..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="App.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/models/App.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-17.5" vertical-offset="0" max-vertical-offset="585">
+              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+              <folding>
+                <marker date="1445267367000" expanded="true" signature="502:572" placeholder="SELECT id FR..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/models/User.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-19.166666" vertical-offset="170" max-vertical-offset="825">
+              <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+              <folding>
+                <element signature="e#6#93#0#PHP" expanded="true" />
+                <marker date="1445274843000" expanded="true" signature="457:470" placeholder="SELECT * FRO..." />
+                <marker date="1445274843000" expanded="true" signature="457:471" placeholder="SELECT * FRO..self..." />
+                <marker date="1445274843000" expanded="true" signature="457:497" placeholder="SELECT * FRO..self_table..." />
+                <marker date="1445274843000" expanded="true" signature="457:504" placeholder="SELECT * FRO..self_table..." />
+                <marker date="1445274843000" expanded="true" signature="457:504" placeholder="SELECT * FRO..self_table..." />
+                <marker date="1445274843000" expanded="true" signature="720:802" placeholder="SELECT `user..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="true" />
+    </FindUsagesManager>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/application/controllers/Index.php" />
+        <option value="$PROJECT_DIR$/application/configs/error_code_msg.php" />
+        <option value="$PROJECT_DIR$/application/library/Constants.php" />
+        <option value="$PROJECT_DIR$/application/controllers/Test.php" />
+        <option value="$PROJECT_DIR$/application/controllers/Common.php" />
+        <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/application/library/MyMysql.php" />
+        <option value="$PROJECT_DIR$/application/controllers/Api_Yaf_Controller_Abstract.php" />
+        <option value="$PROJECT_DIR$/application/modules/v1/controllers/User.php" />
+        <option value="$PROJECT_DIR$/conf/application.ini" />
+        <option value="$PROJECT_DIR$/application/library/PdoDb.php" />
+        <option value="$PROJECT_DIR$/application/models/AppModel.php" />
+        <option value="$PROJECT_DIR$/application/Bootstrap.php" />
+        <option value="$PROJECT_DIR$/application/controllers/App.php" />
+        <option value="$PROJECT_DIR$/application/models/App.php" />
+        <option value="$PROJECT_DIR$/application/configs/Constants.php" />
+        <option value="$PROJECT_DIR$/application/configs/Error_Code_Msg.php" />
+        <option value="$PROJECT_DIR$/application/models/Profile.php" />
+        <option value="$PROJECT_DIR$/application/models/User.php" />
+        <option value="$PROJECT_DIR$/application/modules/V1/controllers/User.php" />
+        <option value="$PROJECT_DIR$/application/library/Common.php" />
+        <option value="$PROJECT_DIR$/application/library/ApiYafControllerAbstract.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="PHP" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1440" />
+    <option name="height" value="807" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="conf" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="V1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bibi-framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="configs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="options.lastSelected" value="editor.preferences.appearance" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FullScreen" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/application/library" />
+      <recent name="$PROJECT_DIR$/application/configs" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="127574ac-6df5-4dd7-8739-d052df018055" name="Default" comment="" />
+      <created>1444756900333</created>
+      <option name="number" value="Default" />
+      <updated>1444756900333</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1440" height="807" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13662376" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16666667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/application/controllers/Index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Bootstrap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="30" max-vertical-offset="555">
+          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Error.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.0" vertical-offset="0" max-vertical-offset="330">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/PDO.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43432835" vertical-offset="9729" max-vertical-offset="20430">
+          <caret line="668" column="20" selection-start-line="668" selection-start-column="20" selection-end-line="668" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.75" vertical-offset="0" max-vertical-offset="465">
+          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding>
+            <element signature="e#6#93#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/mysqli.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3460925" vertical-offset="31223" max-vertical-offset="48420">
+          <caret line="2099" column="9" selection-start-line="2099" selection-start-column="9" selection-end-line="2099" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conf/application.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
+          <caret line="24" column="30" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.625" vertical-offset="0" max-vertical-offset="255">
+          <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Bootstrap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.916666" vertical-offset="125" max-vertical-offset="780">
+          <caret line="37" column="10" selection-start-line="37" selection-start-column="10" selection-end-line="37" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.5" vertical-offset="0" max-vertical-offset="375">
+          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/configs/Constants.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-21.25" vertical-offset="0" max-vertical-offset="705">
+          <caret line="34" column="35" selection-start-line="34" selection-start-column="35" selection-end-line="34" selection-end-column="35" />
+          <folding>
+            <element signature="e#6#92#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/configs/Error_Code_Msg.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.0" vertical-offset="0" max-vertical-offset="480">
+          <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding>
+            <element signature="e#6#92#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/App.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.0" vertical-offset="270" max-vertical-offset="1215">
+          <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+          <folding>
+            <element signature="e#6#92#0#PHP" expanded="true" />
+            <marker date="1445267244000" expanded="true" signature="531:611" placeholder="SELECT id FR..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/App.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.5" vertical-offset="0" max-vertical-offset="585">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding>
+            <marker date="1445267367000" expanded="true" signature="502:572" placeholder="SELECT id FR..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/library/PdoDb.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="37.541668" vertical-offset="3346" max-vertical-offset="4290">
+          <caret line="163" column="20" selection-start-line="163" selection-start-column="20" selection-end-line="163" selection-end-column="20" />
+          <folding>
+            <element signature="e#6#93#0#PHP" expanded="true" />
+            <marker date="1445243894000" expanded="true" signature="3148:3204" placeholder="INSERT INTO ..." />
+            <marker date="1445243894000" expanded="true" signature="3979:4024" placeholder="INSERT INTO ..." />
+            <marker date="1445243894000" expanded="true" signature="5472:5539" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/Profile.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.916666" vertical-offset="35" max-vertical-offset="675">
+          <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+          <folding>
+            <element signature="e#6#93#0#PHP" expanded="true" />
+            <marker date="1445273942000" expanded="true" signature="648:661" placeholder="SELECT * FRO..." />
+            <marker date="1445273942000" expanded="true" signature="648:662" placeholder="SELECT * FRO..table_..." />
+            <marker date="1445273942000" expanded="true" signature="648:697" placeholder="SELECT * FRO.._table_ WHERE..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.166666" vertical-offset="170" max-vertical-offset="825">
+          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+          <folding>
+            <element signature="e#6#93#0#PHP" expanded="true" />
+            <marker date="1445274843000" expanded="true" signature="457:470" placeholder="SELECT * FRO..." />
+            <marker date="1445274843000" expanded="true" signature="457:471" placeholder="SELECT * FRO..self..." />
+            <marker date="1445274843000" expanded="true" signature="457:497" placeholder="SELECT * FRO..self_table..." />
+            <marker date="1445274843000" expanded="true" signature="457:504" placeholder="SELECT * FRO..self_table..." />
+            <marker date="1445274843000" expanded="true" signature="457:504" placeholder="SELECT * FRO..self_table..." />
+            <marker date="1445274843000" expanded="true" signature="720:802" placeholder="SELECT `user..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/modules/V1/controllers/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.791666" vertical-offset="1595" max-vertical-offset="2235">
+          <caret line="138" column="22" selection-start-line="138" selection-start-column="22" selection-end-line="138" selection-end-column="22" />
+          <folding>
+            <element signature="e#6#93#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/library/Common.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.125" vertical-offset="9078" max-vertical-offset="11085">
+          <caret line="631" column="47" selection-start-line="631" selection-start-column="47" selection-end-line="631" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/library/ApiYafControllerAbstract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.765625" vertical-offset="830" max-vertical-offset="1500">
+          <caret line="93" column="49" selection-start-line="93" selection-start-column="49" selection-end-line="93" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

@@ -1,0 +1,51 @@
+******************2015-10-20 record
+
+2015-10-20  00:30:10:1185:  remote_ip  127.0.0.1
+2015-10-20  00:30:10:1190:  request_args  
+2015-10-20  00:30:10:1192:  success_res  {"status":1,"code":0,"data":{"code":6666}}
+2015-10-20  00:30:10:5359:  remote_ip  127.0.0.1
+2015-10-20  00:30:10:5360:  request_args  
+2015-10-20  00:30:10:6313:  remote_ip  127.0.0.1
+2015-10-20  00:30:10:6314:  request_args  
+2015-10-20  00:31:10:2438:  remote_ip  127.0.0.1
+2015-10-20  00:31:10:2493:  request_args  
+2015-10-20  00:35:10:9637:  remote_ip  127.0.0.1
+2015-10-20  00:35:10:9638:  request_args  
+2015-10-20  00:35:10:0143:  fail_res  {"status":0,"code":50001,"data":{"msg":"device_identifier \u5df2\u7ecf\u5b58\u5728"}}
+2015-10-20  00:35:10:9637:  remote_ip  127.0.0.1
+2015-10-20  00:35:10:9695:  request_args  
+2015-10-20  00:36:10:1887:  remote_ip  127.0.0.1
+2015-10-20  00:36:10:1887:  request_args  
+2015-10-20  00:36:10:2978:  success_res  {"status":1,"code":0,"data":{"user_id":"1","username":"bibi_p1vuy9","user_no":"bibi_p1vuy9","created":1445272569}}
+2015-10-20  01:11:10:6293:  remote_ip  127.0.0.1
+2015-10-20  01:11:10:6298:  request_args  
+2015-10-20  01:12:10:4012:  remote_ip  127.0.0.1
+2015-10-20  01:12:10:4013:  request_args  
+2015-10-20  01:12:10:7801:  remote_ip  127.0.0.1
+2015-10-20  01:12:10:7802:  request_args  
+2015-10-20  01:13:10:6445:  remote_ip  127.0.0.1
+2015-10-20  01:13:10:6446:  request_args  
+2015-10-20  01:13:10:5250:  remote_ip  127.0.0.1
+2015-10-20  01:13:10:5251:  request_args  
+2015-10-20  01:13:10:4007:  remote_ip  127.0.0.1
+2015-10-20  01:13:10:4008:  request_args  
+2015-10-20  01:14:10:6020:  remote_ip  127.0.0.1
+2015-10-20  01:14:10:6021:  request_args  
+2015-10-20  01:14:10:3319:  remote_ip  127.0.0.1
+2015-10-20  01:14:10:3320:  request_args  
+2015-10-20  01:14:10:3970:  success_res  {"status":1,"code":0,"data":[{"id":"1","user_id":"1","avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":null,"month":null,"day":null}]}
+2015-10-20  01:15:10:0276:  remote_ip  127.0.0.1
+2015-10-20  01:15:10:0276:  request_args  
+2015-10-20  01:15:10:0931:  success_res  {"status":1,"code":0,"data":{"id":"1","user_id":"1","avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":null,"month":null,"day":null}}
+2015-10-20  11:56:10:8427:  remote_ip  127.0.0.1
+2015-10-20  11:56:10:8431:  request_args  
+2015-10-20  11:56:10:9901:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}
+2015-10-20  12:41:10:2064:  remote_ip  127.0.0.1
+2015-10-20  12:41:10:2068:  request_args  
+2015-10-20  12:41:10:2431:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}
+2015-10-20  12:43:10:1577:  remote_ip  127.0.0.1
+2015-10-20  12:43:10:1577:  request_args  
+2015-10-20  12:43:10:2063:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}
+2015-10-20  13:29:10:9416:  remote_ip  127.0.0.1
+2015-10-20  13:29:10:9470:  request_args  
+2015-10-20  13:29:10:9826:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}
