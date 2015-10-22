@@ -33,9 +33,13 @@ class Bootstrap extends Yaf_Bootstrap_Abstract{
 
     public function _initRequest(Yaf_Dispatcher $dispatcher){
 
-        require APPPATH.'/configs/Constants.php';
+        require APPPATH .'/configs/Constants.php';
         //require APPPATH.'/configs/Error_Code_Msg.php';
         //require APPPATH.'/models/';
+        require APPPATH . '/vendor/autoload.php';
+
+
+
 
     }
 

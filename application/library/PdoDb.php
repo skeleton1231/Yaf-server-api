@@ -46,6 +46,8 @@ class PdoDb
             try
             {
                 self::$pdo = new PDO(self::$dns, self::$username, self::$password);
+                self::$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                self::$pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
                 self::$pdo->query('set names utf8');
             }
             catch(PDOException $e)
@@ -174,6 +176,7 @@ class PdoDb
         }
         $data = implode(',', $tmp);
         $sql = "UPDATE `{$tableName}` SET {$data} WHERE `{$whereId[0]}`='{$whereValue[0]}'";
+
         $rows = self::$pdo->exec($sql);
         if($this->debug)
         {

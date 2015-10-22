@@ -24,8 +24,9 @@ class ProfileModel extends PdoDb{
 
     public function updateProfileByKey($user_id , $data){
 
-        $where = array('user_id' , $user_id);
-        $result = $this->updateProfileByKey(self::$table, $where, $data);
+        $where = array('user_id' => $user_id);
+
+        $result = $this->updateByPrimaryKey(self::$table, $where, $data);
         return $result;
     }
 
@@ -33,7 +34,6 @@ class ProfileModel extends PdoDb{
         $table = self::$table;
         $sql = "SELECT * FROM {$table} WHERE `user_id` = :user_id";
         $profile = $this->query($sql, array(':user_id'=>$user_id));
-
         return $profile;
     }
 

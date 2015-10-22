@@ -1,0 +1,120 @@
+******************2015-10-21 record
+
+2015-10-21  21:11:10:1292:  remote_ip  127.0.0.1
+2015-10-21  21:11:10:1299:  request_args  
+2015-10-21  21:11:10:8866:  success_res  {"status":1,"code":0,"data":{"id":"1","user_id":"1","avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":null,"month":null,"day":null,"age":null,"constellation":""}}
+2015-10-21  21:35:10:3725:  remote_ip  127.0.0.1
+2015-10-21  21:35:10:3726:  request_args  
+2015-10-21  21:35:10:7266:  fail_res  {"status":0,"code":50001,"data":{"msg":"device_identifier \u5df2\u7ecf\u5b58\u5728"}}
+2015-10-21  21:35:10:3337:  remote_ip  127.0.0.1
+2015-10-21  21:35:10:3339:  request_args  
+2015-10-21  21:35:10:7619:  success_res  {"status":1,"code":0,"data":{"id":"1","user_id":"1","avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":null,"month":null,"day":null,"age":null,"constellation":""}}
+2015-10-21  21:44:10:0448:  remote_ip  127.0.0.1
+2015-10-21  21:44:10:0449:  request_args  
+2015-10-21  21:44:10:6752:  remote_ip  127.0.0.1
+2015-10-21  21:44:10:6753:  request_args  
+2015-10-21  21:45:10:9180:  remote_ip  127.0.0.1
+2015-10-21  21:45:10:9181:  request_args  
+2015-10-21  21:45:10:5429:  remote_ip  127.0.0.1
+2015-10-21  21:45:10:5430:  request_args  
+2015-10-21  21:46:10:3101:  remote_ip  127.0.0.1
+2015-10-21  21:46:10:3102:  request_args  
+2015-10-21  21:48:10:8296:  remote_ip  127.0.0.1
+2015-10-21  21:48:10:8298:  request_args  
+2015-10-21  21:48:10:7195:  remote_ip  127.0.0.1
+2015-10-21  21:48:10:7196:  request_args  
+2015-10-21  21:48:10:8956:  remote_ip  127.0.0.1
+2015-10-21  21:48:10:8958:  request_args  
+2015-10-21  21:48:10:6265:  remote_ip  127.0.0.1
+2015-10-21  21:48:10:6266:  request_args  
+2015-10-21  21:49:10:1379:  remote_ip  127.0.0.1
+2015-10-21  21:49:10:1380:  request_args  
+2015-10-21  21:49:10:5997:  remote_ip  127.0.0.1
+2015-10-21  21:49:10:5998:  request_args  
+2015-10-21  21:50:10:2866:  remote_ip  127.0.0.1
+2015-10-21  21:50:10:2867:  request_args  
+2015-10-21  21:51:10:2204:  remote_ip  127.0.0.1
+2015-10-21  21:51:10:2205:  request_args  
+2015-10-21  21:52:10:4944:  remote_ip  127.0.0.1
+2015-10-21  21:52:10:4945:  request_args  
+2015-10-21  21:52:10:8448:  remote_ip  127.0.0.1
+2015-10-21  21:52:10:8449:  request_args  
+2015-10-21  21:52:10:1713:  success_res  {"status":1,"code":0,"data":true}
+2015-10-21  21:55:10:4596:  remote_ip  127.0.0.1
+2015-10-21  21:55:10:4597:  request_args  
+2015-10-21  21:55:10:7921:  fail_res  {"status":0,"code":51003,"data":{"msg":"\u672a\u77e5\u9519\u8bef"}}
+2015-10-21  21:56:10:3045:  remote_ip  127.0.0.1
+2015-10-21  21:56:10:3046:  request_args  
+2015-10-21  21:56:10:6289:  fail_res  {"status":0,"code":51003,"data":{"msg":"\u672a\u77e5\u9519\u8bef"}}
+2015-10-21  21:56:10:7870:  remote_ip  127.0.0.1
+2015-10-21  21:56:10:7872:  request_args  
+2015-10-21  21:56:10:1265:  fail_res  {"status":0,"code":51003,"data":{"msg":"\u672a\u77e5\u9519\u8bef"}}
+2015-10-21  21:57:10:0760:  remote_ip  127.0.0.1
+2015-10-21  21:57:10:0761:  request_args  
+2015-10-21  21:57:10:5596:  remote_ip  127.0.0.1
+2015-10-21  21:57:10:5597:  request_args  
+2015-10-21  21:57:10:6405:  remote_ip  127.0.0.1
+2015-10-21  21:57:10:6406:  request_args  
+2015-10-21  21:58:10:1874:  remote_ip  127.0.0.1
+2015-10-21  21:58:10:1876:  request_args  
+2015-10-21  21:58:10:5984:  success_res  {"status":1,"code":0,"data":{"id":"1","user_id":"1","avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":"1988","month":"12","day":"31","age":"26","constellation":"\u6469\u7faf\u5ea7"}}
+2015-10-21  22:00:10:9613:  remote_ip  127.0.0.1
+2015-10-21  22:00:10:9615:  request_args  
+2015-10-21  22:02:10:2724:  remote_ip  127.0.0.1
+2015-10-21  22:02:10:2777:  request_args  
+2015-10-21  22:03:10:7956:  remote_ip  127.0.0.1
+2015-10-21  22:03:10:7957:  request_args  
+2015-10-21  22:03:10:3088:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7"}}
+2015-10-21  22:08:10:2285:  remote_ip  127.0.0.1
+2015-10-21  22:08:10:2286:  request_args  
+2015-10-21  22:08:10:7650:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7"}}
+2015-10-21  22:08:10:5549:  remote_ip  127.0.0.1
+2015-10-21  22:08:10:5550:  request_args  
+2015-10-21  22:08:10:1310:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7"}}
+2015-10-21  22:08:10:3137:  remote_ip  127.0.0.1
+2015-10-21  22:08:10:3138:  request_args  
+2015-10-21  22:11:10:0434:  remote_ip  127.0.0.1
+2015-10-21  22:11:10:0435:  request_args  
+2015-10-21  22:11:10:6097:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7","test":null}}
+2015-10-21  22:12:10:8864:  remote_ip  127.0.0.1
+2015-10-21  22:12:10:8865:  request_args  
+2015-10-21  22:12:10:4217:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7","test":""}}
+2015-10-21  22:12:10:3082:  remote_ip  127.0.0.1
+2015-10-21  22:12:10:3084:  request_args  
+2015-10-21  22:12:10:8568:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7"}}
+2015-10-21  22:18:10:8040:  remote_ip  127.0.0.1
+2015-10-21  22:18:10:8092:  request_args  
+2015-10-21  22:18:10:3369:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7"}}
+2015-10-21  22:20:10:6901:  remote_ip  127.0.0.1
+2015-10-21  22:20:10:6902:  request_args  
+2015-10-21  22:20:10:2765:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7"}}
+2015-10-21  22:20:10:1282:  remote_ip  127.0.0.1
+2015-10-21  22:20:10:1283:  request_args  
+2015-10-21  22:23:10:6978:  remote_ip  127.0.0.1
+2015-10-21  22:23:10:6980:  request_args  
+2015-10-21  22:23:10:1603:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}
+2015-10-21  22:24:10:1012:  remote_ip  127.0.0.1
+2015-10-21  22:24:10:1014:  request_args  
+2015-10-21  22:24:10:6543:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":""}}
+2015-10-21  22:26:10:2343:  remote_ip  127.0.0.1
+2015-10-21  22:26:10:2345:  request_args  
+2015-10-21  22:26:10:7745:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":null,"signature":null,"user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":""}}
+2015-10-21  22:26:10:3409:  remote_ip  127.0.0.1
+2015-10-21  22:26:10:3410:  request_args  
+2015-10-21  22:27:10:5533:  remote_ip  127.0.0.1
+2015-10-21  22:27:10:5534:  request_args  
+2015-10-21  22:27:10:4833:  remote_ip  127.0.0.1
+2015-10-21  22:27:10:4835:  request_args  
+2015-10-21  22:27:10:9955:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":"","signature":"","user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":""}}
+2015-10-21  23:29:10:5036:  remote_ip  127.0.0.1
+2015-10-21  23:29:10:5037:  request_args  
+2015-10-21  23:29:10:9855:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}
+2015-10-21  23:30:10:3951:  remote_ip  127.0.0.1
+2015-10-21  23:30:10:3952:  request_args  
+2015-10-21  23:30:10:9263:  success_res  {"status":1,"code":0,"data":{"msg":{"id":1,"user_id":1,"avatar":"","signature":"","user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":""}}}
+2015-10-21  23:31:10:1314:  remote_ip  127.0.0.1
+2015-10-21  23:31:10:1315:  request_args  
+2015-10-21  23:31:10:6962:  success_res  {"status":1,"code":0,"data":{"id":1,"user_id":1,"avatar":"","signature":"","user_no":"bibi_p1vuy9","year":1988,"month":12,"day":31,"age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":""}}
+2015-10-21  23:32:10:6727:  remote_ip  127.0.0.1
+2015-10-21  23:32:10:6728:  request_args  
+2015-10-21  23:32:10:1164:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}

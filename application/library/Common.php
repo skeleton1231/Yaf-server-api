@@ -696,7 +696,7 @@ class Common {
      * @param int $day 日期
      * @return str
      */
-    function get_constellation($month, $day){
+    public static function get_constellation($month, $day){
         $signs = array(
             array('20'=>'宝瓶座'), array('19'=>'双鱼座'),
             array('21'=>'白羊座'), array('20'=>'金牛座'),
@@ -714,7 +714,7 @@ class Common {
         return $signName;
     }
 
-    function birthday($mydate){
+    public static function birthday($mydate){
         $birth=$mydate;
         list($by,$bm,$bd)=explode('-',$birth);
         $cm=date('n');

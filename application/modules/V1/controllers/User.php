@@ -98,6 +98,11 @@ class UserController extends ApiYafControllerAbstract
 
         $user = $user->login($data['mobile'] , $data['password']);
 
+        if(!$user){
+
+            $this->send_error(USER_LOGIN_FAIL);
+        }
+
         $user_id = $user[0]['user_id'];
 
         $time = time();
@@ -123,20 +128,63 @@ class UserController extends ApiYafControllerAbstract
 
         $data = $this->get_request_data();
 
+
+
         $key = $data['key'];
         $value = $data['value'];
+        $user_id = $data['user_id'];
+
+        $profile = new ProfileModel();
+
+        $update = array();
+        $update[$key] = $value;
 
         switch($key){
             case 'nickname':
+                $result = $profile->updateProfileByKey($user_id, $update);
                 break;
             case 'birth':
+
+                $date = explode('-' , $value);
+
+                list($year , $month, $day) = $date;
+
+                unset($update['birth']);
+                $update['year']  = $year;
+                $update['month'] = $month;
+                $update['day']   = $day;
+
+                $cons = Common::get_constellation($month, $day);
+
+                $update['constellation'] = $cons;
+                $update['age'] = Common::birthday($value);
+
+
+                $result = $profile->updateProfileByKey($user_id, $update);
+
                 break;
             case 'signature':
+
+                $result = $profile->updateProfileByKey($user_id, $update);
+
                 break;
             case 'user_no':
+
+                $result = $profile->updateProfileByKey($user_id, $update);
+
                 break;
-            case 'constellation':
-                break;
+
+        }
+
+
+        if($result >= 0) {
+            //$response = array();
+            $response = $profile->getProfile($user_id);
+            //print_r($response[0]);exit;
+            $this->send($response[0]);
+        }
+        else{
+            $this->send_error(USER_PROFILE_UPDATE_FAIL);
         }
 
     }
