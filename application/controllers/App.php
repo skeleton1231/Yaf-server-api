@@ -20,17 +20,16 @@ class AppController extends ApiYafControllerAbstract {
 
     public function registerAction(){
 
+        $this->required_fields = array('device_id','device_resolution','device_sys_version','device_type');
+
         $data = $this->get_request_data();
 
         $data['device_identifier'] = $this->generateIdentifier($data);
 
-        //查找是否有该DEVICE_IDENTIFIER
+        RedisDb::setValue('di_'.$data['device_identifier'].'', true);
 
+        //查找是否有该DEVICE_IDENTIFIER
         $appModel = new \AppModel;
-//
-//        $sql = "SELECT id FROM `bibi_device_info` WHERE `device_identifier` = :device_identifier";
-//
-//        $result = $this->db->query($sql, array(':device_identifier'=
 
         $result = $appModel->getDevice($data['device_identifier']);
 
@@ -43,7 +42,6 @@ class AppController extends ApiYafControllerAbstract {
         $data['updated'] = time();
 
         //$id = $this->db->insert('bibi_device_info' , $data);
-
         $id = $appModel->registerDevice($data);
 
         if($id){

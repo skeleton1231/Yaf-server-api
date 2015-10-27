@@ -6,7 +6,7 @@
  * Time: 下午10:42
  */
 
-class AppModel extends  PdoDb{
+class AppModel extends PdoDb{
 
 
     static  private $table = 'bibi_device_info';
@@ -35,5 +35,7 @@ class AppModel extends  PdoDb{
         return $result;
 
     }
+
+
 
 } 

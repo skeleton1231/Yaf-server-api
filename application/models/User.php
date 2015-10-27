@@ -45,5 +45,32 @@ class UserModel extends PdoDb {
 
     }
 
+
+    public static function setUserKeyCache($device_identifier , $user_id){
+
+        $session_id = uniqid('session');
+
+        $keyToUser = 'auth_'.$device_identifier.'_'.$session_id.'';
+        $userToKey = 'key_'.$user_id.'';
+
+        RedisDb::delValue($keyToUser);
+        RedisDb::delValue($userToKey);
+
+        RedisDb::setValue($keyToUser, $user_id);
+        RedisDb::setValue($userToKey, ''.$device_identifier.'_'.$session_id.'');
+
+        return $session_id;
+
+    }
+
+    public static function userAuth($device_identifier , $user_id, $session_id){
+
+        $id = RedisDb::getValue('auth_'.$device_identifier.'_'.$session_id.'');
+
+        $result = $id == $user_id ? true : false;
+
+        return $result;
+    }
+
 }
 

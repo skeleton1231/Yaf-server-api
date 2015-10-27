@@ -10,12 +10,13 @@
 class UserController extends ApiYafControllerAbstract
 {
 
-
     public  function registerAction(){
+
+        $this->required_fields = array_merge($this->required_fields, array('mobile','password','code'));
 
         $data = $this->get_request_data();
 
-        if($data['code'] != $_SESSION['code']){
+        if($data['code'] != RedisDb::getValue('code_'.$data['device_identifier'].'' )){
 
             $this->send_error(USER_CODE_ERROR);
 
@@ -42,8 +43,10 @@ class UserController extends ApiYafControllerAbstract
             $this->send_error(USER_MOBILE_REGISTERED);
         }
 
+        $device_identifier = $data['device_identifier'];
+        unset($data['device_identifier']);
+
         $userId = $userModel->register($data);
-        //$this->db->insert('bibi_user' , $data);
 
         if(!$userId){
 
@@ -51,22 +54,21 @@ class UserController extends ApiYafControllerAbstract
 
         }
 
+        $sessId = UserModel::setUserKeyCache($device_identifier , $userId);
+
         $profileModel = new \ProfileModel;
         $profileInfo = array();
         $profileInfo['user_id'] = $userId;
         $profileInfo['user_no'] = $name;
         $profile = $profileModel->initProfile($profileInfo);
 
+        $profile = $profileModel->getProfile($userId);
 
-        $response = array(
+        $profile['created'] = $time;
 
-            'user_id'  => $userId,
-            'username' => $name,
-            'user_no'  => $name,
-            'created'  => $time,
-        );
+        $profile['session_id'] = $sessId;
 
-        $this->send($response);
+        $this->send($profile);
 
 
     }
@@ -74,46 +76,52 @@ class UserController extends ApiYafControllerAbstract
 
     public function sendCodeAction(){
 
+        $this->required_fields = array_merge($this->required_fields, array('mobile'));
+
         $code = 6666;
 
         $data = $this->get_request_data();
 
-
-        $_SESSION['code'] = $code;
+        RedisDb::setValue('code_'.$data['device_identifier'].'' , $code);
 
         $response = array(
           'code'=>$code
-
         );
+
         $this->send($response);
 
     }
 
     public function loginAction(){
 
+        $this->required_fields = array_merge($this->required_fields, array('mobile','password'));
+
         $data = $this->get_request_data();
 
         $user = new \UserModel;
 
-
-        $user = $user->login($data['mobile'] , $data['password']);
+        $info = $user->login($data['mobile'] , $data['password']);
 
         if(!$user){
 
             $this->send_error(USER_LOGIN_FAIL);
         }
 
-        $user_id = $user[0]['user_id'];
+        $userId = $info[0]['user_id'];
+        $device_identifier = $data['device_identifier'];
+
+
+        $sessId = UserModel::setUserKeyCache($device_identifier , $userId);
 
         $time = time();
 
         $profile = new \ProfileModel;
 
-        $info = $profile->getProfile($user_id);
+        $info = $profile->getProfile($userId);
 
-        $response = $info[0];
+        $info['session_id'] = $sessId;
 
-        $this->send($response);
+        $this->send($info);
 
     }
 
@@ -126,9 +134,11 @@ class UserController extends ApiYafControllerAbstract
      */
     public function updateProfileAction(){
 
+        $this->required_fields = array_merge($this->required_fields, array('session_id','key','value','user_id'));
+
         $data = $this->get_request_data();
 
-
+        $this->userAuth($data);
 
         $key = $data['key'];
         $value = $data['value'];
@@ -181,7 +191,7 @@ class UserController extends ApiYafControllerAbstract
             //$response = array();
             $response = $profile->getProfile($user_id);
             //print_r($response[0]);exit;
-            $this->send($response[0]);
+            $this->send($response);
         }
         else{
             $this->send_error(USER_PROFILE_UPDATE_FAIL);

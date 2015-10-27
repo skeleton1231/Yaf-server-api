@@ -1,0 +1,28 @@
+******************2015-10-24 record
+
+2015-10-24  19:02:10:4341:  remote_ip  127.0.0.1
+2015-10-24  19:02:10:4345:  request_args  
+2015-10-24  19:02:10:4356:  success_res  {"status":1,"code":0,"data":{"code":6666}}
+2015-10-24  19:02:10:5034:  remote_ip  127.0.0.1
+2015-10-24  19:02:10:5089:  request_args  
+2015-10-24  19:03:10:0479:  remote_ip  127.0.0.1
+2015-10-24  19:03:10:0480:  request_args  
+2015-10-24  19:03:10:2000:  success_res  {"status":1,"code":0,"data":{"user_id":"2","username":"bibi_qvxrbt","user_no":"bibi_qvxrbt","created":1445684614}}
+2015-10-24  19:05:10:9411:  remote_ip  127.0.0.1
+2015-10-24  19:05:10:9411:  request_args  
+2015-10-24  19:05:10:9477:  success_res  {"status":1,"code":0,"data":{"code":6666}}
+2015-10-24  19:05:10:7400:  remote_ip  127.0.0.1
+2015-10-24  19:05:10:7402:  request_args  
+2015-10-24  19:05:10:9155:  success_res  {"status":1,"code":0,"data":{"device_id":"idsdusud88","device_resolution":"1334*750","device_sys_version":"ios8.4","device_type":"1","device_identifier":"93bb27424a838637ba162fe8b9782c7b","created":1445684742,"updated":1445684742}}
+2015-10-24  19:05:10:0448:  remote_ip  127.0.0.1
+2015-10-24  19:05:10:0449:  request_args  
+2015-10-24  19:05:10:2083:  success_res  {"status":1,"code":0,"data":{"user_id":3,"username":"bibi_7wxhhv","user_no":"bibi_7wxhhv","created":1445684755,"id":3,"avatar":"","signature":"","year":0,"month":0,"day":0,"age":0,"constellation":"","nickname":""}}
+2015-10-24  19:12:10:3790:  remote_ip  127.0.0.1
+2015-10-24  19:12:10:3792:  request_args  
+2015-10-24  19:12:10:4869:  fail_res  {"status":0,"code":51001,"data":{"msg":"\u624b\u673a\u53f7\u7801\u5df2\u7ecf\u6ce8\u518c"}}
+2015-10-24  19:12:10:6294:  remote_ip  127.0.0.1
+2015-10-24  19:12:10:6295:  request_args  
+2015-10-24  19:12:10:6302:  success_res  {"status":1,"code":0,"data":{"code":6666}}
+2015-10-24  19:12:10:9180:  remote_ip  127.0.0.1
+2015-10-24  19:12:10:9181:  request_args  
+2015-10-24  19:12:10:1098:  success_res  {"status":1,"code":0,"data":{"id":4,"user_id":4,"avatar":"","signature":"","user_no":"bibi_mzjt8w","year":0,"month":0,"day":0,"age":0,"constellation":"","nickname":"","created":1445685152}}

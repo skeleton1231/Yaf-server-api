@@ -7,6 +7,7 @@
  * phares car json
  */
 
+exit;
 
 require '../vendor/autoload.php';
 

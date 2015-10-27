@@ -9,7 +9,7 @@
 class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
 
-    public $required_fields = array ();
+    public $required_fields = array ('device_identifier');
 
     //public $db;
 
@@ -27,22 +27,46 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
         $data = array();
 
-        Common::globalLogRecord ( 'remote_ip', $_SERVER['REMOTE_ADDR'] );
-       // Common::globalLogRecord ( 'request_url', 'http://'.$this->request->head['Host'].$this->request->meta['uri'] );
-        Common::globalLogRecord ( 'request_args', http_build_query ( $data ) );
-
-        if (! empty ( $this->required_fields )) {
-            $this->check_required_fields ( $data, $this->required_fields );
-        }
-
-        //return $this->validate_sign ( $data );
-
         foreach ($_REQUEST as $key => $value){
 
             $data[$key] =  $value;
         }
 
+        //Common::globalLogRecord ( 'remote_ip', $_SERVER['REMOTE_ADDR'] );
+        //Common::globalLogRecord ( 'request_url', 'http://'.$this->request->head['Host'].$this->request->meta['uri'] );
+        //Common::globalLogRecord ( 'request_args', http_build_query ( $data ) );
+
+        if (! empty ( $this->required_fields )) {
+            $this->check_required_fields ( $data, $this->required_fields );
+        }
+
+        if(isset($data['device_identifier'])){
+            $this->validate_auth ( $data['device_identifier'] );
+        }
+
+
+
+
         return $data;
+    }
+
+
+    /**
+     * 验证device_identifier 是否正确
+     * 验证是否登录
+     *
+     */
+
+    private function validate_auth($device_identifier){
+
+       $di = RedisDb::getValue('di_'.$device_identifier.'');
+
+       if(!$di){
+
+           $this->send_error(APP_NOT_AUTHORIZED);
+
+       }
+
     }
 
     /**
@@ -65,8 +89,8 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
      * @param array $data   传入的数据
      * @param array $fields 必须项
      */
-    private function check_required_fields($data, $fields) {
-       // $fields [] = 'sign';
+    private function check_required_fields($data, $fields=array(), $identifier=true) {
+
 
         foreach ( $fields as $field ) {
             if (! isset ( $data [$field] )) {
@@ -95,6 +119,16 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
         $response = Common::getFailRes($errorCode, $errorStatus);
         echo $response;
         die();
+    }
+
+    public function userAuth($data){
+
+        $result = UserModel::userAuth($data['device_identifier'], $data['user_id'] , $data['session_id']);
+
+        if(!$result){
+
+            $this->send_error(USER_AUTH_FAIL);
+        }
     }
 
 } 

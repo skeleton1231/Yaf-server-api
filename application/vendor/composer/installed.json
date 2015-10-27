@@ -56,5 +56,186 @@
             "web service",
             "xml"
         ]
+    },
+    {
+        "name": "predis/predis",
+        "version": "v1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nrk/predis.git",
+            "reference": "84060b9034d756b4d79641667d7f9efe1aeb8e04"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nrk/predis/zipball/84060b9034d756b4d79641667d7f9efe1aeb8e04",
+            "reference": "84060b9034d756b4d79641667d7f9efe1aeb8e04",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0"
+        },
+        "suggest": {
+            "ext-curl": "Allows access to Webdis when paired with phpiredis",
+            "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+        },
+        "time": "2015-07-30 18:34:15",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Predis\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Daniele Alessandri",
+                "email": "suppakilla@gmail.com",
+                "homepage": "http://clorophilla.net"
+            }
+        ],
+        "description": "Flexible and feature-complete PHP client library for Redis",
+        "homepage": "http://github.com/nrk/predis",
+        "keywords": [
+            "nosql",
+            "predis",
+            "redis"
+        ]
+    },
+    {
+        "name": "squizlabs/php_codesniffer",
+        "version": "2.3.4",
+        "version_normalized": "2.3.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
+            "reference": "11a2545c44a5915f883e2e5ec12e14ed345e3ab2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/11a2545c44a5915f883e2e5ec12e14ed345e3ab2",
+            "reference": "11a2545c44a5915f883e2e5ec12e14ed345e3ab2",
+            "shasum": ""
+        },
+        "require": {
+            "ext-tokenizer": "*",
+            "ext-xmlwriter": "*",
+            "php": ">=5.1.2"
+        },
+        "time": "2015-09-09 00:18:50",
+        "bin": [
+            "scripts/phpcs",
+            "scripts/phpcbf"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "CodeSniffer.php",
+                "CodeSniffer/CLI.php",
+                "CodeSniffer/Exception.php",
+                "CodeSniffer/File.php",
+                "CodeSniffer/Fixer.php",
+                "CodeSniffer/Report.php",
+                "CodeSniffer/Reporting.php",
+                "CodeSniffer/Sniff.php",
+                "CodeSniffer/Tokens.php",
+                "CodeSniffer/Reports/",
+                "CodeSniffer/Tokenizers/",
+                "CodeSniffer/DocGenerators/",
+                "CodeSniffer/Standards/AbstractPatternSniff.php",
+                "CodeSniffer/Standards/AbstractScopeSniff.php",
+                "CodeSniffer/Standards/AbstractVariableSniff.php",
+                "CodeSniffer/Standards/IncorrectPatternException.php",
+                "CodeSniffer/Standards/Generic/Sniffs/",
+                "CodeSniffer/Standards/MySource/Sniffs/",
+                "CodeSniffer/Standards/PEAR/Sniffs/",
+                "CodeSniffer/Standards/PSR1/Sniffs/",
+                "CodeSniffer/Standards/PSR2/Sniffs/",
+                "CodeSniffer/Standards/Squiz/Sniffs/",
+                "CodeSniffer/Standards/Zend/Sniffs/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Greg Sherwood",
+                "role": "lead"
+            }
+        ],
+        "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+        "homepage": "http://www.squizlabs.com/php-codesniffer",
+        "keywords": [
+            "phpcs",
+            "standards"
+        ]
+    },
+    {
+        "name": "qiniu/php-sdk",
+        "version": "v7.0.4",
+        "version_normalized": "7.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/qiniu/php-sdk.git",
+            "reference": "a7c996cdf91e7059ce3da203ed9b246877f0a266"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/qiniu/php-sdk/zipball/a7c996cdf91e7059ce3da203ed9b246877f0a266",
+            "reference": "a7c996cdf91e7059ce3da203ed9b246877f0a266",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "squizlabs/php_codesniffer": "~2.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2015-07-24 01:24:17",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Qiniu\\": "src/Qiniu"
+            },
+            "files": [
+                "src/Qiniu/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Qiniu",
+                "email": "sdk@qiniu.com",
+                "homepage": "http://www.qiniu.com"
+            }
+        ],
+        "description": "Qiniu Resource (Cloud) Storage SDK for PHP",
+        "homepage": "http://developer.qiniu.com/",
+        "keywords": [
+            "cloud",
+            "qiniu",
+            "sdk",
+            "storage"
+        ]
     }
 ]

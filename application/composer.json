@@ -1,5 +1,7 @@
 {
     "require": {
-        "php-curl-class/php-curl-class": "^4.8"
+        "php-curl-class/php-curl-class": "^4.8",
+    	"predis/predis": "*",
+        "qiniu/php-sdk": "*"	
     }
 }

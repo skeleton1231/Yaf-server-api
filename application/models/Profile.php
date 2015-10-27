@@ -34,7 +34,7 @@ class ProfileModel extends PdoDb{
         $table = self::$table;
         $sql = "SELECT * FROM {$table} WHERE `user_id` = :user_id";
         $profile = $this->query($sql, array(':user_id'=>$user_id));
-        return $profile;
+        return $profile[0];
     }
 
 }

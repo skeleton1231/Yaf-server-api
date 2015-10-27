@@ -21,7 +21,7 @@ define('NOT_AUTHORIZED', 40003);
 define('NOT_FOUND', 40004);
 define('MODULE_NOT_ALLOWED', 40005);
 define('METHOD_NOT_ALLOWED', 40006);
-define('GET_JWX_DATA_WRONG', 40007);
+define('APP_NOT_AUTHORIZED', 40007);
 
 
 
@@ -37,6 +37,7 @@ define('USER_REGISTER_FAIL' , 51002);
 
 define('USER_PROFILE_UPDATE_FAIL', 51003);
 define('USER_LOGIN_FAIL' , 51004);
+define('USER_AUTH_FAIL', 51005);
 
 
 
