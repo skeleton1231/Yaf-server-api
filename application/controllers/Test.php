@@ -20,7 +20,13 @@ class TestController extends Yaf_Controller_Abstract {
 //        $value = RedisDb::getValue('foo');
 //        print_r($value);
 
-        print_r(new Qiniu\Auth('',''));
+      //  print_r(new Qiniu\Auth('',''));
+
+        $db = new PdoDb();
+
+        $data = $db->query('SELECT * FROM `bibi_car_brand_list`');
+
+        print_r($data);exit;
 
     }
 }

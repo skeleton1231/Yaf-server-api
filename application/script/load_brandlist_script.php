@@ -14,6 +14,7 @@ $myfile = fopen($file, "r") or die("Unable to open file!");
 $json = fread($myfile,filesize($file));
 $array = json_decode($json,true);
 
+
 $brandList = $array['brandList'];
 fclose($myfile);
 

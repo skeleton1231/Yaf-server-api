@@ -44,6 +44,7 @@ foreach($brandList as $key => $brand){
     fclose($myfile);
 
     sleep(5);
+    exit;
 
 
 }
