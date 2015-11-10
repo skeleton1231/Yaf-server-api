@@ -7,6 +7,9 @@
  */
 
 
+use Qiniu\Auth;
+//use Qiniu\Storage;
+
 
 class AppController extends ApiYafControllerAbstract {
 
@@ -67,6 +70,52 @@ class AppController extends ApiYafControllerAbstract {
         $identifier = md5(md5($key));
 
         return $identifier;
+
+    }
+
+
+    public function uploadAction(){
+
+       // $token = 'b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI:7ybP6eSg1UWghOKsdYLFpUfdBWE=:eyJzY29wZSI6ImJpYmkiLCJkZWFkbGluZSI6MTQ0Njc0NzM2OH0=';
+        $accessKey = QI_NIU_AK;
+        $secretKey = QI_NIU_SK;
+
+        // 构建鉴权对象
+        $auth = new Auth($accessKey, $secretKey);
+
+        // 要上传的空间
+        $bucket = 'bibi';
+
+        // 生成上传 Token
+        $token = $auth->uploadToken($bucket);
+
+        //print_r($_FILES);exit;
+
+        // 要上传文件的本地路径
+        if($_FILES){
+
+            foreach($_FILES as $k => $file){
+
+                $filePath = $file['tmp_name'];
+
+                // 上传到七牛后保存的文件名
+                $key = 'test_'.time().'.png';
+
+                // 初始化 UploadManager 对象并进行文件的上传。
+                $uploadMgr = new \Qiniu\Storage\UploadManager();
+
+                list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+                echo "\n====> putFile result: \n";
+                if ($err !== null) {
+                    var_dump($err);
+                } else {
+                    var_dump($ret);
+                }
+
+            }
+
+        }
+
 
     }
 

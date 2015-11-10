@@ -698,7 +698,7 @@ class Common {
      */
     public static function get_constellation($month, $day){
         $signs = array(
-            array('20'=>'宝瓶座'), array('19'=>'双鱼座'),
+            array('20'=>'水瓶座'), array('19'=>'双鱼座'),
             array('21'=>'白羊座'), array('20'=>'金牛座'),
             array('21'=>'双子座'), array('22'=>'巨蟹座'),
             array('23'=>'狮子座'), array('23'=>'处女座'),

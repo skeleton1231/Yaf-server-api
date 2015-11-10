@@ -40,6 +40,11 @@ define('USER_LOGIN_FAIL' , 51004);
 define('USER_AUTH_FAIL', 51005);
 
 
+define('QI_NIU_AK','b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI');
+define('QI_NIU_SK','5RgnuN64dSEJoitJwUvMkMGypaifc9PqSOvjYd2f');
+
+define('IMAGE_DOMAIN' , 'http://7xo3dw.com1.z0.glb.clouddn.com/');
+
 
 
 

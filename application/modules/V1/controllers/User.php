@@ -60,15 +60,20 @@ class UserController extends ApiYafControllerAbstract
         $profileInfo = array();
         $profileInfo['user_id'] = $userId;
         $profileInfo['user_no'] = $name;
-        $profile = $profileModel->initProfile($profileInfo);
 
-        $profile = $profileModel->getProfile($userId);
+        $response = array();
 
-        $profile['created'] = $time;
+        $profileModel->initProfile($profileInfo);
 
-        $profile['session_id'] = $sessId;
+        $response['profile'] = $profileModel->getProfile($userId);
 
-        $this->send($profile);
+        $response['created'] = $time;
+
+        $response['session_id'] = $sessId;
+
+        $response['user_id'] = $userId;
+
+        $this->send($response);
 
 
     }
@@ -111,17 +116,19 @@ class UserController extends ApiYafControllerAbstract
         $device_identifier = $data['device_identifier'];
 
 
+        $response = array();
+        $response['user_id'] = $userId;
+
         $sessId = UserModel::setUserKeyCache($device_identifier , $userId);
 
         $time = time();
 
         $profile = new \ProfileModel;
 
-        $info = $profile->getProfile($userId);
+        $response['profile'] = $profile->getProfile($userId);
+        $response['session_id'] = $sessId;
 
-        $info['session_id'] = $sessId;
-
-        $this->send($info);
+        $this->send($response);
 
     }
 
@@ -188,9 +195,9 @@ class UserController extends ApiYafControllerAbstract
 
 
         if($result >= 0) {
-            //$response = array();
+
             $response = $profile->getProfile($user_id);
-            //print_r($response[0]);exit;
+
             $this->send($response);
         }
         else{

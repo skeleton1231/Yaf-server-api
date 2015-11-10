@@ -21,6 +21,15 @@ $sql = "SELECT * FROM `bibi_car_brand_list`";
 
 $rs = $db->query($sql);
 
+$curl = new \Curl\Curl();
+
+$curl->setHeader('Content-Type', 'application/x-www-form-urlencoded');
+$curl->setHeader('Cookie','sto-id-20480=IJGEBAKMFAAA; uid=rBBkiVY4LoNQZB2OGq+aAg==');
+
+
+
+
+
 while($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 
     $brandId = $row['brand_id'];
@@ -41,9 +50,6 @@ while($row = $rs->fetch(PDO::FETCH_ASSOC)) {
     );
 
 
-    $curl = new \Curl\Curl();
-    $curl->setHeader('Content-Type', 'application/x-www-form-urlencoded');
-    $curl->setHeader('Cookie','sto-id-20480=IJGEBAKMFAAA; uid=rBBkiVY4LoNQZB2OGq+aAg==');
     $response = $curl->post($url, $post);
     $raw = json_encode($response);
 

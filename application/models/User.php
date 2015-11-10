@@ -53,6 +53,10 @@ class UserModel extends PdoDb {
         $keyToUser = 'auth_'.$device_identifier.'_'.$session_id.'';
         $userToKey = 'key_'.$user_id.'';
 
+
+        $oldAuth =  'auth_' . RedisDb::getValue($userToKey);
+
+        RedisDb::delValue($oldAuth);
         RedisDb::delValue($keyToUser);
         RedisDb::delValue($userToKey);
 
