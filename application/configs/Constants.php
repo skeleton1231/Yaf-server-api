@@ -40,6 +40,22 @@ define('USER_LOGIN_FAIL' , 51004);
 define('USER_AUTH_FAIL', 51005);
 
 
+define('CAR_ALREADY_ADDED',60001);
+define('CAR_ADDED_ERROR',60002);
+
+
+//qiniu
+define('QINIU_UPLOAD_ERROR' , 70001);
+
+
+//item
+define('ITEM_TYPE_USER_CAR' , 1);
+define('ITEM_TYPE_USER_SELLING_CAR' , 2);
+define('ITEM_TYPE_USER_AVATAR' , 3);
+define('ITEM_TYPE_USER_POST' , 4);
+
+
+
 define('QI_NIU_AK','b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI');
 define('QI_NIU_SK','5RgnuN64dSEJoitJwUvMkMGypaifc9PqSOvjYd2f');
 

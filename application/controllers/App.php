@@ -29,8 +29,6 @@ class AppController extends ApiYafControllerAbstract {
 
         $data['device_identifier'] = $this->generateIdentifier($data);
 
-        RedisDb::setValue('di_'.$data['device_identifier'].'', true);
-
         //查找是否有该DEVICE_IDENTIFIER
         $appModel = new \AppModel;
 
@@ -57,10 +55,6 @@ class AppController extends ApiYafControllerAbstract {
 
         }
 
-
-
-
-
     }
 
     public function generateIdentifier($data){
@@ -76,7 +70,13 @@ class AppController extends ApiYafControllerAbstract {
 
     public function uploadAction(){
 
-       // $token = 'b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI:7ybP6eSg1UWghOKsdYLFpUfdBWE=:eyJzY29wZSI6ImJpYmkiLCJkZWFkbGluZSI6MTQ0Njc0NzM2OH0=';
+        $this->required_fields = array('session_id','device_identifier');
+
+        $data = $this->get_request_data();
+
+        $user_id = $this->userAuth($data);
+
+        // $token = 'b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI:7ybP6eSg1UWghOKsdYLFpUfdBWE=:eyJzY29wZSI6ImJpYmkiLCJkZWFkbGluZSI6MTQ0Njc0NzM2OH0=';
         $accessKey = QI_NIU_AK;
         $secretKey = QI_NIU_SK;
 
@@ -89,9 +89,8 @@ class AppController extends ApiYafControllerAbstract {
         // 生成上传 Token
         $token = $auth->uploadToken($bucket);
 
-        //print_r($_FILES);exit;
+        $items = array();
 
-        // 要上传文件的本地路径
         if($_FILES){
 
             foreach($_FILES as $k => $file){
@@ -99,22 +98,47 @@ class AppController extends ApiYafControllerAbstract {
                 $filePath = $file['tmp_name'];
 
                 // 上传到七牛后保存的文件名
-                $key = 'test_'.time().'.png';
+                $key = uniqid('bibi-file');
 
                 // 初始化 UploadManager 对象并进行文件的上传。
                 $uploadMgr = new \Qiniu\Storage\UploadManager();
 
                 list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
-                echo "\n====> putFile result: \n";
-                if ($err !== null) {
-                    var_dump($err);
-                } else {
-                    var_dump($ret);
+
+                if($err != null){
+
+                    $this->send_error(QINIU_UPLOAD_ERROR);
                 }
 
+                $data = array();
+
+                $data['hash'] = $ret['hash'];
+                $data['url']  = IMAGE_DOMAIN . $ret['key'];
+                $data['created'] = time();
+                $data['type'] = 1;
+                $data['user_id'] = $user_id;
+
+
+                $fm = new FileModel;
+                $id = $fm->Create($data);
+
+                $item = array();
+                $item['file_id'] = $id;
+                $item['file_url'] = $data['url'];
+                $items[] = $item;
             }
 
+            $response = array();
+            $response['list'] = $items;
+            $this->send($response);
+
         }
+        else{
+
+            $this->send_error(QINIU_UPLOAD_ERROR);
+
+        }
+
 
 
     }

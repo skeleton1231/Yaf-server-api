@@ -63,8 +63,19 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
        if(!$di){
 
-           $this->send_error(APP_NOT_AUTHORIZED);
+            $sql = 'SELECT `id` FROM `bibi_device_info` WHERE `device_identifier` = "'.$device_identifier.'"';
+            $pdo = new PdoDb();
 
+            $id = $pdo->query($sql);
+
+            if(!$id) {
+                $pdo = null;
+                $this->send_error(APP_NOT_AUTHORIZED);
+            }
+            else{
+                $pdo = null;
+                RedisDb::setValue('di_'.$device_identifier.'', true);
+            }
        }
 
     }
@@ -123,12 +134,17 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
     public function userAuth($data){
 
-        $result = UserModel::userAuth($data['device_identifier'], $data['user_id'] , $data['session_id']);
+        //$result = UserModel::userAuth($data['device_identifier'], $data['user_id'] , $data['session_id']);
+
+        $sess = new SessionModel();
+        $result = $sess->Get($data);
 
         if(!$result){
 
             $this->send_error(USER_AUTH_FAIL);
         }
+
+        return $result;
     }
 
 } 

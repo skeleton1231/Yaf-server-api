@@ -54,7 +54,11 @@ class UserController extends ApiYafControllerAbstract
 
         }
 
-        $sessId = UserModel::setUserKeyCache($device_identifier , $userId);
+        $sessionData = array('device_identifier'=>$device_identifier , 'user_id'=>$userId);
+        //$sessId = UserModel::setUserKeyCache($device_identifier , $userId);
+        $sess = new SessionModel();
+        $sessId = $sess->Create($sessionData);
+
 
         $profileModel = new \ProfileModel;
         $profileInfo = array();
@@ -119,7 +123,9 @@ class UserController extends ApiYafControllerAbstract
         $response = array();
         $response['user_id'] = $userId;
 
-        $sessId = UserModel::setUserKeyCache($device_identifier , $userId);
+        $sessionData = array('device_identifier'=>$device_identifier , 'user_id'=>$userId);
+        $sess = new SessionModel();
+        $sessId = $sess->Create($sessionData);
 
         $time = time();
 
@@ -141,16 +147,15 @@ class UserController extends ApiYafControllerAbstract
      */
     public function updateProfileAction(){
 
-        $this->required_fields = array_merge($this->required_fields, array('session_id','key','value','user_id'));
+        $this->required_fields = array_merge($this->required_fields, array('session_id','key','value'));
 
         $data = $this->get_request_data();
 
-        $this->userAuth($data);
+
+        $user_id = $this->userAuth($data);
 
         $key = $data['key'];
         $value = $data['value'];
-        $user_id = $data['user_id'];
-
         $profile = new ProfileModel();
 
         $update = array();

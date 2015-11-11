@@ -8,7 +8,7 @@
 
 class UserModel extends PdoDb {
 
-    static private $table = 'bibi_user';
+    static public $table = 'bibi_user';
 
     public function __contsruct(){
 
@@ -32,6 +32,16 @@ class UserModel extends PdoDb {
         $info = $this->query($sql,$param);
 
         return $info;
+    }
+
+    public function getInfoById($userId){
+
+        $sql = 'SELECT * FROM '.self::$table.' WHERE `user_id` = :user_id';
+        $param = array(':user_id'=>$userId);
+        $info = $this->query($sql,$param);
+
+        return isset($info[0]) ? $info[0] : null;
+
     }
 
     public function login($mobile , $password){
@@ -63,18 +73,27 @@ class UserModel extends PdoDb {
         RedisDb::setValue($keyToUser, $user_id);
         RedisDb::setValue($userToKey, ''.$device_identifier.'_'.$session_id.'');
 
+
+
         return $session_id;
 
     }
 
-    public static function userAuth($device_identifier , $user_id, $session_id){
+    public function update($where, $data){
 
-        $id = RedisDb::getValue('auth_'.$device_identifier.'_'.$session_id.'');
+        $this->updateByPrimaryKey(self::$table, $where, $data);
 
-        $result = $id == $user_id ? true : false;
-
-        return $result;
     }
+
+
+//    public static function userAuth($device_identifier , $user_id, $session_id){
+//
+//        $id = RedisDb::getValue('auth_'.$device_identifier.'_'.$session_id.'');
+//
+//        $result = $id == $user_id ? true : false;
+//
+//        return $result;
+//    }
 
 }
 

@@ -9,7 +9,7 @@
 
 class ProfileModel extends PdoDb{
 
-    static private $table = 'bibi_user_profile';
+    static public $table = 'bibi_user_profile';
 
     public function __construct(){
 

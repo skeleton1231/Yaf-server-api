@@ -8,6 +8,8 @@
 
 class FileModel extends PdoDb{
 
+    static public $table = 'bibi_files_list';
+
 
     public function __contsruct(){
 
@@ -15,15 +17,18 @@ class FileModel extends PdoDb{
 
     }
 
-    public function insert($data){
+    public function Create($data){
 
         $id = $this->insert(self::$table , $data);
 
         return $id;
     }
 
-    public function update(){
+    public function GetMultiple($files_id){
 
-        
+        $sql = 'SELECT id as file_id, url as file_url FROM `'.self::$table.'` WHERE id in ('.$files_id.')';
+        $files = $this->query($sql);
+
+        return $files;
     }
 }
