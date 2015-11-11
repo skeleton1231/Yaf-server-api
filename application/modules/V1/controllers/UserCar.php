@@ -6,7 +6,7 @@
  * Time: 下午12:56
  */
 
-class UserCarController extends ApiYafControllerAbstract{
+class UsercarController extends ApiYafControllerAbstract{
 
 
 

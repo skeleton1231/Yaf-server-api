@@ -92,7 +92,7 @@ class AppController extends ApiYafControllerAbstract {
         $items = array();
 
         if($_FILES){
-
+            
             foreach($_FILES as $k => $file){
 
                 $filePath = $file['tmp_name'];
@@ -129,7 +129,7 @@ class AppController extends ApiYafControllerAbstract {
             }
 
             $response = array();
-            $response['list'] = $items;
+            $response = $items;
             $this->send($response);
 
         }
