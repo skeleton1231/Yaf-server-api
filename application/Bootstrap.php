@@ -38,9 +38,6 @@ class Bootstrap extends Yaf_Bootstrap_Abstract{
         //require APPPATH.'/models/';
         require APPPATH . '/vendor/autoload.php';
 
-
-
-
     }
 
     public function _initSession(Yaf_Dispatcher $dispatcher){

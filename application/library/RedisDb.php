@@ -44,6 +44,7 @@ class RedisDb {
 
         $instance = self::getInstance();
 
+
         $return = $instance->set($key , $value);
 
     }

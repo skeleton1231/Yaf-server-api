@@ -11,6 +11,8 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
     public $required_fields = array ('device_identifier');
 
+    public $optional_fields = array();
+
     //public $db;
 
     public function init(){
@@ -32,13 +34,15 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
             $data[$key] =  $value;
         }
 
-        //Common::globalLogRecord ( 'remote_ip', $_SERVER['REMOTE_ADDR'] );
-        //Common::globalLogRecord ( 'request_url', 'http://'.$this->request->head['Host'].$this->request->meta['uri'] );
-        //Common::globalLogRecord ( 'request_args', http_build_query ( $data ) );
+        Common::globalLogRecord ( 'remote_ip', $_SERVER['REMOTE_ADDR'] );
+        Common::globalLogRecord ( 'request_url', 'http://'. $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] );
+        Common::globalLogRecord ( 'request_args', http_build_query ( $data ) );
 
         if (! empty ( $this->required_fields )) {
             $this->check_required_fields ( $data, $this->required_fields );
         }
+
+
 
         if(isset($data['device_identifier'])){
             $this->validate_auth ( $data['device_identifier'] );
@@ -105,6 +109,7 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
         foreach ( $fields as $field ) {
             if (! isset ( $data [$field] )) {
+
                 $this->send_error ( NOT_ENOUGH_ARGS );
             }
         }
@@ -117,6 +122,8 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
     public function send($data = array(),$type='') {
         header('Content-type: application/json');
         $response = Common::getSuccessRes($data,$type='');
+
+
         echo $response;
     }
 

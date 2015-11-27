@@ -34,9 +34,19 @@ class UserModel extends PdoDb {
         return $info;
     }
 
-    public function getInfoById($userId){
+    public function getAllInfoById($userId){
 
         $sql = 'SELECT * FROM '.self::$table.' WHERE `user_id` = :user_id';
+        $param = array(':user_id'=>$userId);
+        $info = $this->query($sql,$param);
+
+        return isset($info[0]) ? $info[0] : null;
+
+    }
+
+    public function getInfoById($userId){
+
+        $sql = 'SELECT `user_id` ,`username`, `mobile`, `created` FROM '.self::$table.' WHERE `user_id` = :user_id';
         $param = array(':user_id'=>$userId);
         $info = $this->query($sql,$param);
 
@@ -47,11 +57,11 @@ class UserModel extends PdoDb {
     public function login($mobile , $password){
 
         $table = self::$table;
-        $sql = "SELECT `user_id` FROM {$table} WHERE `mobile` = :mobile AND `password` = :password ";
+        $sql = "SELECT `user_id` ,`username`, `mobile`, `created` FROM {$table} WHERE `mobile` = :mobile AND `password` = :password ";
         $param = array(':mobile'=>$mobile, ':password'=>$password);
         $info = $this->query($sql,$param);
 
-        return $info;
+        return isset($info[0]) ? $info[0] : null;
 
     }
 
@@ -82,6 +92,20 @@ class UserModel extends PdoDb {
     public function update($where, $data){
 
         $this->updateByPrimaryKey(self::$table, $where, $data);
+
+    }
+
+    public function getProfileInfoById($userId){
+
+
+        $userInfo = $this->getInfoById($userId);
+
+        $profileM = new ProfileModel();
+        $profile = $profileM->getProfile($userId);
+
+        $userInfo['profile'] = $profile;
+
+        return $userInfo;
 
     }
 

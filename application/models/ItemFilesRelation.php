@@ -29,17 +29,20 @@ class ItemFilesRelationModel extends PdoDb{
 
     }
 
-    public function CreateBatch($item_id, $files_id, $type){
+    public function CreateBatch($item_id, $files_id, $type, $items_type=''){
 
         $files_id = explode(',', $files_id);
+        $items_type = explode(',',$items_type);
+
 
         $items = array();
 
         foreach($files_id as $k => $file_id){
             $data = array();
-            $data['item_id'] = $item_id;
-            $data['file_id'] = $file_id;
-            $data['type']    = $type;
+            $data['item_id']   = $item_id;
+            $data['file_id']   = $file_id;
+            $data['type']      = $type;
+            $data['item_type'] = isset($items_type[$k]) ? $items_type[$k] : 0;
             $items[] = $data;
         }
 

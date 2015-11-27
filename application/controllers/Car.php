@@ -32,19 +32,17 @@ class CarController extends ApiYafControllerAbstract{
 
             }
 
-            RedisDb::setValue('brand_list', json_encode($brandList));
-
+            RedisDb::setValue('brand_list', serialize($brandList));
 
         }
         else{
 
-            $brandList = json_decode($brandList, true);
+            $brandList = unserialize($brandList, true);
 
         }
 
-
         $response = array();
-        $response = $brandList;
+        $response['brand_list'] = $brandList;
 
 
         $this->send($response);
@@ -119,12 +117,19 @@ class CarController extends ApiYafControllerAbstract{
 
             }
 
-            $brandInfo = json_encode($brandInfo);
-            RedisDb::setValue($key, $brandInfo);
+
+            //$brandInfo = json_encode($brandInfo);
+
+            RedisDb::setValue($key, serialize($brandInfo));
+        }
+        else{
+
+            $brandInfo = unserialize($brandInfo);
+
         }
 
+       // $brandInfo = json_decode($brandInfo, true);
 
-        $brandInfo = json_decode($brandInfo, true);
 
         $response = array();
         $response = $brandInfo;

@@ -20,6 +20,12 @@ class PdoDb
     public $debug = null;
     //开始事务
     private $_begin_transaction = false;
+
+    public $properties = null;
+
+    public $where = null;
+
+    public static $table = null;
     /**
      * @param bool   $debug    是否开启调试，错误信息输出
      * @param string $database 数据库类别
@@ -281,4 +287,16 @@ class PdoDb
     {
         self::$pdo = null;
     }
+
+    public function CreateM(){
+        $id = $this->insert(self::$table, $this->properties);
+        return $id;
+    }
+
+    public function UpdateM(){
+
+        $this->updateByPrimaryKey(self::$table, $this->where, $this->properties);
+    }
+
+
 }

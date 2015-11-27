@@ -20,7 +20,6 @@ class AppController extends ApiYafControllerAbstract {
      * @device_type
      * @device_identifier
      */
-
     public function registerAction(){
 
         $this->required_fields = array('device_id','device_resolution','device_sys_version','device_type');
@@ -34,26 +33,23 @@ class AppController extends ApiYafControllerAbstract {
 
         $result = $appModel->getDevice($data['device_identifier']);
 
-        if($result){
 
-            $this->send_error(APP_REGISTER_EXIST , STATUS_FAIL);
-        }
+        if(!$result){
 
-        $data['created'] = time();
-        $data['updated'] = time();
+            $data['created'] = time();
+            $data['updated'] = time();
 
-        //$id = $this->db->insert('bibi_device_info' , $data);
-        $id = $appModel->registerDevice($data);
+            //$id = $this->db->insert('bibi_device_info' , $data);
+            $id = $appModel->registerDevice($data);
 
-        if($id){
+            if(!$id){
 
-            $this->send($data);
-        }
-        else{
-
-            $this->send_error(APP_REGISTER_FAIL , STATUS_FAIL);
+                $this->send_error(APP_REGISTER_FAIL , STATUS_FAIL);
+            }
 
         }
+
+        $this->send($data);
 
     }
 
@@ -67,6 +63,62 @@ class AppController extends ApiYafControllerAbstract {
 
     }
 
+    public function uploadTokenAction(){
+
+
+        $this->required_fields = array('session_id','device_identifier');
+
+        $data = $this->get_request_data();
+
+        $userId = $this->userAuth($data);
+
+        // $token = 'b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI:7ybP6eSg1UWghOKsdYLFpUfdBWE=:eyJzY29wZSI6ImJpYmkiLCJkZWFkbGluZSI6MTQ0Njc0NzM2OH0=';
+        $accessKey = QI_NIU_AK;
+        $secretKey = QI_NIU_SK;
+
+        // 构建鉴权对象
+        $auth = new Auth($accessKey, $secretKey);
+
+        // 要上传的空间
+        $bucket = 'bibi';
+
+        // 生成上传 Token
+        //$token = $auth->uploadToken($bucket);
+
+        $expire = 3600;
+
+        $key = 'uploadToken_' . $userId;
+
+        $policy = array(
+            'callbackUrl' => 'http://120.25.62.110/index/callback',
+            'callbackBody' => '{"fname":"$(fname)", "hash":"$(key)",  "user_id":' . $userId . '}'
+        );
+
+        $uploadToken = $auth->uploadToken($bucket, null, $expire, $policy);
+
+//        $uploadToken = RedisDb::getValue($key);
+//
+//        if(!$uploadToken){
+//
+//            $policy = array(
+//                'callbackUrl' => 'http://120.25.62.110/index/callback',
+//                'callbackBody' => '{"fname":"$(fname)", "hash":"$(key)",  "user_id":' . $userId . '}'
+//            );
+//
+//            $uploadToken = $auth->uploadToken($bucket, null, $expire, $policy);
+//            RedisDb::setValue($key , $uploadToken);
+//            RedisDb::getInstance()->expire($key,$expire);
+//
+//        }
+
+
+        $response = array();
+        $response['upload_token'] = $uploadToken;
+
+        $this->send($response);
+
+
+    }
 
     public function uploadAction(){
 
@@ -87,23 +139,37 @@ class AppController extends ApiYafControllerAbstract {
         $bucket = 'bibi';
 
         // 生成上传 Token
-        $token = $auth->uploadToken($bucket);
+        //$token = $auth->uploadToken($bucket);
+        $expire = 3600;
+
+        $key = 'uploadToken_' . $user_id;
+
+        $policy = array(
+            'callbackUrl' => 'http://120.25.62.110/index/callback',
+            'callbackBody' => '{"fname":"$(fname)", "hash":"$(key)",  "user_id":' . $user_id . '}'
+        );
+
+        $uploadToken = $auth->uploadToken($bucket, null, $expire, $policy);
+
 
         $items = array();
 
         if($_FILES){
-            
+
             foreach($_FILES as $k => $file){
 
                 $filePath = $file['tmp_name'];
 
                 // 上传到七牛后保存的文件名
-                $key = uniqid('bibi-file');
+                $key = base64_encode(uniqid('bibi-file'));
 
                 // 初始化 UploadManager 对象并进行文件的上传。
                 $uploadMgr = new \Qiniu\Storage\UploadManager();
 
-                list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+                list($ret, $err) = $uploadMgr->putFile($uploadToken, $key, $filePath);
+
+
+                $hash = $ret['data']['hash'];
 
                 if($err != null){
 
@@ -112,25 +178,27 @@ class AppController extends ApiYafControllerAbstract {
 
                 $data = array();
 
-                $data['hash'] = $ret['hash'];
-                $data['url']  = IMAGE_DOMAIN . $ret['key'];
-                $data['created'] = time();
-                $data['type'] = 1;
-                $data['user_id'] = $user_id;
-
-
-                $fm = new FileModel;
-                $id = $fm->Create($data);
-
-                $item = array();
-                $item['file_id'] = $id;
-                $item['file_url'] = $data['url'];
-                $items[] = $item;
+//                $data['hash'] = $hash;
+//                $data['url']  = IMAGE_DOMAIN . $hash;
+//                $data['created'] = time();
+//                $data['type'] = 1;
+//                $data['user_id'] = $user_id;
+//
+//
+//                $fm = new FileModel;
+//                $id = $fm->Create($data);
+//
+//                $item = array();
+//                $item['file_id'] = $data['hash'];
+//                $item['file_url'] = $data['url'];
+                $items[] = $hash;
             }
 
-            $response = array();
-            $response = $items;
-            $this->send($response);
+            echo implode(',', $items);
+
+//            $response = array();
+//            $response['files_id'] = implode();
+//            $this->send($response);
 
         }
         else{

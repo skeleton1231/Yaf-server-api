@@ -28,13 +28,13 @@ class UserCarModel extends PdoDb{
         $sql = '
                 SELECT
                 t1.*,
-                t3.id AS file_id,
+                t3.hash AS file_id,
                 t3.url AS file_url
                 FROM `'.self::$table.'` AS t1
                 LEFT JOIN `'.ItemFilesRelationModel::$table.'` AS t2
                 ON t1.id = t2.item_id
                 LEFT JOIN `'.FileModel::$table.'` AS t3
-                ON t2.file_id = t3.id
+                ON t2.file_id = t3.hash
                 WHERE t1.`user_id` = '.$userId.' AND t2.type = '.ITEM_TYPE_USER_CAR.'
                 ';
 

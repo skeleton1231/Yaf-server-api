@@ -1,0 +1,6 @@
+******************2015-11-26 record
+
+2015-11-26  23:30:11:0248:  remote_ip  127.0.0.1
+2015-11-26  23:30:11:0249:  request_url  http://127.0.0.1/app/register
+2015-11-26  23:30:11:0262:  request_args  device_id=app45848&device_resolution=1334%2A750&device_sys_version=ios8.4&device_type=1
+2015-11-26  23:30:11:2520:  success_res  {"status":1,"code":0,"data":{"device_id":"app45848","device_resolution":"1334*750","device_sys_version":"ios8.4","device_type":"1","device_identifier":"87d9063bac24d7fa832bfa1603f971a7"}}

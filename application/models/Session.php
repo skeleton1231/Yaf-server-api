@@ -20,6 +20,7 @@ class SessionModel extends PdoDb{
     public function Create($data){
 
 
+
         $session_id = uniqid('session');
         $device_identifier = $data['device_identifier'];
         $user_id = $data['user_id'];

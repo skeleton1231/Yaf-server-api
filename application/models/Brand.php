@@ -26,12 +26,15 @@ class BrandModel extends PdoDb{
         }
     }
 
-    public function getCarInfo(){
+    public function getBrandInfo(){
 
         $sql = 'SELECT
                 CONCAT(t1.brand_name, t2.brand_series_name, t3.model_name) AS car_name,
+                t1.brand_id,
                 t1.brand_name,
-                t2.brand_series_name,
+                t2.brand_series_id,
+                t2.brand_series_name AS `series_name`,
+                t3.model_id,
                 t3.model_name
                 FROM
                 `'.self::$tableBrand.'` AS t1 LEFT JOIN `'.self::$tableSeries.'` AS t2
@@ -46,7 +49,7 @@ class BrandModel extends PdoDb{
 
         $info = $this->query($sql);
 
-        return $info[0]['car_name'];
+        return isset($info[0]) ? $info[0] : array();
     }
 
 

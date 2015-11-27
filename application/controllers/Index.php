@@ -5,7 +5,7 @@
  * @desc 默认控制器
  * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
  */
-class IndexController extends Yaf_Controller_Abstract {
+class IndexController extends ApiYafControllerAbstract {
 
 	/** 
      * 默认动作
@@ -14,6 +14,35 @@ class IndexController extends Yaf_Controller_Abstract {
      */
 	public function indexAction($name = "Stranger") {
 
-        echo $name;
+        echo md5('123456');
 	}
+
+    public function callbackAction(){
+
+
+        $_body = file_get_contents('php://input');
+
+        Common::globalLogRecord('qiniu request' , $_body);
+
+        $body = json_decode($_body, true);
+
+        $time = time();
+
+        $hash = urldecode($body['hash']);
+
+        $data = array();
+        $data['user_id'] = $body['user_id'];
+        $data['url'] = IMAGE_DOMAIN .  $hash;
+        $data['hash'] = $hash;
+        $data['created'] = $time;
+        $data['type'] = 1;
+
+        $file = new FileModel();
+        $file->Create($data);
+
+        $this->send(array('hash'=>$hash));
+
+
+
+    }
 }

@@ -32,22 +32,22 @@ class ProfileModel extends PdoDb{
 
     public function getProfile($user_id){
         $table = self::$table;
-        $sql = "SELECT avatar, signature, year,month,day,age, constellation, nickname FROM {$table} WHERE `user_id` = :user_id";
+        $sql = "SELECT avatar, signature, age, constellation, nickname, gender FROM {$table} WHERE `user_id` = :user_id";
         $profile = $this->query($sql, array(':user_id'=>$user_id));
         $profile = $profile[0];
 
-        if($profile['year'] == 0 || $profile['month'] == 0 || $profile['day'] == 0){
-
-            $profile['birth'] = '';
-        }
-        else{
-
-            $profile['birth'] = $profile['year'] . '-' . $profile['month'] . '-' . $profile['day'];
-        }
-
-        unset($profile['year']);
-        unset($profile['month']);
-        unset($profile['day']);
+//        if($profile['year'] == 0 || $profile['month'] == 0 || $profile['day'] == 0){
+//
+//            $profile['birth'] = '';
+//        }
+//        else{
+//
+//            $profile['birth'] = $profile['year'] . '-' . $profile['month'] . '-' . $profile['day'];
+//        }
+//
+//        unset($profile['year']);
+//        unset($profile['month']);
+//        unset($profile['day']);
 
 
         return $profile;
