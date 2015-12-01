@@ -31,9 +31,8 @@ class ItemFilesRelationModel extends PdoDb{
 
     public function CreateBatch($item_id, $files_id, $type, $items_type=''){
 
-        $files_id = explode(',', $files_id);
-        $items_type = explode(',',$items_type);
-
+        $files_id = json_decode($files_id, true);
+        $items_type = json_decode($items_type, true);
 
         $items = array();
 

@@ -83,7 +83,9 @@ class CarController extends ApiYafControllerAbstract
 
             $carInfo = $cs->GetCarInfoById($id);
 
-            $this->send($carInfo);
+            $response['car_info'] = $carInfo;
+
+            $this->send($response);
         } else {
 
             $this->send_error(CAR_ADDED_ERROR);
@@ -119,7 +121,9 @@ class CarController extends ApiYafControllerAbstract
 
         $carInfo = $carModel->GetCarInfoById($carId);
 
-        $this->send($carInfo);
+        $response['car_info'] = $carInfo;
+
+        $this->send($response);
     }
 
     public function publishAction()
@@ -170,6 +174,31 @@ class CarController extends ApiYafControllerAbstract
         unset($properties['session_id']);
         unset($properties['files_id']);
         unset($properties['files_type']);
+        $properties['user_id'] = $userId;
+
+        $bm = new BrandModel();
+        $brandM  = $bm->getBrandModel($data['brand_id']);
+        $seriesM = $bm->getSeriesModel($data['brand_id'],$data['series_id']);
+        $modelM  =  $bm->getModelModel($data['series_id'], $data['model_id']);
+
+
+        if(!is_array($brandM)){
+
+            $this->send_error(CAR_BRAND_ERROR);
+        }
+
+        if(!is_array($seriesM)){
+            $this->send_error(CAR_SERIES_ERROR);
+        }
+
+        if(!is_array($modelM)){
+
+            $this->send_error(CAR_MODEL_ERROR);
+        }
+
+
+        $properties['car_name'] = $brandM['brand_name'] . ' ' . $seriesM['series_name'] . ' ' . $modelM['model_name'];
+        $properties['car_name'] = trim($properties['car_name']);
 
 
         if (isset($properties['vin_file'])) {
@@ -210,13 +239,88 @@ class CarController extends ApiYafControllerAbstract
             $ifr->CreateBatch($carId, $data['files_id'], ITEM_TYPE_CAR, $data['files_type']);
 
             $carInfo = $cs->GetCarInfoById($properties['hash']);
-            $this->send($carInfo);
+
+            $response['car_info'] = $carInfo;
+
+            $this->send($response);
 
         } else {
 
             $this->send_error(CAR_ADDED_ERROR);
 
         }
+
+    }
+
+
+    public function listAction(){
+
+
+        $jsonData = require APPPATH .'/configs/JsonData.php';
+
+        $this->optional_fields = array('keyword','order_id','brand_id','series_id');
+        //$this->required_fields = array_merge($this->required_fields, array('session_id'));
+
+        $data = $this->get_request_data();
+
+        $data['order_id'] = $data['order_id'] ? $data['order_id'] : 0 ;
+        $data['page']     = $data['page'] ? $data['page'] : 1;
+        $data['brand_id'] = $data['brand_id'] ? $data['brand_id'] : 0 ;
+        $data['series_id'] = $data['series_id'] ? $data['series_id'] : 0 ;
+
+
+        $carM = new CarSellingModel();
+        $where = 'WHERE t1.files <> "" AND t1.brand_id <> 0 AND t1.series_id <> 0 ';
+
+        if($data['keyword']){
+            $carM->keyword = $data['keyword'];
+            $where .= ' AND t1.car_name LIKE "%'.$carM->keyword.'%" ';
+        }
+
+        if($data['brand_id']){
+
+            $where .= ' AND t1.brand_id = '.$data['brand_id'].' ';
+        }
+
+        if($data['series_id']){
+
+            $where .= ' AND t1.series_id = '.$data['series_id'].' ';
+        }
+
+
+        $carM->where = $where;
+
+        if(isset($jsonData['order_info'][$data['order_id']])) {
+
+            $carM->order  = ' ORDER BY t1.car_type ASC , ';
+            $carM->order .= $jsonData['order_info'][$data['order_id']];
+
+        }
+
+        $carM->page = $data['page'];
+
+        $cars = $carM->getCarList();
+
+        $response = array();
+        $response['car_list'] = $cars;
+        $response['order_id'] = $data['order_id'];
+
+        if($data['city_id']){
+
+            $jsonData['city_info']['city_id'] = $data['city_id'];
+            $jsonData['city_info']['city_lat'] = $data['city_lat'];
+            $jsonData['city_info']['city_lng'] = $data['city_lng'];
+
+        }
+
+        $response['city_info'] = $jsonData['city_info'];
+        $response['keyword']   = $data['keyword'];
+        $bm = new BrandModel();
+        $response['brand_info'] = $bm->getBrandModel($data['brand_id']);
+        $response['series_info'] = $bm->getSeriesModel($data['brand_id'],$data['series_id']);
+
+
+        $this->send($response);
 
     }
 

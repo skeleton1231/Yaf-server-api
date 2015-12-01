@@ -44,6 +44,9 @@ define('USER_PROFILE_UPDATE_FAIL', 51007);
 define('CAR_ALREADY_ADDED',60001);
 define('CAR_ADDED_ERROR',60002);
 define('CAR_DRIVE_INFO_ERROR',60003);
+define('CAR_BRAND_ERROR',60004);
+define('CAR_SERIES_ERROR', 60005);
+define('CAR_MODEL_ERROR', 60006);
 
 
 
@@ -81,6 +84,16 @@ define('QI_NIU_AK','b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI');
 define('QI_NIU_SK','5RgnuN64dSEJoitJwUvMkMGypaifc9PqSOvjYd2f');
 
 define('IMAGE_DOMAIN' , 'http://7xopqk.com1.z0.glb.clouddn.com/');
+
+
+define("ORDER_BY_DEFAULT", 0);
+define('ORDER_BY_PRICE_ASC', 1);
+define("ORDER_BY_PRICE_DESC", 2);
+define("ORDER_BY_BOARD_TIME_ASC", 3);
+define("ORDER_BY_MILEAGE_ASC",4);
+
+
+
 
 
 

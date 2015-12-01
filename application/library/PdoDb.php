@@ -26,6 +26,12 @@ class PdoDb
     public $where = null;
 
     public static $table = null;
+
+    public $order = " ORDER BY ";
+
+    public $page = 0;
+
+    public $keyword = '';
     /**
      * @param bool   $debug    是否开启调试，错误信息输出
      * @param string $database 数据库类别

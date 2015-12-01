@@ -330,7 +330,7 @@ class UserController extends ApiYafControllerAbstract
         $userInfo = $userM->getProfileInfoById($user_id);
 
         $response = array();
-        $response['userInfo'] = $userInfo;
+        $response['user_info'] = $userInfo;
 
         $this->send($response);
 
