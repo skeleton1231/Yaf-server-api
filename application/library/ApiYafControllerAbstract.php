@@ -120,6 +120,7 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
      * @param array $data  数据
      */
     public function send($data = array(),$type='') {
+
         header('Content-type: application/json');
         $response = Common::getSuccessRes($data,$type='');
 

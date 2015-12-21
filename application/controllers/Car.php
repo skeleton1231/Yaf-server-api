@@ -42,7 +42,7 @@ class CarController extends ApiYafControllerAbstract
 //
 //        }
 
-        $sql = 'SELECT `brand_id`, `brand_name`, `abbre`, `brand_url` FROM `bibi_car_brand_list` ORDER BY `abbre` ASC';
+        $sql = 'SELECT `brand_id`, `brand_name`, `abbre`, `brand_url` FROM `bibi_car_brand_list` WHERE is_hot = 1 ORDER BY `abbre` ASC';
 
         $pdo = new PdoDb;
         $list = $pdo->query($sql);
@@ -83,7 +83,7 @@ class CarController extends ApiYafControllerAbstract
         $pdo = new PdoDb;
 
         $sql = 'SELECT * FROM `bibi_car_brand_list` WHERE `brand_id` = ' . $brand_id . '';
-        $brand = $pdo->query($sql)[0];
+        $brand = @$pdo->query($sql)[0];
 
         $brandInfo = array();
         //$brandInfo['brand_id'] = $brand['brand_id'];

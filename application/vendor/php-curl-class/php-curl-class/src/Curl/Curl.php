@@ -2,9 +2,51 @@
 
 namespace Curl;
 
+abstract class CurlCookieConst
+{
+    private static $RFC2616 = array();
+    private static $RFC6265 = array();
+
+    public static function Init() {
+        self::$RFC2616 = array_fill_keys(array(
+            // RFC2616: "any CHAR except CTLs or separators".
+            '!', '#', '$', '%', '&', "'", '*', '+', '-', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+            'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+            'W', 'X', 'Y', 'Z', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '|', '~',
+        ), true);
+
+        self::$RFC6265 = array_fill_keys(array(
+            // RFC6265: "US-ASCII characters excluding CTLs, whitespace DQUOTE, comma, semicolon, and backslash".
+            // %x21
+            '!',
+            // %x23-2B
+            '#', '$', '%', '&', "'", '(', ')', '*', '+',
+            // %x2D-3A
+            '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':',
+            // %x3C-5B
+            '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[',
+            // %x5D-7E
+            ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+            'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~',
+        ), true);
+    }
+
+    public static function RFC2616() {
+        return self::$RFC2616;
+    }
+
+    public static function RFC6265() {
+        return self::$RFC6265;
+    }
+}
+
+CurlCookieConst::Init();
+
 class Curl
 {
-    const VERSION = '4.8.1';
+    const VERSION = '4.8.2';
     const DEFAULT_TIMEOUT = 30;
 
     public $curl;
@@ -105,15 +147,13 @@ class Curl
             } else {
                 $binary_data = false;
                 foreach ($data as $key => $value) {
-                    // Fix "Notice: Array to string conversion" when $value in
-                    // curl_setopt($ch, CURLOPT_POSTFIELDS, $value) is an array
-                    // that contains an empty array.
+                    // Fix "Notice: Array to string conversion" when $value in curl_setopt($ch, CURLOPT_POSTFIELDS,
+                    // $value) is an array that contains an empty array.
                     if (is_array($value) && empty($value)) {
                         $data[$key] = '';
-                    // Fix "curl_setopt(): The usage of the @filename API for
-                    // file uploading is deprecated. Please use the CURLFile
-                    // class instead".
-                    } elseif (is_string($value) && strpos($value, '@') === 0) {
+                    // Fix "curl_setopt(): The usage of the @filename API for file uploading is deprecated. Please use
+                    // the CURLFile class instead". Ignore non-file values prefixed with the @ character.
+                    } elseif (is_string($value) && strpos($value, '@') === 0 && is_file(substr($value, 1))) {
                         $binary_data = true;
                         if (class_exists('CURLFile')) {
                             $data[$key] = new \CURLFile(substr($value, 1));
@@ -543,8 +583,28 @@ class Curl
      */
     public function setCookie($key, $value)
     {
-        $this->cookies[$key] = $value;
-        $this->setOpt(CURLOPT_COOKIE, str_replace(' ', '%20', urldecode(http_build_query($this->cookies, '', '; '))));
+        $name_chars = array();
+        foreach (str_split($key) as $name_char) {
+            if (!array_key_exists($name_char, CurlCookieConst::RFC2616())) {
+                $name_chars[] = rawurlencode($name_char);
+            } else {
+                $name_chars[] = $name_char;
+            }
+        }
+
+        $value_chars = array();
+        foreach (str_split($value) as $value_char) {
+            if (!array_key_exists($value_char, CurlCookieConst::RFC6265())) {
+                $value_chars[] = rawurlencode($value_char);
+            } else {
+                $value_chars[] = $value_char;
+            }
+        }
+
+        $this->cookies[implode('', $name_chars)] = implode('', $value_chars);
+        $this->setOpt(CURLOPT_COOKIE, implode('; ', array_map(function($k, $v) {
+            return $k . '=' . $v;
+        }, array_keys($this->cookies), array_values($this->cookies))));
     }
 
     /**

@@ -6,14 +6,15 @@
  * Time: 下午9:57
  */
 
+ini_set('max_execution_time', 0);
+set_time_limit(0);
 
 class ScriptController extends ApiYafControllerAbstract
 {
 
     public function carTypeAction(){
 
-        ini_set('max_execution_time', 0);
-        set_time_limit(0);
+
 
         $file = APPPATH . '/static/BrandList.json';
         $myfile = fopen($file, "r") or die("Unable to open file!");
@@ -50,5 +51,45 @@ class ScriptController extends ApiYafControllerAbstract
 
 
     }
+
+    public function userRegisterAction(){
+
+
+        $ar = new ApiRequest();
+
+        for($i=1; $i<= 10; $i++){
+
+            $ar->appRegister();
+
+            $ar->userSendCode();
+
+            $ar->userRegister();
+
+            $ar->userUpdateAll();
+
+            $ar->carCreate();
+
+            $ar->publishCarCreate();
+
+            sleep(1);
+        }
+
+
+//        /$ar->appRegister();
+
+        //$ar->carCreate();
+
+
+    }
+
+    public function publishCarAction(){
+
+        $ar = new ApiRequest();
+        $ar->publishCarCreate();
+
+    }
+
+
+
 
 }

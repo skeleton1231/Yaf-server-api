@@ -2,7 +2,9 @@
 
 namespace Elasticsearch;
 
+use Elasticsearch\Common\Exceptions\InvalidArgumentException;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use Elasticsearch\Common\Exceptions\TransportException;
 use Elasticsearch\Namespaces\CatNamespace;
 use Elasticsearch\Namespaces\ClusterNamespace;
 use Elasticsearch\Namespaces\IndicesNamespace;
@@ -110,6 +112,8 @@ class Client
             $endpoint->resultOrFuture($response);
         } catch (Missing404Exception $exception) {
             return false;
+        } catch (TransportException $exception) {
+            return false;
         }
 
         return true;
@@ -213,10 +217,12 @@ class Client
     public function delete($params)
     {
         $id = $this->extractArgument($params, 'id');
-
         $index = $this->extractArgument($params, 'index');
-
         $type = $this->extractArgument($params, 'type');
+
+        $this->verifyNotNullOrEmpty("id", $id);
+        $this->verifyNotNullOrEmpty("type", $type);
+        $this->verifyNotNullOrEmpty("index", $index);
 
         /** @var callback $endpointBuilder */
         $endpointBuilder = $this->endpoints;
@@ -1424,6 +1430,24 @@ class Client
             return $val;
         } else {
             return null;
+        }
+    }
+
+    private function verifyNotNullOrEmpty($name, $var) {
+        if ($var === null) {
+            throw new InvalidArgumentException("$name cannot be null.");
+        }
+
+        if (is_string($var)) {
+            if (strlen($var) === 0) {
+                throw new InvalidArgumentException("$name cannot be an empty string");
+            }
+        }
+
+        if (is_array($var)) {
+            if (strlen(implode("", $var)) === 0) {
+                throw new InvalidArgumentException("$name cannot be an array of empty strings");
+            }
         }
     }
 }

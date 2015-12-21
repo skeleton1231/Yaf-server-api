@@ -11,6 +11,7 @@ class CarSellingModel extends PdoDb
 
     //public static $table = 'bibi_car_selling_list';
     public $brand_info;
+    public static $visit_user_id = 0;
 
 
     public function __construct()
@@ -37,12 +38,10 @@ class CarSellingModel extends PdoDb
             WHERE t1.hash = "' . $hash . '"
         ';
 
-        $items = $this->query($sql);
 
-        if (isset($items[0])) {
+        $car = @$this->query($sql)[0];
 
-            $car = $items[0];
-        } else {
+        if (!$car) {
 
             return array();
         }
@@ -54,6 +53,7 @@ class CarSellingModel extends PdoDb
     }
 
     public function handlerCar($car){
+
 
         $brandM = new BrandModel();
 
@@ -80,6 +80,7 @@ class CarSellingModel extends PdoDb
             $car['user_info']['username'] = '';
             $car['user_info']['mobile']   = '';
             $car['user_info']['created']  = 0;
+            //$car['user_info']['is_auth']  = 1;
             $car['user_info']['profile']['avatar']  = $car['avatar'];
             unset($car['avatar']);
             $car['user_info']['profile']['nickname']  = $car['nickname'];
@@ -105,7 +106,7 @@ class CarSellingModel extends PdoDb
                 $item = array();
                 $item['file_id'] = $image['hash'];
                 $item['file_url'] = IMAGE_DOMAIN . $image['key'];
-                $item['file_type'] = $image['type'];
+                $item['file_type'] = $image['type'] ? $image['type'] : 0;
                 $items[] = $item;
 
             }
@@ -118,8 +119,8 @@ class CarSellingModel extends PdoDb
         unset($car['hash']);
 
         $car['city_info'] = array(
-            'city_id' => $car['city_id'],
-            'city_name' => $car['city_name'],
+            'city_id' =>   93,//$car['city_id'],
+            'city_name' => '深圳',   //$car['city_name'],
             'city_lng' => 360,
             'city_lat' => 360,
         );
@@ -144,10 +145,19 @@ class CarSellingModel extends PdoDb
         unset($car['avatar']);
         unset($car['nickname']);
 
+        //print_r($car);exit;
 
-        $car['is_fav'] = 1;
+
+        $favCarM = new FavoriteCarModel();
+        $favCarM->user_id = self::$visit_user_id;
+        $favCarM->car_id  = $car['car_id'];
+        $favId = $favCarM->get();
+
+        $car['is_fav'] = $favId ? 1 : 2;
         $car['car_time'] = '今天';
-        $car['visit_num'] = 100;
+        //$car['visit_num'] = $car['visit_num'];
+
+        $favCarM = null;
 
         return $car;
 
@@ -166,10 +176,13 @@ class CarSellingModel extends PdoDb
         $files = json_decode($files_id, true);
         $files_type = json_decode($files_type, true);
 
-        foreach ($files as $k => $fileHash) {
+        if($files && $files_type){
 
-            $filesInfo[] = array('hash' => $fileHash, 'type' => $files_type[$k], 'key' => $fileHash);
+            foreach ($files as $k => $fileHash) {
 
+                $filesInfo[] = array('hash' => $fileHash, 'type' => $files_type[$k], 'key' => $fileHash);
+
+            }
         }
 
         return $filesInfo;
@@ -177,7 +190,7 @@ class CarSellingModel extends PdoDb
     }
 
 
-    public function getCarList()
+    public function getCarList($userId = 0)
     {
 
         $pageSize = 10;
@@ -193,6 +206,15 @@ class CarSellingModel extends PdoDb
                 ON t2.user_id = t3.user_id
                 ';
 
+        $sqlCnt = '
+                SELECT
+                count(*) AS total
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+                ';
 
         $sql .= $this->where;
         $sql .= $this->order;
@@ -201,22 +223,35 @@ class CarSellingModel extends PdoDb
 
         $sql .= ' LIMIT '.$number.' , '.$pageSize.' ';
 
+
         $cars = $this->query($sql);
 
-        $carM = new CarSellingModel();
+        //$carM = new CarSellingModel();
 
         $items = array();
 
         foreach($cars as $k => $car){
 
-            $item = array();
-            $item = $carM->handlerCar($car);
+            $item = $this->handlerCar($car);
             $items[$k]['car_info'] = $item;
             $items[$k]['car_users'] = $this->getSameBrandUsers();
 
         }
 
-        return $items;
+        $sqlCnt .= $this->where;
+        $sqlCnt .= $this->order;
+
+
+        $total = @$this->query($sqlCnt)[0]['total'];
+
+        $count = count($items);
+
+        $list['car_list'] = $items;
+        $list['has_more'] = (($number+$count) < $total) ? 1 : 2;
+        $list['total'] = $total;
+        //$list['number'] = $number;
+
+        return $list;
     }
 
     public function getTotal()
@@ -240,5 +275,268 @@ class CarSellingModel extends PdoDb
         return $userInfos ? $userInfos : array();
 
     }
+
+
+    public function getUserPublishCar($userId){
+
+        $pageSize = 10;
+
+        $sql = '
+            SELECT
+                t1.*,
+                t3.avatar,t3.nickname
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+            WHERE
+                t2.user_id = '.$userId.' AND t1.car_type = '.PLATFORM_USER_SELLING_CAR.'
+            ORDER BY
+                t1.updated DESC
+        ';
+
+        $number = ($this->page-1)*$pageSize;
+
+        $sql .= ' LIMIT '.$number.' , '.$pageSize.' ';
+
+        $sqlCnt = '
+            SELECT
+                count(*) AS total
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+            WHERE
+                t2.user_id = '.$userId.' AND t1.car_type = '.PLATFORM_USER_SELLING_CAR.'
+        ';
+
+        $cars = $this->query($sql);
+
+
+        $items = array();
+
+        foreach($cars as $k => $car){
+
+            $item = $this->handlerCar($car);
+
+            $items[$k]['car_info'] = $item;
+            $items[$k]['car_users'] = $this->getSameBrandUsers();
+        }
+
+
+        $total = @$this->query($sqlCnt)[0]['total'];
+
+
+        $count = count($items);
+
+        $list['car_list'] = $items;
+        $list['has_more'] = (($number+$count) < $total) ? 1 : 2;
+        $list['total'] = $total;
+        //$list['number'] = $number;
+
+        return $list;
+
+
+    }
+
+    public function getUserFavoriteCar($userId){
+
+        $pageSize = 10;
+
+        $sql = '
+            SELECT
+                t1.*,
+                t3.avatar,t3.nickname
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+                LEFT JOIN `bibi_favorite_car` AS t4
+                ON t1.hash = t4.car_id
+            WHERE t4.user_id = '.$userId.'
+            ORDER BY t4.created DESC
+        ';
+
+        $number = ($this->page-1)*$pageSize;
+
+        $sql .= ' LIMIT '.$number.' , '.$pageSize.' ';
+
+        $sqlCnt = '
+            SELECT
+                count(*) AS total
+            FROM `bibi_car_selling_list` AS t1
+            LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+            LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+            LEFT JOIN `bibi_favorite_car` AS t4
+                ON t1.hash = t4.car_id
+                WHERE t4.user_id = '.$userId.'
+        ';
+
+        $cars = $this->query($sql);
+
+        $items = array();
+
+        foreach($cars as $k => $car){
+
+            $item = $this->handlerCar($car);
+            $items[$k]['car_info'] = $item;
+            //$items[$k]['car_users'] = $this->getSameBrandUsers();
+        }
+
+
+        $total = @$this->query($sqlCnt)[0]['total'];
+
+        $count = count($items);
+
+        $list['car_list'] = $items;
+        $list['has_more'] = (($number+$count) < $total) ? 1 : 2;
+        $list['total'] = $total;
+        //$list['number'] = $number;
+
+        return $list;
+
+    }
+
+    public function getUserVisitCar($userId){
+
+        $pageSize = 10;
+
+        $sql = '
+            SELECT
+                t1.*,
+                t3.avatar,t3.nickname
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+                LEFT JOIN `bibi_visit_car` AS t4
+                ON t1.hash = t4.car_id
+                WHERE t4.user_id = '.$userId.'
+        ';
+
+        $number = ($this->page-1)*$pageSize;
+
+        $sql .= ' LIMIT '.$number.' , '.$pageSize.' ';
+
+        $sqlCnt = '
+            SELECT
+                count(*) AS total
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+                LEFT JOIN `bibi_visit_car` AS t4
+                ON t1.hash = t4.car_id
+                WHERE t4.user_id = '.$userId.'
+        ';
+
+        $cars = $this->query($sql);
+
+        $items = array();
+
+        foreach($cars as $k => $car){
+
+            $item = $this->handlerCar($car);
+            $items[$k]['car_info'] = $item;
+            $items[$k]['car_users'] = $this->getSameBrandUsers();
+        }
+
+        $total = @$this->query($sqlCnt)[0]['total'];
+
+        $count = count($items);
+
+        $list['car_list'] = $items;
+        $list['has_more'] = (($number+$count) < $total) ? 1 : 2;
+        $list['total'] = $total;
+        //$list['number'] = $number;
+
+        return $list;
+
+    }
+
+    public function relatedPriceCars($carId , $price){
+
+        $minPrice = $price * 0.7;
+        $maxPrice = $price * 1.3;
+
+
+        $sql = '
+                SELECT
+                t1.*,
+                t3.avatar,t3.nickname
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+                WHERE
+                 t1.files <> "" AND t1.car_type != 3 AND t1.hash != "'.$carId.'" AND
+                t1.price BETWEEN '.$minPrice.' AND '.$maxPrice.'
+				ORDER BY t1.car_type ASC, t1.price ASC
+                LIMIT 0 , 20
+                ';
+
+
+        $cars = $this->query($sql);
+
+        $items = array();
+
+        if($cars){
+
+            foreach($cars as $k => $car){
+
+                $item = $this->handlerCar($car);
+                $items[$k]['car_info'] = $item;
+            }
+        }
+
+
+        return $items;
+    }
+
+    public function relatedStyleCars($carId ,$brand_id, $series_id){
+
+
+        $sql = '
+                SELECT
+                t1.*,
+                t3.avatar,t3.nickname
+                FROM `bibi_car_selling_list` AS t1
+                LEFT JOIN `bibi_user` AS t2
+                ON t1.user_id = t2.user_id
+                LEFT JOIN `bibi_user_profile` AS t3
+                ON t2.user_id = t3.user_id
+                WHERE
+                t1.files <> "" AND t1.car_type != 3  AND t1.hash != "'.$carId.'" AND
+                t1.brand_id = '.$brand_id.' AND t1.series_id = '.$series_id.'
+                LIMIT 0 , 20
+                ';
+
+        $cars = $this->query($sql);
+
+        $items = array();
+
+        if($cars){
+
+            foreach($cars as $k => $car){
+
+                $item = $this->handlerCar($car);
+                $items[$k]['car_info'] = $item;
+            }
+        }
+
+
+        return $items;
+
+    }
+
+
 
 }

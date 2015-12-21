@@ -126,7 +126,7 @@ class BrandModel extends PdoDb{
     public function getModelModel($seriesId, $modelId)
     {
 
-        $key = 'modelModel_'.$modelId.'';
+        $key = 'modelModel.'.$modelId.'';
 
         $model = RedisDb::getValue($key);
 
@@ -142,6 +142,8 @@ class BrandModel extends PdoDb{
                 $info['series_id'] = $seriesId;
 
                 RedisDb::setValue($key, serialize($info));
+
+                return $info;
             }
             else{
 

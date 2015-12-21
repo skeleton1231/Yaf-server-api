@@ -5,6 +5,7 @@
         "qiniu/php-sdk": "*",
 	    "elasticsearch/elasticsearch": "~2.0",
 	    "sunra/php-simple-html-dom-parser": "v1.5.0",
-        "fzaninotto/faker": "^1.5"
+        "fzaninotto/faker": "^1.5",
+        "propel/propel": "~2.0@dev"
     }
 }

@@ -45,7 +45,9 @@ class TestController extends Yaf_Controller_Abstract {
 
     public function userCarsAction(){
 
-        exit;
+        $rs = RedisDb::getValue('test_car_users');
+
+        //exit;
         $jsonData = require APPPATH .'/configs/JsonData.php';
 
         $sql = 'SELECT

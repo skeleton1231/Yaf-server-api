@@ -32,6 +32,8 @@ class PdoDb
     public $page = 0;
 
     public $keyword = '';
+
+    public $condition = '';
     /**
      * @param bool   $debug    是否开启调试，错误信息输出
      * @param string $database 数据库类别

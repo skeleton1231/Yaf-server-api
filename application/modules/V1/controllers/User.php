@@ -16,11 +16,11 @@ class UserController extends ApiYafControllerAbstract
 
         $data = $this->get_request_data();
 
-        if ($data['code'] != RedisDb::getValue('code_' . $data['device_identifier'] . '')) {
-
-            $this->send_error(USER_CODE_ERROR);
-
-        }
+//        if ($data['code'] != RedisDb::getValue('code_' . $data['device_identifier'] . '')) {
+//
+//            $this->send_error(USER_CODE_ERROR);
+//
+//        }
 
         unset($data['code']);
 
@@ -40,7 +40,7 @@ class UserController extends ApiYafControllerAbstract
 
         $len = strlen($nickname);
 
-        if ($len < 6 || $len > 20) {
+        if ($len < 4 || $len > 20) {
 
             $this->send_error(USER_NICKNAME_FORMAT_ERROR);
 

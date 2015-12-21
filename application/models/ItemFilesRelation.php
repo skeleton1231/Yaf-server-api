@@ -48,4 +48,13 @@ class ItemFilesRelationModel extends PdoDb{
         $this->insertBatch(self::$table, $items);
     }
 
+    public function DeleteBatch($item_id,  $type){
+
+        $sql = 'DELETE  FROM `'.self::$table.'` WHERE `item_id` = "'.$item_id.'" AND `type` = '.$type.'';
+
+        $this->exec($sql);
+
+
+    }
+
 }

@@ -385,6 +385,17 @@ class CurlTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testPostNonFilePathUpload()
+    {
+        $test = new Test();
+        $test->server('post', 'POST', array(
+            'foo' => 'bar',
+            'file' => '@not-a-file',
+        ));
+        $this->assertFalse($test->curl->error);
+        $this->assertEquals('foo=bar&file=%40not-a-file', $test->curl->response);
+    }
+
     public function testPutRequestMethod()
     {
         $test = new Test();
@@ -660,6 +671,19 @@ class CurlTest extends PHPUnit_Framework_TestCase
         $reflectionProperty->setAccessible(true);
         $options = $reflectionProperty->getValue($curl);
         $this->assertEquals('cookie=Om%20nom%20nom%20nom', $options[CURLOPT_COOKIE]);
+    }
+
+    public function testMultipleCookies()
+    {
+        $curl = new Curl();
+        $curl->setCookie('cookie', 'Om nom nom nom');
+        $curl->setCookie('foo', 'bar');
+
+        $reflectionClass = new ReflectionClass('\Curl\Curl');
+        $reflectionProperty = $reflectionClass->getProperty('options');
+        $reflectionProperty->setAccessible(true);
+        $options = $reflectionProperty->getValue($curl);
+        $this->assertEquals('cookie=Om%20nom%20nom%20nom; foo=bar', $options[CURLOPT_COOKIE]);
     }
 
     public function testCookieEncodingColon()

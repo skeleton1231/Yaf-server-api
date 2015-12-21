@@ -22,6 +22,7 @@ class AppController extends ApiYafControllerAbstract {
      */
     public function registerAction(){
 
+
         $this->required_fields = array('device_id','device_resolution','device_sys_version','device_type');
 
         $data = $this->get_request_data();
@@ -32,7 +33,6 @@ class AppController extends ApiYafControllerAbstract {
         $appModel = new \AppModel;
 
         $result = $appModel->getDevice($data['device_identifier']);
-
 
         if(!$result){
 
@@ -176,29 +176,11 @@ class AppController extends ApiYafControllerAbstract {
                     $this->send_error(QINIU_UPLOAD_ERROR);
                 }
 
-                $data = array();
-
-//                $data['hash'] = $hash;
-//                $data['url']  = IMAGE_DOMAIN . $hash;
-//                $data['created'] = time();
-//                $data['type'] = 1;
-//                $data['user_id'] = $user_id;
-//
-//
-//                $fm = new FileModel;
-//                $id = $fm->Create($data);
-//
-//                $item = array();
-//                $item['file_id'] = $data['hash'];
-//                $item['file_url'] = $data['url'];
                 $items[] = $hash;
             }
 
             echo implode(',', $items);
 
-//            $response = array();
-//            $response['files_id'] = implode();
-//            $this->send($response);
 
         }
         else{

@@ -13,7 +13,17 @@ class CarController extends ApiYafControllerAbstract
     public function createAction()
     {
 
-        $this->required_fields = array_merge($this->required_fields, array('session_id', 'car_no', 'brand_id', 'series_id', 'files_id', 'files_type'));
+        $this->required_fields = array_merge(
+            $this->required_fields,
+            array(
+                'session_id',
+                'car_no',
+                'brand_id',
+                'city_id',
+                'series_id',
+                'files_id',
+                'files_type'
+            ));
 
         $this->optional_fields = array('model_id', 'vin_no', 'vin_file');
 
@@ -21,15 +31,6 @@ class CarController extends ApiYafControllerAbstract
 
         $userId = $this->userAuth($data);
 
-
-        $userM = new UserModel();
-        $userInfo = $userM->getAllInfoById($userId);
-
-        if ($userInfo['has_car'] == 1) {
-            $this->send_error(CAR_ALREADY_ADDED);
-        }
-
-        $carInfo = array();
         $cs = new CarSellingModel();
 
         $properties = $data;
@@ -38,54 +39,67 @@ class CarController extends ApiYafControllerAbstract
         unset($properties['files_id']);
         unset($properties['files_type']);
 
-//        if(isset($properties['vin_file'])){
-//
-//            $vinFile = new FileModel();
-//            $vinFile = $vinFile->Get($properties['vin_file']);
-//            $properties['vin_file']    =  $vinFile;
-//
-//        }
-//
-//        if(isset($properties['vin_no'])){
-//
-//           $vinNo = $properties['vin_no'];
-//        }
-//
-//        if(!$vinNo  && !$vinFile){
-//
-//            $this->send_error(CAR_DRIVE_INFO_ERROR);
-//        }
 
+        $bm = new BrandModel();
+        $brandM  = $bm->getBrandModel($data['brand_id']);
+        $seriesM = $bm->getSeriesModel($data['brand_id'],$data['series_id']);
+        $modelM  =  $bm->getModelModel($data['series_id'], $data['model_id']);
+
+
+        if(!is_array($brandM)){
+
+            $this->send_error(CAR_BRAND_ERROR);
+        }
+
+        if(!is_array($seriesM)){
+            $this->send_error(CAR_SERIES_ERROR);
+        }
+
+        if(!is_array($modelM)){
+
+            $this->send_error(CAR_MODEL_ERROR);
+        }
+
+
+        $properties['car_name'] = $brandM['brand_name'] . ' ' . $seriesM['series_name'] . ' ' . $modelM['model_name'];
+        $properties['car_name'] = trim($properties['car_name']);
+
+
+
+        if (isset($properties['vin_file'])) {
+
+            $vinFile = new FileModel();
+            $vinFile = $vinFile->Get($properties['vin_file']);
+            $properties['vin_file'] = $vinFile;
+
+        }
 
         $properties['car_type'] = PLATFORM_USER_OWNER_CAR;
         $time = time();
         $properties['created'] = $time;
         $properties['updated'] = $time;
         $properties['user_id'] = $userId;
-        $properties['status'] = CAR_NOT_AUTH;
+        $properties['verify_status'] = CAR_NOT_AUTH;
         $properties['files'] = serialize($cs->dealFilesWithString($data['files_id'], $data['files_type']));
+        $properties['hash'] = uniqid();
 
-
-        $cs->properties = $carInfo;
+        $cs->properties = $properties;
 
         $id = $cs->CreateM();
 
 
         if ($id) {
-            //更新用户状态
-            $where = array('user_id' => $userId);
-            $update = array('has_car' => 1);
-            $userM->update($where, $update);
 
             //插入文件
             $ifr = new ItemFilesRelationModel();
             $ifr->CreateBatch($id, $data['files_id'], ITEM_TYPE_CAR, $data['files_type']);
 
-            $carInfo = $cs->GetCarInfoById($id);
+            $carInfo = $cs->GetCarInfoById($properties['hash']);
 
             $response['car_info'] = $carInfo;
 
             $this->send($response);
+
         } else {
 
             $this->send_error(CAR_ADDED_ERROR);
@@ -113,144 +127,72 @@ class CarController extends ApiYafControllerAbstract
 
         $data = $this->get_request_data();
 
-        $userId = $this->userAuth($data);
+        //$userId = $this->userAuth($data);
+        if(isset($data['session_id'])){
+
+            $sess = new SessionModel();
+            $userId = $sess->Get($data);
+        }
+        else{
+
+            $userId = 0;
+        }
 
         $carModel = new CarSellingModel();
 
+        $carT = $carModel::$table;
+
+
         $carId = $data['car_id'];
+
+        $carModel::$visit_user_id = $userId;
 
         $carInfo = $carModel->GetCarInfoById($carId);
 
+
         $response['car_info'] = $carInfo;
 
-        $this->send($response);
-    }
 
-    public function publishAction()
-    {
+        //同款车
+        $response['related_price_car_list'] = $carModel->relatedPriceCars($carId,$carInfo['price']);
 
-        $required_fields = array(
-
-            'session_id',
-            'brand_id',
-            'series_id',
-            'model_id',
-            'price',
-            'board_time',
-            'mileage',
-            'car_status',
-            'city_id',
-            'car_color',
-            'car_no',
-            'vin_no',
-            'vin_file',
-            'contact_name',
-            'contact_address',
-            'maintain',
-            'is_transfer',
-            'insurance_due_time',
-            'check_expiration_time',
-            'files_id',
-            'files_type',
-            'car_intro',
-            'exchange_time'
-
+        //同价车
+        $response['related_style_car_list'] = $carModel->relatedStyleCars(
+            $carId,
+            $carInfo['brand_info']['brand_id'] ,
+            $carInfo['series_info']['series_id']
         );
 
-        $this->required_fields = array_merge($this->required_fields, $required_fields);
 
-        $data = $this->get_request_data();
+        $visitCarM = new VisitCarModel();
+        $visitCarM->car_id  = $carId;
+        $visitCarM->user_id = $userId;
 
-        $userId = $this->userAuth($data);
+        $id = $visitCarM->get();
 
-        if (!$data['vin_no'] && !$data['drive_file']) {
+        if(!$id){
 
-            $this->send_error(CAR_DRIVE_INFO_ERROR);
-        }
+            $properties = array();
+            $properties['created'] = time();
+            $properties['user_id'] = $userId;
+            $properties['car_id']  = $carId;
 
-        $properties = $data;
-        $properties['car_type'] = PLATFORM_USER_SELLING_CAR;
-        unset($properties['device_identifier']);
-        unset($properties['session_id']);
-        unset($properties['files_id']);
-        unset($properties['files_type']);
-        $properties['user_id'] = $userId;
+            $carModel->updateByPrimaryKey(
+                $carT,
+                array('hash'=>$carId),
+                array('visit_num'=>($carInfo['visit_num']+1))
+            );
 
-        $bm = new BrandModel();
-        $brandM  = $bm->getBrandModel($data['brand_id']);
-        $seriesM = $bm->getSeriesModel($data['brand_id'],$data['series_id']);
-        $modelM  =  $bm->getModelModel($data['series_id'], $data['model_id']);
-
-
-        if(!is_array($brandM)){
-
-            $this->send_error(CAR_BRAND_ERROR);
-        }
-
-        if(!is_array($seriesM)){
-            $this->send_error(CAR_SERIES_ERROR);
-        }
-
-        if(!is_array($modelM)){
-
-            $this->send_error(CAR_MODEL_ERROR);
+            $visitCarM->insert($visitCarM->tableName, $properties);
         }
 
 
-        $properties['car_name'] = $brandM['brand_name'] . ' ' . $seriesM['series_name'] . ' ' . $modelM['model_name'];
-        $properties['car_name'] = trim($properties['car_name']);
+        $this->send($response);
 
-
-        if (isset($properties['vin_file'])) {
-
-            $vinFile = new FileModel();
-            $vinFile = $vinFile->Get($properties['vin_file']);
-            $properties['vin_file'] = $vinFile;
-
-        }
-
-        if (isset($properties['vin_no'])) {
-
-            $vinNo = $properties['vin_no'];
-        }
-
-        if (!$vinNo && !$vinFile) {
-
-            $this->send_error(CAR_DRIVE_INFO_ERROR);
-        }
-
-
-        $cs = new CarSellingModel();
-
-        $filesInfo = $cs->dealFilesWithString($data['files_id'], $data['files_type']);
-
-        $time = time();
-        $properties['created'] = $time;
-        $properties['updated'] = $time;
-        $properties['files'] = serialize($filesInfo);
-        $properties['hash'] = uniqid();
-
-        $cs->properties = $properties;
-        $carId = $cs->CreateM();
-
-        if ($carId) {
-
-            $ifr = new ItemFilesRelationModel();
-            $ifr->CreateBatch($carId, $data['files_id'], ITEM_TYPE_CAR, $data['files_type']);
-
-            $carInfo = $cs->GetCarInfoById($properties['hash']);
-
-            $response['car_info'] = $carInfo;
-
-            $this->send($response);
-
-        } else {
-
-            $this->send_error(CAR_ADDED_ERROR);
-
-        }
 
     }
+
+
 
 
     public function listAction(){
@@ -264,13 +206,13 @@ class CarController extends ApiYafControllerAbstract
         $data = $this->get_request_data();
 
         $data['order_id'] = $data['order_id'] ? $data['order_id'] : 0 ;
-        $data['page']     = $data['page'] ? $data['page'] : 1;
+        $data['page']     = $data['page'] ? ($data['page']+1) : 1;
         $data['brand_id'] = $data['brand_id'] ? $data['brand_id'] : 0 ;
         $data['series_id'] = $data['series_id'] ? $data['series_id'] : 0 ;
 
 
         $carM = new CarSellingModel();
-        $where = 'WHERE t1.files <> "" AND t1.brand_id <> 0 AND t1.series_id <> 0 ';
+        $where = 'WHERE t1.files <> "" AND t1.brand_id <> 0 AND t1.series_id <> 0 AND t1.car_type <> 3 ';
 
         if($data['keyword']){
             $carM->keyword = $data['keyword'];
@@ -287,22 +229,40 @@ class CarController extends ApiYafControllerAbstract
             $where .= ' AND t1.series_id = '.$data['series_id'].' ';
         }
 
+        if($data['source'] == 1){
+
+            $where .= ' AND t1.car_type = 1';
+        }
+
 
         $carM->where = $where;
 
         if(isset($jsonData['order_info'][$data['order_id']])) {
 
-            $carM->order  = ' ORDER BY t1.car_type ASC , ';
-            $carM->order .= $jsonData['order_info'][$data['order_id']];
+           // $carM->order  = ' ORDER BY t1.car_type ASC , ';
+            $carM->order = $jsonData['order_info'][$data['order_id']];
 
         }
 
         $carM->page = $data['page'];
 
-        $cars = $carM->getCarList();
+        if(isset($data['session_id'])){
 
-        $response = array();
-        $response['car_list'] = $cars;
+            $sess = new SessionModel();
+            $userId = $sess->Get($data);
+        }
+        else{
+
+            $userId = 0;
+        }
+
+
+        $carM::$visit_user_id = $userId;
+
+        $lists = $carM->getCarList();
+
+        //$response = array();
+        $response = $lists;
         $response['order_id'] = $data['order_id'];
 
         if($data['city_id']){
@@ -319,10 +279,11 @@ class CarController extends ApiYafControllerAbstract
         $response['brand_info'] = $bm->getBrandModel($data['brand_id']);
         $response['series_info'] = $bm->getSeriesModel($data['brand_id'],$data['series_id']);
 
-
         $this->send($response);
 
     }
+
+
 
 
 }
