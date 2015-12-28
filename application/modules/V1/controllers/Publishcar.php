@@ -108,7 +108,8 @@ class PublishcarController extends ApiYafControllerAbstract
         $properties['created'] = $time;
         $properties['updated'] = $time;
         $properties['files'] = $filesInfo ? serialize($filesInfo) : '';
-        $properties['verify_status'] = $data['action'];
+
+        $properties['verify_status'] = $data['action'] == 0 ? 6 : 1;
         unset($properties['action']);
 
         return $properties;
