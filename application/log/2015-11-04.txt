@@ -1,7 +1,0 @@
-******************2015-11-04 record
-
-2015-11-04  15:38:11:8638:  fail_res  {"status":0,"code":40007,"data":{"msg":"App\u9a8c\u8bc1\u5931\u8d25"}}
-2015-11-04  15:40:11:1581:  success_res  {"status":1,"code":0,"data":{"avatar":"","signature":"","age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":"","birth":"1988-12-31","session_id":"session5639b68a18bb5"}}
-2015-11-04  17:03:11:6259:  success_res  {"status":1,"code":0,"data":[{"user_id":1}]}
-2015-11-04  17:05:11:1618:  success_res  {"status":1,"code":0,"data":{"profile":{"avatar":"","signature":"","age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":"","birth":"1988-12-31"},"session_id":"session5639ca5100014"}}
-2015-11-04  17:06:11:9469:  success_res  {"status":1,"code":0,"data":{"user_id":1,"profile":{"avatar":"","signature":"","age":26,"constellation":"\u6469\u7faf\u5ea7","nickname":"","birth":"1988-12-31"},"session_id":"session5639ca7cc34b7"}}
