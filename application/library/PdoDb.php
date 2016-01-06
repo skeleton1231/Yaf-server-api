@@ -139,6 +139,7 @@ class PdoDb
         $fields = '`' . implode('`,`', array_keys($data)) . '`';
         $values = "'" . implode("','", $data) . "'";
         $sql = "INSERT INTO `{$tableName}`({$fields}) VALUES ({$values})";
+
         self::$pdo->exec($sql);
         if($this->debug)
         {

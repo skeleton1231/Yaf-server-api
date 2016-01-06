@@ -225,7 +225,6 @@ class PublishcarController extends ApiYafControllerAbstract
     public function listAction()
     {
 
-
         $this->required_fields = array_merge($this->required_fields, array('session_id'));
 
         $carM = new CarSellingModel();

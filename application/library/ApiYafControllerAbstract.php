@@ -29,10 +29,23 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
         $data = array();
 
+        $jsonFields = array('files_id','files_type');
+
         foreach ($_REQUEST as $key => $value){
 
-            $data[$key] =  $value;
+
+            if(!in_array($key, $jsonFields)){
+
+                $data[$key] = addslashes($value);
+
+            }
+            else{
+
+                $data[$key] = $value;
+            }
+
         }
+
 
         Common::globalLogRecord ( 'remote_ip', $_SERVER['REMOTE_ADDR'] );
         Common::globalLogRecord ( 'request_url', 'http://'. $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] );
@@ -48,7 +61,7 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
             $this->validate_auth ( $data['device_identifier'] );
         }
 
-
+        $pdo = null;
 
 
         return $data;

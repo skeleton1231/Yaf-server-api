@@ -153,6 +153,8 @@ class CarController extends ApiYafControllerAbstract
         $response['car_info'] = $carInfo;
 
 
+        $response['car_users'] = $carModel->getSameBrandUsers();
+
         //同款车
         $response['related_price_car_list'] = $carModel->relatedPriceCars($carId,$carInfo['price']);
 

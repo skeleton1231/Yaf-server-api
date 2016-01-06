@@ -478,6 +478,7 @@ class CarSellingModel extends PdoDb
                 ON t2.user_id = t3.user_id
                 WHERE
                  t1.files <> "" AND t1.car_type != 3 AND t1.hash != "'.$carId.'" AND
+                 t1.brand_id > 0 AND t1.series_id > 0 AND
                 t1.price BETWEEN '.$minPrice.' AND '.$maxPrice.'
 				ORDER BY t1.car_type ASC, t1.price ASC
                 LIMIT 0 , 20
@@ -493,7 +494,7 @@ class CarSellingModel extends PdoDb
             foreach($cars as $k => $car){
 
                 $item = $this->handlerCar($car);
-                $items[$k]['car_info'] = $item;
+                $items[$k] = $item;
             }
         }
 
@@ -516,6 +517,7 @@ class CarSellingModel extends PdoDb
                 WHERE
                 t1.files <> "" AND t1.car_type != 3  AND t1.hash != "'.$carId.'" AND
                 t1.brand_id = '.$brand_id.' AND t1.series_id = '.$series_id.'
+                ORDER BY t1.car_type ASC, t1.price ASC
                 LIMIT 0 , 20
                 ';
 
@@ -528,7 +530,7 @@ class CarSellingModel extends PdoDb
             foreach($cars as $k => $car){
 
                 $item = $this->handlerCar($car);
-                $items[$k]['car_info'] = $item;
+                $items[$k] = $item;
             }
         }
 
