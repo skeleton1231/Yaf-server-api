@@ -9,20 +9,22 @@
 class PostModel extends PdoDb{
 
 
-    static public $table = 'bibi_posts';
-
     public $post_id;
     public $post_content;
     public $user_id;
-    public $comment_num;
-    public $like_num;
-    public $files;
+    public $comment_num=0;
+    public $like_num=0;
+    public $post_files;
+    public $lat=0;
+    public $lng=0;
     public $created;
     public $updated;
 
     public function __construct(){
 
         parent::__construct();
+
+        self::$table = 'bibi_posts';
     }
 
     public function saveProperties(){
@@ -32,7 +34,9 @@ class PostModel extends PdoDb{
         $this->properties['user_id']        = $this->user_id;
         $this->properties['comment_num']    = $this->comment_num;
         $this->properties['like_num']       = $this->like_num;
-        $this->properties['files']          = $this->files;
+        $this->properties['post_files']     = $this->post_files;
+        $this->properties['lat']            = $this->lat;
+        $this->properties['lng']            = $this->lng;
         $this->properties['created']        = $this->created;
         $this->properties['updated']        = $this->updated;
 

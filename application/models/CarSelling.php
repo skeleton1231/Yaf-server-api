@@ -146,8 +146,6 @@ class CarSellingModel extends PdoDb
         unset($car['nickname']);
 
         //print_r($car);exit;
-
-
         $favCarM = new FavoriteCarModel();
         $favCarM->user_id = self::$visit_user_id;
         $favCarM->car_id  = $car['car_id'];
@@ -311,6 +309,7 @@ class CarSellingModel extends PdoDb
             WHERE
                 t2.user_id = '.$userId.' AND t1.car_type = '.PLATFORM_USER_SELLING_CAR.'
         ';
+
 
         $cars = $this->query($sql);
 

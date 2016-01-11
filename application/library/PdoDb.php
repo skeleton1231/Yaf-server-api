@@ -307,5 +307,21 @@ class PdoDb
         $this->updateByPrimaryKey(self::$table, $this->where, $this->properties);
     }
 
+    public function implodeArrayByKey($key, $result,$string=','){
+
+
+        $values = array();
+
+        foreach($result as $k => $rs){
+
+            $values[] = $rs[$key];
+
+        }
+
+        $values = implode($string , $values);
+
+        return $values ? $values : 0;
+    }
+
 
 }

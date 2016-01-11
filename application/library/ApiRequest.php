@@ -25,6 +25,14 @@ class ApiRequest{
 
     public static $publisCarCreate = "/publishcar/create";
 
+    public static $postCreate = '/post/create';
+
+    public static $commentCreate = '/comment/create';
+
+    public static $likeCreate = '/like/create';
+
+
+
     public $url;
     public $curl;
     public $post;
@@ -81,6 +89,11 @@ class ApiRequest{
     public $files_type = '';
 
 
+    public $post_content = '';
+    public $lat = 0.00;
+    public $lng = 0.00;
+
+
 
     public function getAppRegisterUrl(){
 
@@ -109,6 +122,20 @@ class ApiRequest{
 
     }
 
+    public function getPostCreateUrl(){
+
+        return self::$domain . self::$version . self::$postCreate;
+    }
+
+    public function getCommentCreateUrl(){
+
+        return self::$domain . self::$version . self::$commentCreate;
+    }
+
+    public function getLikeCreateUrl(){
+
+        return self::$domain . self::$version . self::$likeCreate;
+    }
 
 
     private function setPostFields($fields){
@@ -470,6 +497,72 @@ class ApiRequest{
 
 
     }
+
+    public function getCarInfo(){
+
+        $rand = rand(0,500);
+
+        $pdo = new PdoDb();
+        $sql = 'SELECT * FROM `bibi_car_selling_list` WHERE `platform_name` = "优信二手车"  LIMIT '.$rand.',  1';
+
+        $car = $pdo->query($sql)[0];
+
+
+        $files = unserialize($car['files']);
+
+        foreach($files as $k => $file){
+            if($k < 9){
+
+                $keys[] = $file['key'];
+                $type[] = 1;
+            }
+
+        }
+
+        $carInfo['keys'] = $keys;
+        $carInfo['type'] = $type;
+
+        return $carInfo;
+    }
+
+
+    public function getUserDs($userId){
+
+        $pdo = new PdoDb();
+        $sql = '
+                SELECT
+                session_id, device_identifier
+                FROM `biib_session`
+                WHERE `user_id` = '.$userId.'
+                ORDER BY created DESC
+                LIMIT 0 , 1
+                ';
+
+        $ds = $pdo->query($sql)[0];
+
+        return $ds;
+
+    }
+
+
+    public function postCreateAction(){
+
+
+        $postFields = array(
+
+            'device_identifier',
+            'session_id',
+            'post_content',
+            'files_id',
+            'files_type',
+            'lat',
+            'lng'
+        );
+
+
+
+    }
+
 
 
 }

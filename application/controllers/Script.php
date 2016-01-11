@@ -89,6 +89,34 @@ class ScriptController extends ApiYafControllerAbstract
 
     }
 
+    public function getCarAction(){
+
+
+        $rand = rand(0,500);
+
+        $pdo = new PdoDb();
+        $sql = 'SELECT * FROM `bibi_car_selling_list` WHERE `platform_name` = "优信二手车"  LIMIT '.$rand.',  1';
+
+        $car = $pdo->query($sql)[0];
+
+
+        $files = unserialize($car['files']);
+
+        foreach($files as $k => $file){
+            if($k < 9){
+
+                $keys[] = $file['key'];
+                $type[] = 1;
+            }
+
+        }
+
+        echo json_encode($keys);
+        echo "<br />";
+        echo json_encode($type);
+        echo "<br />";
+    }
+
 
 
 
