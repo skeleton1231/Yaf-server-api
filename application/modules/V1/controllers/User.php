@@ -16,11 +16,6 @@ class UserController extends ApiYafControllerAbstract
 
         $data = $this->get_request_data();
 
-//        if ($data['code'] != RedisDb::getValue('code_' . $data['device_identifier'] . '')) {
-//
-//            $this->send_error(USER_CODE_ERROR);
-//
-//        }
 
         unset($data['code']);
 
@@ -45,6 +40,7 @@ class UserController extends ApiYafControllerAbstract
             $this->send_error(USER_NICKNAME_FORMAT_ERROR);
 
         }
+
 
         unset($data['nickname']);
 
@@ -78,6 +74,7 @@ class UserController extends ApiYafControllerAbstract
         $profileInfo['user_id'] = $userId;
         $profileInfo['user_no'] = $name;
         $profileInfo['nickname'] = $nickname;
+        $profileInfo['avatar']   = AVATAR_DEFAULT;
 
         $response = array();
 
@@ -354,8 +351,73 @@ class UserController extends ApiYafControllerAbstract
         $userInfo['profile'] = $profile;
 
         $response['user_info'] = $userInfo;
+
+        $car = new CarSellingModel();
+
+        $response['car_info'] = $car->getUserCar($userId);
+
+        $friendShipM = new FriendShipModel();
+
+        $friendShipM->currentUser = $userId;
+
+        $response['friend_num'] = $friendShipM->friendNumCnt();
+
+        $response['fans_num']   = $friendShipM->fansNumCnt();
+
         $this->send($response);
 
     }
+
+    public function homepageAction(){
+
+        $this->required_fields = array_merge($this->required_fields, array('session_id'));
+        $data = $this->get_request_data();
+
+        $userId = $this->userAuth($data);
+
+
+
+        $otherId = $this->getAccessId($data, $userId);
+
+        $userM = new UserModel();
+        $userInfo = $userM->getInfoById($otherId);
+
+        $profileM = new ProfileModel();
+        $profile = $profileM->getProfile($otherId);
+
+        $userInfo['profile'] = $profile;
+
+        $response['user_info'] = $userInfo;
+
+//        $car = new CarSellingModel();
+//
+//        $response['car_info'] = $car->getUserCar($otherId);
+
+        $friendShipM = new FriendShipModel();
+
+        $friendShipM->currentUser = $otherId;
+
+        $response['friend_num'] = $friendShipM->friendNumCnt();
+
+        $response['fans_num']   = $friendShipM->fansNumCnt();
+
+        $friendShip = $friendShipM->getMyFriendShip($userId, $otherId);
+
+        $response['is_friend'] = isset($friendShip['friendship_id']) ? 1 : 2;
+
+//        $publishCar = $car->getUserPublishCar($otherId);
+//
+//        foreach($publishCar['car_list'] as $k => $car){
+//
+//            $response['publish_car_list'][] = $car['car_info'];
+//        }
+
+       // $response['publish_car_list'] = $publishCar['car_list'];
+
+        $this->send($response);
+
+
+    }
+
 
 }

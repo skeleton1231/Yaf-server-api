@@ -56,7 +56,6 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
         }
 
 
-
         if(isset($data['device_identifier'])){
             $this->validate_auth ( $data['device_identifier'] );
         }
@@ -122,7 +121,6 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
         foreach ( $fields as $field ) {
             if (! isset ( $data [$field] )) {
-
                 $this->send_error ( NOT_ENOUGH_ARGS );
             }
         }
@@ -136,7 +134,6 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
         header('Content-type: application/json');
         $response = Common::getSuccessRes($data,$type='');
-
 
         echo $response;
     }
@@ -166,6 +163,20 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
         }
 
         return $result;
+    }
+
+    public function getAccessId($data, $userId){
+
+        $objId = @$data['user_id'];
+
+        if($objId){
+
+            return $objId;
+        }
+        else{
+
+            return $userId;
+        }
     }
 
 } 

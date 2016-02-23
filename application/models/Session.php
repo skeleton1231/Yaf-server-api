@@ -49,7 +49,13 @@ class SessionModel extends PdoDb{
     public function Get($data){
 
         $device_identifier = $data['device_identifier'];
-        $session_id = $data['session_id'];
+        $session_id = @$data['session_id'];
+
+        if(!$session_id){
+
+            return 0;
+        }
+
         $keyToUser = $device_identifier.'_'. $session_id;
         $user_id = RedisDb::getValue($keyToUser);
 
@@ -60,7 +66,7 @@ class SessionModel extends PdoDb{
             $sql = "SELECT `user_id` FROM `{$table}` WHERE `session_id` = :session_id AND `device_identifier` = :device_identifier ";
             $param = array(':session_id'=>$session_id, ':device_identifier'=>$device_identifier);
             $info = $this->query($sql,$param);
-            $user_id = $info[0]['user_id'];
+            $user_id = @$info[0]['user_id'];
 
             RedisDb::setValue($keyToUser, $user_id);
 

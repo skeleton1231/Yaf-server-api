@@ -36,7 +36,7 @@ class UserModel extends PdoDb {
 
     public function getAllInfoById($userId){
 
-        $sql = 'SELECT * FROM '.self::$table.' WHERE `user_id` = :user_id';
+        $sql = 'SELECT * FROM bibi_user WHERE `user_id` = :user_id';
         $param = array(':user_id'=>$userId);
         $info = $this->query($sql,$param);
 
@@ -107,6 +107,27 @@ class UserModel extends PdoDb {
 
         return $userInfo;
 
+    }
+
+    public function updateGeoById($userId, $lat , $lng){
+
+        $geohashM = new GeoHash();
+        $geohash = $geohashM->encode($lat, $lng);
+
+        $sql = '
+            UPDATE
+            `bibi_user`
+            SET
+            `lat` = '.$lat.',
+            `lng` = '.$lng.',
+            `geohash` = "'.$geohash.'"
+            WHERE
+            `user_id` = '.$userId.'
+        ';
+
+        $this->exec($sql);
+
+        return $geohash;
     }
 
 

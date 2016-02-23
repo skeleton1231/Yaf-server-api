@@ -75,17 +75,25 @@ class FavoritecarController extends ApiYafControllerAbstract{
     public function deleteAction(){
 
 
-        $this->required_fields = array_merge($this->required_fields,array('session_id','favorite_id','car_id'));
+        $this->required_fields = array_merge($this->required_fields,array('session_id', 'car_id'));
 
         $data = $this->get_request_data();
 
         $userId = $this->userAuth($data);
 
         $favCarM = new FavoriteCarModel();
-        $favCarM->favorite_id = $data['favorite_id'];
+
         $favCarM->car_id      = $data['car_id'];
         $favCarM->user_id     = $userId;
+
+        $key = 'favorite_'.$favCarM->user_id.'_'.$favCarM->car_id.'';
+
+
+        $favId = RedisDb::getValue($key);
+        $favCarM->favorite_id = $favId;
         $favCarM->delete();
+
+        RedisDb::delValue($key);
 
         $response = array();
 

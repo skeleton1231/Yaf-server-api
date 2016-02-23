@@ -29,11 +29,13 @@ class PdoDb
 
     public $order = " ORDER BY ";
 
-    public $page = 0;
+    public $page = 1;
 
     public $keyword = '';
 
     public $condition = '';
+
+    public $currentUser = 0;
     /**
      * @param bool   $debug    是否开启调试，错误信息输出
      * @param string $database 数据库类别
@@ -62,7 +64,7 @@ class PdoDb
                 self::$pdo = new PDO(self::$dns, self::$username, self::$password);
                 self::$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 self::$pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
-                self::$pdo->query('set names utf8');
+                self::$pdo->query('set names utf8mb4');
             }
             catch(PDOException $e)
             {

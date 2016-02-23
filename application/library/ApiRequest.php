@@ -11,7 +11,7 @@ class ApiRequest{
 
     public static $version = '/v1';
 
-    public static $domain = 'http://120.25.62.110';
+    public static $domain = 'http://127.0.0.1';
 
     public static $appRegisterUrl = "/app/register";
 
@@ -89,9 +89,15 @@ class ApiRequest{
     public $files_type = '';
 
 
+    public $feed_id;
     public $post_content = '';
     public $lat = 0.00;
     public $lng = 0.00;
+
+    public $content;
+    public $reply_id;
+    public $from_id;
+    public $to_id;
 
 
 
@@ -205,18 +211,18 @@ class ApiRequest{
         $curl = $this->getCurlInstance();
 
         $this->setPostFields($postFields);
-
-
-//        print_r($this->url);
-//        echo "<br />";
+//
+//        echo $this->url;
+//
+//        echo "\n";
+//
 //
 //        print_r($this->post);
-//        echo "<br />";
 //
+//        echo "\n";
 //
 //        exit;
-
-
+//
         $response = $curl->post($this->url,$this->post);
 
         return $response->data;
@@ -519,8 +525,8 @@ class ApiRequest{
 
         }
 
-        $carInfo['keys'] = $keys;
-        $carInfo['type'] = $type;
+        $carInfo['keys'] = json_encode($keys);
+        $carInfo['type'] = json_encode($type);
 
         return $carInfo;
     }
@@ -532,7 +538,7 @@ class ApiRequest{
         $sql = '
                 SELECT
                 session_id, device_identifier
-                FROM `biib_session`
+                FROM `bibi_session`
                 WHERE `user_id` = '.$userId.'
                 ORDER BY created DESC
                 LIMIT 0 , 1
@@ -547,7 +553,6 @@ class ApiRequest{
 
     public function postCreateAction(){
 
-
         $postFields = array(
 
             'device_identifier',
@@ -560,9 +565,87 @@ class ApiRequest{
         );
 
 
+        $userId = 1;
+
+        $car = $this->getCarInfo();
+
+        $faker = $this->getFakerInstance();
+
+        $userInfo = $this->getUserDs($userId);
+
+        $this->device_identifier = $userInfo['device_identifier'];
+        $this->session_id = $userInfo['session_id'];
+        $this->post_content = $faker->realText(140);
+        $this->files_id = $car['keys'];
+        $this->files_type = $car['type'];
+
+        $this->url  = $this->getPostCreateUrl();
+
+        $response = $this->request($postFields);
+
+
+        return $response;
 
     }
 
+
+    public function commentCreateAction($feedId, $fromId , $toId, $replyId = 0){
+
+        $postFields = array(
+
+            'device_identifier',
+            'session_id',
+            'content',
+            'to_id',
+            'feed_id',
+            'reply_id'
+        );
+
+
+        $fromUserInfo = $this->getUserDs($fromId);
+
+        $faker = $this->getFakerInstance();
+
+
+        $this->device_identifier = $fromUserInfo['device_identifier'];
+        $this->session_id        = $fromUserInfo['session_id'];
+        $this->content           = $faker->realText(20);
+        $this->to_id             = $toId;
+        $this->feed_id           = $feedId;
+        $this->reply_id          = $replyId;
+
+
+        $this->url  = $this->getCommentCreateUrl();
+
+        Common::globalLogRecord('postFields:reply_id' , $this->reply_id);
+
+        $response = $this->request($postFields);
+
+        return $response->comment_id;
+
+    }
+
+
+    public function likeCreateAction($feedId,$userId){
+
+        $postFields = array(
+
+            'device_identifier',
+            'session_id',
+            'feed_id'
+        );
+
+        $likeUserInfo = $this->getUserDs($userId);
+
+        $this->device_identifier = $likeUserInfo['device_identifier'];
+        $this->session_id        = $likeUserInfo['session_id'];
+        $this->feed_id           = $feedId;
+
+        $this->url = $this->getLikeCreateUrl();
+
+        $this->request($postFields);
+
+    }
 
 
 }

@@ -128,7 +128,7 @@ class CarController extends ApiYafControllerAbstract
         $data = $this->get_request_data();
 
         //$userId = $this->userAuth($data);
-        if(isset($data['session_id'])){
+        if(@$data['session_id']){
 
             $sess = new SessionModel();
             $userId = $sess->Get($data);
@@ -248,15 +248,8 @@ class CarController extends ApiYafControllerAbstract
 
         $carM->page = $data['page'];
 
-        if(isset($data['session_id'])){
-
-            $sess = new SessionModel();
-            $userId = $sess->Get($data);
-        }
-        else{
-
-            $userId = 0;
-        }
+        $sess = new SessionModel();
+        $userId = $sess->Get($data);
 
 
         $carM::$visit_user_id = $userId;
@@ -283,6 +276,24 @@ class CarController extends ApiYafControllerAbstract
 
         $this->send($response);
 
+    }
+
+
+    public function userfavoriteAction(){
+
+        $this->required_fields = array_merge($this->required_fields, array('session_id'));
+
+        $data = $this->get_request_data();
+
+        $userId = $this->userAuth($data);
+
+        $objId = $this->getAccessId($data, $userId);
+
+        $car = new CarSellingModel();
+
+        $response = $car->getUserCar($objId);
+
+        $this->send($response);
     }
 
 

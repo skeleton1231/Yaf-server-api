@@ -236,9 +236,11 @@ class PublishcarController extends ApiYafControllerAbstract
 
         $userId = $this->userAuth($data);
 
-        $carM::$visit_user_id = $userId;
+        $objId = $this->getAccessId($data, $userId);
 
-        $list = $carM->getUserPublishCar($userId);
+        $carM::$visit_user_id = $objId;
+
+        $list = $carM->getUserPublishCar($objId);
 
         $response = $list;
 

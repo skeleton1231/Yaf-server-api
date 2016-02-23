@@ -56,6 +56,7 @@ class FeedModel extends PdoDb
     public function getFeeds($feedId = 0, $type = 0, $page = 1)
     {
 
+        $action = 'list';
 
         $sql = '
                  SELECT
@@ -88,7 +89,10 @@ class FeedModel extends PdoDb
 
         if ($feedId) {
 
-            $sql .= ' WHERE t1.feed_id = ' . $feedId . ' ';
+            $sql .= ' WHERE t1.feed_id = ' . $feedId . ' '; //ORDER BY t3.comment_id DESC
+
+            $action = 'detail';
+
         } else {
 
             $pageSize = 10;
@@ -97,6 +101,8 @@ class FeedModel extends PdoDb
 
             switch ($type) {
 
+                //like_num DESC, comment_num DESC, feed_id DESC
+
                 case 1:
                     //热门消息
                     $sqlHot = '
@@ -104,35 +110,182 @@ class FeedModel extends PdoDb
                         t1.feed_id
                         FROM
                         `bibi_feeds` AS t1
-                        ORDER BY like_num DESC, comment_num DESC
+                        ORDER BY
+                        like_num DESC, comment_num DESC, feed_id DESC
                         LIMIT ' . $number . ' , ' . $pageSize . '
                     ';
+
 
                     $sqlHotCnt = '
                         SELECT
                         COUNT(t1.feed_id) AS total
                         FROM
                         `bibi_feeds` AS t1
-                        ORDER BY like_num DESC, comment_num DESC
+                        ORDER BY
+                        like_num DESC, comment_num DESC, feed_id DESC
                     ';
+
 
                     $total = $this->query($sqlHotCnt)[0]['total'];
 
                     $result = @$this->query($sqlHot);
                     $result = $this->implodeArrayByKey('feed_id', $result);
 
-                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ';
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') '; //ORDER BY t3.comment_id DESC
 
                     break;
+
+                case 3:
+                    //最新消息
+                    $sqlLatest = '
+                        SELECT
+                        t1.feed_id
+                        FROM
+                        `bibi_feeds` AS t1
+                        ORDER BY created DESC
+                        LIMIT ' . $number . ' , ' . $pageSize . '
+                    ';
+
+
+
+                    $sqlLatestCnt = '
+                        SELECT
+                        COUNT(t1.feed_id) AS total
+                        FROM
+                        `bibi_feeds` AS t1
+                        ORDER BY created  DESC
+                    ';
+
+                    $total = $this->query($sqlLatestCnt)[0]['total'];
+
+                    $result = @$this->query($sqlLatest);
+                    $result = $this->implodeArrayByKey('feed_id', $result);
+
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ORDER BY `feed_id` DESC ';
+
+                    break;
+
                 case 2:
                     //关注
-                    break;
-                case 3:
-                    //附近
-                    break;
-                case 4:
-                    //我发布的朋友圈
+                    $sqlFriend = '
+                        SELECT
+                        t1.feed_id
+                        FROM
+                        `bibi_feeds` AS t1
+                        LEFT JOIN
+                        `bibi_friendship` AS t2
+                        ON
+                        t1.user_id = t2.friend_id
+                        LEFT_JOIN
+                        `bibi_user_profile` AS t3
+                        ON
+                        t1.user_id = t3.user_id
+                        WHERE
+                        t2.user_id = '.$this->currentUser.'
+                        LIMIT ' . $number . ' , ' . $pageSize . '
+                    ';
 
+                    $sqlFriendCnt = '
+                        SELECT
+                        COUNT(t1.feed_id) AS total
+                        FROM
+                        `bibi_feeds` AS t1
+                        LEFT JOIN
+                        `bibi_friendship` AS t2
+                        ON
+                        t1.user_id = t2.friend_id
+                        LEFT JOIN
+                        `bibi_user_profile` AS t3
+                        ON
+                        t1.user_id = t3.user_id
+                        WHERE
+                        t2.user_id = '.$this->currentUser.'
+                    ';
+
+
+                    $total = $this->query($sqlFriendCnt)[0]['total'];
+
+                    $result = @$this->query($sqlFriend);
+                    $result = $this->implodeArrayByKey('feed_id', $result);
+
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ')  ORDER BY `feed_id` DESC ';
+
+                    break;
+
+
+                case 6:
+
+                    $userM = new UserModel();
+                    $info = $userM->getAllInfoById($this->currentUser);
+                    $geohash = $info['geohash'];
+                    $geohash = substr($geohash, 0, 5);
+
+                    //附近
+                    $sqlNearBy = '
+                        SELECT
+                        t1.feed_id
+                        FROM
+                        `bibi_feeds` AS t1
+                        LEFT JOIN
+                        `bibi_users` AS t2
+                        ON
+                        t1.user_id = t2.user_id
+                        WHERE
+                        t2.geohash LIKE "'.$geohash.'%"
+                    ';
+
+                    $sqlNearByCnt = '
+                        SELECT
+                        COUNT(t1.feed_id) AS total
+                        FROM
+                        `bibi_feeds` AS t1
+                        LEFT JOIN
+                        `bibi_users` AS t2
+                        ON
+                        t1.user_id = t2.user_id
+                        WHERE
+                        t2.geohash LIKE "'.$geohash.'%"
+                    ';
+
+                    $total = $this->query($sqlNearByCnt)[0]['total'];
+
+                    $result = @$this->query($sqlNearBy);
+                    $result = $this->implodeArrayByKey('feed_id', $result);
+
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ';
+
+
+                    break;
+
+
+                case 5:
+                    //用户发布的朋友圈
+                    $sqlMine = '
+                        SELECT
+                        t1.feed_id
+                        FROM
+                        `bibi_feeds` AS t1
+                        WHERE t1.user_id = '.$this->currentUser.'
+                        ORDER BY created DESC
+                        LIMIT ' . $number . ' , ' . $pageSize . '
+                    ';
+
+
+                    $sqlMineCnt = '
+                        SELECT
+                        COUNT(t1.feed_id) AS total
+                        FROM
+                        `bibi_feeds` AS t1
+                        WHERE t1.user_id = '.$this->currentUser.'
+                        ORDER BY created  DESC
+                    ';
+
+                    $total = $this->query($sqlMineCnt)[0]['total'];
+
+                    $result = @$this->query($sqlMine);
+                    $result = $this->implodeArrayByKey('feed_id', $result);
+
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ';
 
                     break;
             }
@@ -143,8 +296,7 @@ class FeedModel extends PdoDb
 
         $feeds = $this->query($sql);
 
-
-        $feeds = $this->handleFeed($feeds);
+        $feeds = $this->handleFeed($feeds,$action);
 
 
         if(!$feedId){
@@ -166,7 +318,7 @@ class FeedModel extends PdoDb
 
     }
 
-    public function handleFeed($feeds)
+    public function handleFeed($feeds, $action='list')
     {
 
         $items = array();
@@ -239,7 +391,7 @@ class FeedModel extends PdoDb
 
             if ($like && !in_array($like['like_id'], $likeIds)) {
 
-                $items[$feed['feed_id']]['like_list'][] = $like;
+                $items[$feed['feed_id']]['like_list'][] = $like['user_info'];
                 $likeIds[] = $like['like_id'];
             }
 
@@ -253,19 +405,25 @@ class FeedModel extends PdoDb
             $item['car_info'] = $this->getFeedRelateCar($item);
 
             $commentTotal = count($item['comment_list']);
+
             $commentList = array();
-            foreach ($item['comment_list'] as $k => $cl) {
 
-                if ($k < 10) {
+            if($action=='list'){
 
-                    $commentList[] = $cl;
-                } else {
+                foreach ($item['comment_list'] as $k => $cl) {
 
-                    break;
+                    if ($k < 10) {
+
+                        $commentList[] = $cl;
+                    } else {
+
+                       break;
+                    }
                 }
+
+                $item['comment_list'] = $commentList;
             }
 
-            $item['comment_list'] = $commentList;
 
             $item['comment_num'] = $commentTotal;
 
@@ -287,6 +445,10 @@ class FeedModel extends PdoDb
 
             $item['like_num'] = $likeTotal;
 
+            $isLike = RedisDb::getValue('like_'.$item['feed_id'].'_'.$this->currentUser.'');
+
+            $item['is_like']  = $isLike ? $isLike : 2;
+
 
             $list[] = $item;
         }
@@ -301,8 +463,16 @@ class FeedModel extends PdoDb
         if ($feed['comment_id']) {
 
             $comment['comment_id'] = $feed['comment_id'];
+            $comment['feed_id']    = $feed['feed_id'];
+
             $comment['content'] = $feed['comment_content'];
-            $comment['reply_id'] = $feed['comment_reply_id'];
+
+            $comment['reply_id'] = 0;
+
+            if($feed['comment_reply_id']) {
+                $comment['reply_id'] = $feed['comment_reply_id'];
+            }
+
             $comment['created'] = $feed['comment_created'];
 
             $comment['from_user_info'] = array();
@@ -310,10 +480,19 @@ class FeedModel extends PdoDb
             $comment['from_user_info']['profile']['avatar'] = $feed['comment_from_avatar'];
             $comment['from_user_info']['profile']['nickname'] = $feed['comment_from_nickname'];
 
-            $comment['to_user_info'] = array();
-            $comment['to_user_info']['user_id'] = $feed['comment_to_user_id'];
-            $comment['to_user_info']['profile']['avatar'] = $feed['comment_to_avatar'];
-            $comment['to_user_info']['profile']['nickname'] = $feed['comment_to_nickname'];
+
+            if($comment['reply_id']){
+
+                $comment['to_user_info'] = array();
+                $comment['to_user_info']['user_id'] = $feed['comment_to_user_id'];
+                $comment['to_user_info']['profile']['avatar'] = $feed['comment_to_avatar'];
+                $comment['to_user_info']['profile']['nickname'] = $feed['comment_to_nickname'];
+            }
+            else{
+
+                $comment['to_user_info'] = new stdClass();
+            }
+
 
             return $comment;
 
@@ -330,9 +509,9 @@ class FeedModel extends PdoDb
 
             $like = array();
             $like['like_id'] = $feed['like_id'];
-            $like['user_id'] = $feed['like_user_id'];
-            $like['profile']['avatar'] = $feed['like_avatar'];
-            $like['profile']['nickname'] = $feed['like_nickname'];
+            $like['user_info']['user_id'] = $feed['like_user_id'];
+            $like['user_info']['profile']['avatar'] = $feed['like_avatar'];
+            $like['user_info']['profile']['nickname'] = $feed['like_nickname'];
 
             return $like;
 
@@ -357,11 +536,11 @@ class FeedModel extends PdoDb
 
         if ($cars) {
 
-            $num = count($cars['car_list']);
+//            $num = count($cars['car_list']);
+//
+//            $rand = rand(0, $num - 1);
 
-            $rand = rand(0, $num - 1);
-
-            return $cars['car_list'][$rand]['car_info'];
+            return @$cars['car_list'][0]['car_info'];
         } else {
 
             return new \stdClass();
@@ -389,6 +568,49 @@ class FeedModel extends PdoDb
         return serialize($files);
 
     }
+
+    public function updateCommentNum($feedId){
+
+        $sql = '
+            UPDATE
+            `bibi_feeds`
+            SET
+            comment_num = comment_num + 1
+            WHERE
+            `feed_id` = '.$feedId.'
+            ;
+        ';
+
+        $this->exec($sql);
+
+    }
+
+
+    public function updateLikeNum($feedId){
+
+        $sql = '
+            UPDATE
+            `bibi_feeds`
+            SET
+            like_num = like_num + 1
+            WHERE
+            `feed_id` = '.$feedId.'
+            ;
+        ';
+
+        $this->exec($sql);
+
+    }
+
+    public function deleteFeed($feedId){
+
+        $sql = ' DELETE FROM `bibi_feeds` WHERE `feed_id` = '.$feedId.' AND `user_id` = '.$this->currentUser.' ';
+
+        echo $sql;exit;
+
+        $this->execute($sql);
+    }
+
 
 
 }

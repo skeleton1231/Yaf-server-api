@@ -27,13 +27,9 @@ $curl->setHeader('Content-Type', 'application/x-www-form-urlencoded');
 $curl->setHeader('Cookie','sto-id-20480=IJGEBAKMFAAA; uid=rBBkiVY4LoNQZB2OGq+aAg==');
 
 
-
-
-
 while($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 
     $brandId = $row['brand_id'];
-
 
     $url = 'http://api.xin.com/serie/view/';
 

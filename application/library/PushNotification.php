@@ -9,7 +9,7 @@
 /*
  * 推送类,包括推送具体实现的方法,包括ios以及android
  */
-class Notification {
+class PushNotification {
 
     // For mac.
     private $_macApnsHost = 'gateway.sandbox.push.apple.com'; // Url of live server: gateway.push.apple.com,sandbox: gateway.sandbox.push.apple.com

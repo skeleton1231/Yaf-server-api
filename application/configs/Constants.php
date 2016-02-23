@@ -71,9 +71,13 @@ define('CAR_EXCHANGE_TIME_ERROR', 60023);
 define('FAVORITE_FAIL', 61000);
 define('FAVORITE_CAR_ALREADY', 61001);
 
+//feed
+define('POST_IMAGE_ERROR', 62001);
+define('COMMENT_USER_ERROR',66001);
 
 //qiniu
 define('QINIU_UPLOAD_ERROR' , 70001);
+
 
 
 //item
@@ -106,6 +110,8 @@ define('QI_NIU_AK','b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI');
 define('QI_NIU_SK','5RgnuN64dSEJoitJwUvMkMGypaifc9PqSOvjYd2f');
 
 define('IMAGE_DOMAIN' , 'http://7xopqk.com1.z0.glb.clouddn.com/');
+
+define('AVATAR_DEFAULT', 'http://7xopqk.com1.z0.glb.clouddn.com/avatar_default.jpg');
 
 
 define("ORDER_BY_DEFAULT", 0);

@@ -39,10 +39,11 @@ class CommentModel extends PdoDb {
         $this->properties['created']    = $this->created;
     }
 
-    public function getComment($commentId=0, $feedId=0, $page=1){
+    public function getComment($commentId=0, $feedId=0, $page=1,$userId = 0){
 
         $sql = '
             SELECT
+            t1.feed_id,
             t1.comment_id,t1.content as comment_content,t1.created as comment_created,t1.reply_id as comment_reply_id,
             t2.user_id AS comment_from_user_id, t2.avatar AS comment_from_avatar, t2.nickname AS comment_from_nickname,
             t3.user_id AS comment_to_user_id, t3.avatar AS comment_to_avatar, t3.nickname AS comment_to_nickname
@@ -56,16 +57,55 @@ class CommentModel extends PdoDb {
             `bibi_user_profile` AS t3
             ON
             t1.to_id = t3.user_id
+            LEFT JOIN
+            `bibi_feeds` AS t4
+            ON
+            t1.feed_id = t4.feed_id
             WHERE
-            `feed_id` = '.$feedId.'
         ';
 
-        if($commentId){
+        $sqlCnt = '
+             SELECT
+            COUNT(t1.comment_id) AS total
+            FROM
+            `bibi_comments` AS t1
+            LEFT JOIN
+            `bibi_user_profile` AS t2
+            ON
+            t1.from_id = t2.user_id
+            LEFT JOIN
+            `bibi_user_profile` AS t3
+            ON
+            t1.to_id = t3.user_id
+            LEFT JOIN
+            `bibi_feeds` AS t4
+            ON
+            t1.feed_id = t4.feed_id
+            WHERE
 
-            $sql .= ' AND t1.comment_id = '.$commentId.' ';
+        ';
+
+        if($commentId && $feedId){
+
+            $sql .= ' t1.feed_id = '.$feedId.' AND t1.comment_id = '.$commentId.' ';
         }
-        else{
+        elseif($userId){
 
+            $sql .= ' t1.to_id = '.$userId.' AND t1.from_id != t1.to_id ';
+
+            $sqlCnt .= ' t1.to_id = '.$userId.' AND t1.from_id != t1.to_id ';
+
+            $total = $this->query($sqlCnt)[0]['total'];
+
+            $pageSize = 10;
+            $number = ($page - 1) * $pageSize;
+
+            $sql .= '  LIMIT ' . $number . ' , ' . $pageSize . ' ';
+
+        }
+        elseif($feedId){
+
+            $sql .= ' t1.feed_id = '.$feedId.' ';
             $pageSize = 10;
             $number = ($page - 1) * $pageSize;
 
@@ -127,5 +167,21 @@ class CommentModel extends PdoDb {
         }
 
         return $items;
+    }
+
+
+    public function deleteComment(){
+
+        $sql = '
+                DELETE FROM `bibi_comments`
+                WHERE
+                `comment_id` = '.$this->comment_id.'
+                AND
+                `from_id` = '.$this->currentUser.'
+                AND
+                `feed_id` = '.$this->feed_id.'
+                ';
+
+        $this->execute($sql);
     }
 }

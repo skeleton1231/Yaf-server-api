@@ -310,7 +310,6 @@ class CarSellingModel extends PdoDb
                 t2.user_id = '.$userId.' AND t1.car_type = '.PLATFORM_USER_SELLING_CAR.'
         ';
 
-
         $cars = $this->query($sql);
 
 
@@ -537,6 +536,29 @@ class CarSellingModel extends PdoDb
         return $items;
 
     }
+
+
+    public function getUserCar($userId){
+
+        $sql = ' SELECT `hash` AS car_id FROM `bibi_car_selling_list` WHERE `user_id` = '.$userId.' AND `car_type` = 3 ' ;
+
+
+        $carId = @$this->query($sql)[0]['car_id'];
+
+        if($carId){
+
+            $carInfo = $this->GetCarInfoById($carId);
+        }
+        else{
+
+            $carInfo = new stdClass();
+        }
+
+        return $carInfo;
+
+    }
+
+
 
 
 
