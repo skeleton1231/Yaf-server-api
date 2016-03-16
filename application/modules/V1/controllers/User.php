@@ -265,6 +265,8 @@ class UserController extends ApiYafControllerAbstract
                 continue;
             }
 
+
+
             switch ($k) {
 
                 case 'birth':
@@ -275,7 +277,6 @@ class UserController extends ApiYafControllerAbstract
                         $date = explode('-', $birth);
 
                         if (is_array($date)) {
-
 
                             list($year, $month, $day) = $date;
 
@@ -295,9 +296,12 @@ class UserController extends ApiYafControllerAbstract
 
                 case 'avatar':
 
-                    $file = new FileModel();
-                    $fileUrl = $file->Get($data['avatar']);
-                    $update['avatar'] = $fileUrl;
+                    if($data['avatar']){
+
+                        $file = new FileModel();
+                        $fileUrl = $file->Get($data['avatar']);
+                        $update['avatar'] = $fileUrl;
+                    }
 
                     break;
 
@@ -305,13 +309,31 @@ class UserController extends ApiYafControllerAbstract
                     $update['gender'] = $data['gender'] ? $data['gender'] : 0;
                     break;
 
+                case 'nickname':
 
-                default:
+                    if($data['nickname']){
 
-                    $update[$k] = $data[$k];
+                        $update['nickname'] = $data['nickname'];
 
+                    }
 
                     break;
+
+                case 'signature':
+
+                    if($data['signature']){
+
+                        $update['signature'] = $data['signature'];
+
+                    }
+
+                    break;
+//
+//                default:
+//
+//                    $update[$k] = $data[$k];
+//
+//                    break;
 
 
             }
@@ -375,8 +397,6 @@ class UserController extends ApiYafControllerAbstract
 
         $userId = $this->userAuth($data);
 
-
-
         $otherId = $this->getAccessId($data, $userId);
 
         $userM = new UserModel();
@@ -389,9 +409,9 @@ class UserController extends ApiYafControllerAbstract
 
         $response['user_info'] = $userInfo;
 
-//        $car = new CarSellingModel();
-//
-//        $response['car_info'] = $car->getUserCar($otherId);
+        $car = new CarSellingModel();
+
+        $response['car_info'] = $car->getUserCar($otherId);
 
         $friendShipM = new FriendShipModel();
 
@@ -403,7 +423,7 @@ class UserController extends ApiYafControllerAbstract
 
         $friendShip = $friendShipM->getMyFriendShip($userId, $otherId);
 
-        $response['is_friend'] = isset($friendShip['friendship_id']) ? 1 : 2;
+        $response['is_friend'] = isset($friendShip['user_id']) ? 1 : 2;
 
 //        $publishCar = $car->getUserPublishCar($otherId);
 //

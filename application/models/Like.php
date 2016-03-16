@@ -151,12 +151,12 @@ class LikeModel extends PdoDb {
 
 //            $friendShipM = new FriendShipModel();
 //
-//            foreach($likes as $like){
-//
-//              $like['is_friend'] = $friendShipM->isFriend($this->currentUser , $like['user_info']['user_id']);
-//            }
+            foreach($likes as $like){
 
-            $list['like_list'] = $likes['user_info'];
+                $item[] = $like['user_info'];
+            }
+
+            $list['like_list'] = $item;
             $list['has_more'] = (($number + $count) < $total) ? 1 : 2;
             $list['total'] = $total;
 

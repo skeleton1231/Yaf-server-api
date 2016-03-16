@@ -37,8 +37,6 @@ class FriendshipController extends ApiYafControllerAbstract {
 
         $friendShip = $friendShipM->getMyFriendShip($userId, $data['user_id']);
 
-
-
         $this->send($friendShip);
 
     }
@@ -57,7 +55,7 @@ class FriendshipController extends ApiYafControllerAbstract {
 
         $friendShipM->deleteFriendShip($friendShip['friendship_id']);
 
-        $this->send();
+        $this->send($friendShipM);
 
 
     }
@@ -91,7 +89,7 @@ class FriendshipController extends ApiYafControllerAbstract {
 
         }
 
-        $response['friendship_list'] = $friendShips;
+        $response = $friendShips;
 
         $this->send($response);
 

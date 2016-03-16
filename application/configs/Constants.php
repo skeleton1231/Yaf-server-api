@@ -104,8 +104,6 @@ define('CAR_AUTH' , 11);
 define('CAR_NOT_AUTH' , 12);
 
 
-
-
 define('QI_NIU_AK','b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI');
 define('QI_NIU_SK','5RgnuN64dSEJoitJwUvMkMGypaifc9PqSOvjYd2f');
 
@@ -119,6 +117,7 @@ define('ORDER_BY_PRICE_ASC', 1);
 define("ORDER_BY_PRICE_DESC", 2);
 define("ORDER_BY_BOARD_TIME_ASC", 3);
 define("ORDER_BY_MILEAGE_ASC",4);
+
 
 
 

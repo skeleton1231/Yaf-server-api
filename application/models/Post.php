@@ -40,7 +40,6 @@ class PostModel extends PdoDb{
         $this->properties['created']        = $this->created;
         $this->properties['updated']        = $this->updated;
 
-
     }
 
 

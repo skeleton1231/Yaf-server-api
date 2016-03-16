@@ -94,6 +94,15 @@ class PostController extends ApiYafControllerAbstract {
 
         $response = $feedM->getFeeds(0,$data['post_type'],$data['page']);
 
+        if($response['feed_list']){
+
+            foreach($response['feed_list'] as $key => $list){
+
+                $response['feed_list'][$key]['post_files'] = array();
+                $response['feed_list'][$key]['post_files'][] = $list['post_files'][0];
+            }
+        }
+
         $this->send($response);
 
 

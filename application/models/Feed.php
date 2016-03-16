@@ -87,6 +87,7 @@ class FeedModel extends PdoDb
                  ON t6.user_id = t7.user_id
                 ';
 
+
         if ($feedId) {
 
             $sql .= ' WHERE t1.feed_id = ' . $feedId . ' '; //ORDER BY t3.comment_id DESC
@@ -176,7 +177,7 @@ class FeedModel extends PdoDb
                         `bibi_friendship` AS t2
                         ON
                         t1.user_id = t2.friend_id
-                        LEFT_JOIN
+                        LEFT JOIN
                         `bibi_user_profile` AS t3
                         ON
                         t1.user_id = t3.user_id
@@ -202,13 +203,13 @@ class FeedModel extends PdoDb
                         t2.user_id = '.$this->currentUser.'
                     ';
 
-
                     $total = $this->query($sqlFriendCnt)[0]['total'];
 
                     $result = @$this->query($sqlFriend);
                     $result = $this->implodeArrayByKey('feed_id', $result);
 
                     $sql .= ' WHERE t1.feed_id in (' . $result . ')  ORDER BY `feed_id` DESC ';
+
 
                     break;
 
@@ -292,7 +293,6 @@ class FeedModel extends PdoDb
 
 
         }
-
 
         $feeds = $this->query($sql);
 

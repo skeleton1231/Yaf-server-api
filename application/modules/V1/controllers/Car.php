@@ -19,7 +19,7 @@ class CarController extends ApiYafControllerAbstract
                 'session_id',
                 'car_no',
                 'brand_id',
-                'city_id',
+                //'city_id',
                 'series_id',
                 'files_id',
                 'files_type'
@@ -255,6 +255,18 @@ class CarController extends ApiYafControllerAbstract
         $carM::$visit_user_id = $userId;
 
         $lists = $carM->getCarList();
+
+        if($lists['car_list']){
+
+            foreach($lists['car_list'] as $key => $list){
+
+                $file = isset($list['car_info']['files'][0]) ?  $list['car_info']['files'][0] : array();
+
+                $lists['car_list'][$key]['car_info']['files'] = array();
+                $lists['car_list'][$key]['car_info']['files'][] = $file;
+            }
+        }
+
 
         //$response = array();
         $response = $lists;

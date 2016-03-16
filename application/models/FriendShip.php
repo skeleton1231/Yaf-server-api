@@ -77,7 +77,6 @@ class FriendShipModel extends PdoDb {
             $total = $this->query($sqlCnt)[0]['total'];
         }
 
-
         $friendships = $this->query($sql);
 
         if($friendships){
@@ -163,12 +162,12 @@ class FriendShipModel extends PdoDb {
 
         $friendships = $this->handleFriendShip($friendships);
 
-        foreach($friendships as $k => $friendship){
-
-            $key = $userId . '_' . $friendship['friend_id'];
-            $friendships[$k]['is_friend'] = $this->isFriend($key);
-
-        }
+//        foreach($friendships as $k => $friendship){
+//
+//            $key = $userId . '_' . $friendship['friend_id'];
+//            $friendships[$k]['is_friend'] = $this->isFriend($key);
+//
+//        }
 
         $count = count($friendships);
         $list['friendship_list'] = $friendships;
@@ -194,7 +193,7 @@ class FriendShipModel extends PdoDb {
                 $item['user_info']['profile']['avatar'] = $friendShip['friendship_avatar'];
                 $item['user_info']['profile']['nickname'] = $friendShip['friendship_nickname'];
 
-                $items[] = $item;
+                $items[] = $item['user_info'];
 
             }
         }

@@ -132,6 +132,7 @@ class CommentModel extends PdoDb {
             $total = $this->query($sqlCnt)[0]['total'];
         }
 
+
         $comments = $this->query($sql);
 
         $comments = $this->handleComment($comments);

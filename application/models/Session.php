@@ -9,7 +9,7 @@
 class SessionModel extends PdoDb{
 
 
-    static public  $table = 'bibi_session';
+    static public $table = 'bibi_session';
 
     public function __contsruct(){
 
@@ -18,7 +18,6 @@ class SessionModel extends PdoDb{
     }
 
     public function Create($data){
-
 
 
         $session_id = uniqid('session');

@@ -34,7 +34,7 @@ class CommentController extends ApiYafControllerAbstract {
 
             $replyComment = $commentM->getComment($replyId, $data['feed_id']);
 
-            $toId = $replyComment['from_user_info']['user_id'];
+            $toId = isset($replyComment['from_user_info']['user_id']) ? $replyComment['from_user_info']['user_id'] : 0;
 
             if($userId == $toId){
 
@@ -57,6 +57,7 @@ class CommentController extends ApiYafControllerAbstract {
         $commentM->created = $time;
 
         $commentM->saveProperties();
+
         $commentId = $commentM->CreateM();
 
         $feedM->updateCommentNum($data['feed_id']);
