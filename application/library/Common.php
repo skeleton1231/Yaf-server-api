@@ -726,5 +726,40 @@ class Common {
     }
 
 
+    /**
+     * 发送模板短信
+     *
+     * @param
+     * to 手机号码集合,用英文逗号分开
+     * @param
+     * datas 内容数据 格式为数组 例如：array('Marry','Alon')，如不需替换请填 null
+     * @param $tempId 模板Id,测试应用和未上线应用使用测试模板请填写1，正式应用上线后填写已申请审核通过的模板ID
+     */
+    public static function sendSMS($to, $datas, $tempId) {
+
+        $sms_setting = Yaf_Registry::get('config')->sms;
+
+        $rest = new Rest($sms_setting->serverIP, $sms_setting->serverPort, $sms_setting->softVersion);
+        $rest->setAccount($sms_setting->accountSid, $sms_setting->accountToken);
+        $rest->setAppId($sms_setting->appId);
+
+        Common::globalLogRecord("Sending TemplateSMS to $to ...", "sms");
+
+        $result = $rest->sendTemplateSMS($to, $datas, $tempId); // 发送模板短信
+        if ($result == NULL) {
+            Common::globalLogRecord("Sending TemplateSMS failed, result error!", "sms");
+            return false;
+        }
+
+        if ($result->statusCode != 0) {
+            Common::globalLogRecord("Sending TemplateSMS failed, error code is " . $result->statusCode . ", error msg is " . $result->statusMsg . "!", "sms");
+            return false;
+        } else {
+            Common::globalLogRecord("Sending TemplateSMS success, the dateCreated is " . $result->TemplateSMS->dateCreated . ", the smsMessageSid is " . $result->TemplateSMS->smsMessageSid . "!", "sms");
+            return true;
+        }
+    }
+
+
 
 }

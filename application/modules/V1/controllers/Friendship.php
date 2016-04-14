@@ -62,7 +62,6 @@ class FriendshipController extends ApiYafControllerAbstract {
 
     public function listAction(){
 
-
         $this->required_fields = array_merge($this->required_fields,array('session_id','page','action'));
 
         $data = $this->get_request_data();
@@ -78,7 +77,6 @@ class FriendshipController extends ApiYafControllerAbstract {
         $data['action'] = isset($data['action']) ? $data['action'] : 1;
 
         //action 1 : 为关注列表 2: 粉丝列表
-
         if($data['action'] == 1){
 
             $friendShips = $friendShipM->getFriendShipToMe($userId, 0, $data['page']);

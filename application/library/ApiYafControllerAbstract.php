@@ -26,7 +26,6 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
      */
     public function get_request_data() {
 
-
         $data = array();
 
         $jsonFields = array('files_id','files_type');
@@ -56,6 +55,7 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
         }
 
 
+
         if(isset($data['device_identifier'])){
             $this->validate_auth ( $data['device_identifier'] );
         }
@@ -83,6 +83,7 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
             $pdo = new PdoDb();
 
             $id = $pdo->query($sql);
+
 
             if(!$id) {
                 $pdo = null;
@@ -177,6 +178,32 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
             return $userId;
         }
+    }
+
+    public function getRcloudToken($userId,$nickname,$avatar){
+
+        $key = 'chat_token_' . $userId;
+
+        $token = RedisDb::getValue($key);
+
+        if(!$token){
+
+            $rServer = new RcloudServerAPI(RCLOUD_APP_KEY,RCLOUD_APP_SECRET);
+            $rs = $rServer->getToken($userId,$nickname,$avatar);
+
+            if($rs['code'] == 200){
+
+                $token = $rs['token'];
+                RedisDb::setValue($key, $token);
+            }
+            else{
+                return '';
+            }
+
+        }
+
+
+        return $token;
     }
 
 } 

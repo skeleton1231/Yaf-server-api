@@ -143,7 +143,7 @@ class FriendShipModel extends PdoDb {
             FROM
             `bibi_friendship` AS t1
             LEFT JOIN
-            `bibi_user_profile` AS t2`
+            `bibi_user_profile` AS t2
             ON
             t1.user_id = t2.user_id
             WHERE t1.friend_id = '.$userId.'
@@ -154,7 +154,6 @@ class FriendShipModel extends PdoDb {
         $number = ($page - 1) * $pageSize;
 
         $sql .= '  LIMIT ' . $number . ' , ' . $pageSize . ' ';
-
 
         $total = $this->query($sqlCnt)[0]['total'];
 

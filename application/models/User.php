@@ -65,6 +65,20 @@ class UserModel extends PdoDb {
 
     }
 
+    public function loginByOauth($data){
+
+        $weibo_open_id = $data['weibo_open_id'];
+        $wx_open_id = $data['wx_open_id'];
+        $table = self::$table;
+        $sql = "SELECT `user_id` ,`username`, `mobile`, `created` FROM
+                {$table} WHERE `wx_open_id` = :wx_open_id OR `weibo_open_id` = :weibo_open_id ";
+        $param = array(':wx_open_id'=>$wx_open_id, ':password'=>$weibo_open_id);
+        $info = $this->query($sql,$param);
+
+        return isset($info[0]) ? $info[0] : null;
+
+    }
+
 
     public static function setUserKeyCache($device_identifier , $user_id){
 

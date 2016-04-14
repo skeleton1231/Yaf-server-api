@@ -9,6 +9,8 @@
 class UserController extends ApiYafControllerAbstract
 {
 
+
+
     public function registerAction()
     {
 
@@ -16,6 +18,15 @@ class UserController extends ApiYafControllerAbstract
 
         $data = $this->get_request_data();
 
+
+        //unset($data['code']);
+        $key =  $key = 'code_' . $data['mobile'] . '';
+        $code = RedisDb::getValue($key);
+
+        if($code != $data['code']){
+
+            $this->send_error(USER_CODE_ERROR);
+        }
 
         unset($data['code']);
 
@@ -64,7 +75,6 @@ class UserController extends ApiYafControllerAbstract
         }
 
         $sessionData = array('device_identifier' => $device_identifier, 'user_id' => $userId);
-        //$sessId = UserModel::setUserKeyCache($device_identifier , $userId);
         $sess = new SessionModel();
         $sessId = $sess->Create($sessionData);
 
@@ -76,7 +86,6 @@ class UserController extends ApiYafControllerAbstract
         $profileInfo['nickname'] = $nickname;
         $profileInfo['avatar']   = AVATAR_DEFAULT;
 
-        $response = array();
 
         $profileModel->initProfile($profileInfo);
 
@@ -87,6 +96,7 @@ class UserController extends ApiYafControllerAbstract
         $response = array();
         $response['session_id'] = $sessId;
         $response['user_info'] = $userInfo;
+        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
 
         $this->send($response);
 
@@ -99,11 +109,11 @@ class UserController extends ApiYafControllerAbstract
 
         $this->required_fields = array_merge($this->required_fields, array('mobile'));
 
-        $code = 6666;
+        $code = rand(1000,9999);
 
         $data = $this->get_request_data();
 
-        $key = 'code_' . $data['device_identifier'] . '';
+        $key = 'code_' . $data['mobile'] . '';
 
         RedisDb::setValue($key, $code);
 
@@ -112,6 +122,8 @@ class UserController extends ApiYafControllerAbstract
         $response = array(
             'code' => $code
         );
+
+        Common::sendSMS($data['mobile'],array($code),"74511");
 
         $this->send($response);
 
@@ -137,6 +149,7 @@ class UserController extends ApiYafControllerAbstract
         $device_identifier = $data['device_identifier'];
 
 
+
         $response = array();
 
         $sessionData = array('device_identifier' => $device_identifier, 'user_id' => $userId);
@@ -151,6 +164,9 @@ class UserController extends ApiYafControllerAbstract
         $info['profile'] = $profile->getProfile($userId);
         $response['session_id'] = $sessId;
         $response['user_info'] = $info;
+
+        $nickname = $info['profile']['nickname'];
+        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
 
         $this->send($response);
 
@@ -433,6 +449,149 @@ class UserController extends ApiYafControllerAbstract
 //        }
 
        // $response['publish_car_list'] = $publishCar['car_list'];
+
+        $this->send($response);
+
+
+    }
+
+    public function oauthloginAction(){
+
+        $this->required_fields = array_merge(
+            $this->required_fields,
+            array('wx_open_id','weibo_open_id','nickname','avatar')
+        );
+
+        $data = $this->get_request_data();
+
+        $user = new \UserModel;
+
+        $oauth['wx_open_id'] = $data['wx_open_id'];
+        $oauth['weibo_open_id'] = $data['weibo_open_id'];
+
+        $info = $user->loginByOauth($oauth);
+
+        if (!$info) {
+
+            $this->send_error(USER_OAUTH_UPDATE_PROFILE);
+        }
+
+        $userId = $info['user_id'];
+        $device_identifier = $data['device_identifier'];
+
+        $response = array();
+
+        $sessionData = array('device_identifier' => $device_identifier, 'user_id' => $userId);
+        //删除sessionId
+        $sess = new SessionModel();
+        $sessId = $sess->Create($sessionData);
+
+        $time = time();
+
+        $profile = new \ProfileModel;
+
+        $update['nickname'] = $data['nickname'];
+        $update['avatar']   = $data['avatar'];
+        $profile->updateProfileByKey($userId,$update);
+
+        $info['profile'] = $profile->getProfile($userId);
+        $response['session_id'] = $sessId;
+        $response['user_info'] = $info;
+
+        $nickname = $info['profile']['nickname'];
+        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
+
+
+        $this->send($response);
+    }
+
+
+    public function oauthregisterAction(){
+
+        $this->required_fields = array_merge(
+            $this->required_fields,
+            array('mobile', 'password', 'code', 'nickname','avatar','wx_open_id','weibo_open_id')
+        );
+
+        $data = $this->get_request_data();
+
+        $key =  $key = 'code_' . $data['mobile'] . '';
+        $code = RedisDb::getValue($key);
+
+        if($code != $data['code']){
+
+            $this->send_error(USER_CODE_ERROR);
+        }
+
+        unset($data['code']);
+
+        $time = time();
+
+        $nickname = $data['nickname'];
+
+        $avatar = $data['avatar'];
+
+        $userModel = new \UserModel;
+        $profileModel = new \ProfileModel;
+
+        $info = $userModel->getInfoByMobile($data['mobile']);
+
+        if($info){
+
+            $user_id = $info[0]['user_id'];
+
+            $update['password'] = $data['password'];
+            $update['wx_open_id'] = $data['wx_open_id'];
+            $update['weibo_open_id'] = $data['weibo_open_id'];
+            $update['updated'] = $time;
+
+            $userModel->update(array('user_id'=>$user_id),$update);
+
+            $updateProfile['nickname'] = $data['nickname'];
+            $updateProfile['avatar']   = $data['avatar'];
+
+            $profileModel->updateProfileByKey($user_id, $updateProfile);
+        }
+        else{
+
+            $insert = array();
+            $insert['login_ip'] = $_SERVER['REMOTE_ADDR'];
+            $insert['login_time'] = $time;
+            $insert['created'] = $time;
+            $insert['updated'] = $time;
+
+            $name = 'bibi_' . Common::randomkeys(6);
+
+            $insert['username'] = $name;
+            $insert['wx_open_id'] = $data['wx_open_id'];
+            $insert['weibo_open_id'] = $data['weibo_open_id'];
+
+
+            $userId = $userModel->register($data);
+
+            $profileInfo = array();
+            $profileInfo['user_id'] = $userId;
+            $profileInfo['user_no'] = $name;
+            $profileInfo['nickname'] = $nickname;
+            $profileInfo['avatar']   = $avatar;
+
+            $profileModel->initProfile($profileInfo);
+        }
+
+        $device_identifier = $data['device_identifier'];
+        $sessionData = array('device_identifier' => $device_identifier, 'user_id' => $userId);
+        $sess = new SessionModel();
+        $sessId = $sess->Create($sessionData);
+
+        $userInfo = $userModel->getInfoById($userId);
+        $userInfo['profile'] = $profileModel->getProfile($userId);
+
+
+        $response = array();
+        $response['session_id'] = $sessId;
+        $response['user_info'] = $userInfo;
+        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
+
 
         $this->send($response);
 

@@ -78,4 +78,11 @@ class TestController extends Yaf_Controller_Abstract {
         RedisDb::setValue('test_car_users' , $str);
 
     }
+
+    public function smsAction(){
+
+        $mobile = '15999593293';
+
+       // $rest = Common::sendSMS($mobile,array('1234'),74511);
+    }
 }

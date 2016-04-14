@@ -38,6 +38,7 @@ define('USER_LOGIN_FAIL' , 51004);
 define('USER_AUTH_FAIL', 51005);
 define('USER_PROFILE_KEY_ERROR', 51006);
 define('USER_PROFILE_UPDATE_FAIL', 51007);
+define('USER_OAUTH_UPDATE_PROFILE',51008);
 
 
 //car
@@ -117,6 +118,10 @@ define('ORDER_BY_PRICE_ASC', 1);
 define("ORDER_BY_PRICE_DESC", 2);
 define("ORDER_BY_BOARD_TIME_ASC", 3);
 define("ORDER_BY_MILEAGE_ASC",4);
+
+
+define("RCLOUD_APP_KEY",'qf3d5gbj3uwth');
+define("RCLOUD_APP_SECRET",'oqWp38xqaYifT');
 
 
 

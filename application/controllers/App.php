@@ -189,8 +189,14 @@ class AppController extends ApiYafControllerAbstract {
 
         }
 
+    }
 
+    public function ruleAction(){
+
+
+        header("Location: http://120.25.62.110/protocol.html");
 
     }
+
 
 }

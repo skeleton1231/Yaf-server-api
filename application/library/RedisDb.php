@@ -32,6 +32,7 @@ class RedisDb {
             self::$config['scheme'] = $master->scheme;
             self::$config['host']   = $master->host;
             self::$config['port']   = $master->port;
+            self::$config['password'] = $master->password;
             //$options = array('replication' => true);
             self::$instance = new Predis\Client(self::$config);
         }
