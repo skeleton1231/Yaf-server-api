@@ -96,7 +96,7 @@ class UserController extends ApiYafControllerAbstract
         $response = array();
         $response['session_id'] = $sessId;
         $response['user_info'] = $userInfo;
-        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
+        $response['user_info']['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
 
         $this->send($response);
 
@@ -166,7 +166,7 @@ class UserController extends ApiYafControllerAbstract
         $response['user_info'] = $info;
 
         $nickname = $info['profile']['nickname'];
-        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
+        $response['user_info']['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
 
         $this->send($response);
 
@@ -466,8 +466,14 @@ class UserController extends ApiYafControllerAbstract
 
         $user = new \UserModel;
 
-        $oauth['wx_open_id'] = $data['wx_open_id'];
-        $oauth['weibo_open_id'] = $data['weibo_open_id'];
+        $wx_open_id = $data['wx_open_id'];
+        $weibo_open_id = $data['weibo_open_id'];
+
+
+
+        $oauth['wx_open_id'] =  preg_match("/[A-Za-z0-9]+/", $wx_open_id) ? $wx_open_id : '';
+        $oauth['weibo_open_id'] = preg_match("/[A-Za-z0-9]+/", $weibo_open_id) ? $weibo_open_id : '';
+
 
         $info = $user->loginByOauth($oauth);
 
@@ -499,7 +505,7 @@ class UserController extends ApiYafControllerAbstract
         $response['user_info'] = $info;
 
         $nickname = $info['profile']['nickname'];
-        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
+        $response['user_info']['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
 
 
         $this->send($response);
@@ -518,10 +524,10 @@ class UserController extends ApiYafControllerAbstract
         $key =  $key = 'code_' . $data['mobile'] . '';
         $code = RedisDb::getValue($key);
 
-        if($code != $data['code']){
-
-            $this->send_error(USER_CODE_ERROR);
-        }
+//        if($code != $data['code']){
+//
+//            $this->send_error(USER_CODE_ERROR);
+//        }
 
         unset($data['code']);
 
@@ -536,21 +542,23 @@ class UserController extends ApiYafControllerAbstract
 
         $info = $userModel->getInfoByMobile($data['mobile']);
 
+
         if($info){
 
-            $user_id = $info[0]['user_id'];
+            $userId = $info[0]['user_id'];
 
             $update['password'] = $data['password'];
             $update['wx_open_id'] = $data['wx_open_id'];
             $update['weibo_open_id'] = $data['weibo_open_id'];
             $update['updated'] = $time;
 
-            $userModel->update(array('user_id'=>$user_id),$update);
+            $userModel->update(array('user_id'=>$userId),$update);
 
             $updateProfile['nickname'] = $data['nickname'];
             $updateProfile['avatar']   = $data['avatar'];
 
-            $profileModel->updateProfileByKey($user_id, $updateProfile);
+            $profileModel->updateProfileByKey($userId, $updateProfile);
+
         }
         else{
 
@@ -565,9 +573,10 @@ class UserController extends ApiYafControllerAbstract
             $insert['username'] = $name;
             $insert['wx_open_id'] = $data['wx_open_id'];
             $insert['weibo_open_id'] = $data['weibo_open_id'];
+            $insert['mobile'] = $data['mobile'];
+            $insert['password'] = $data['password'];
 
-
-            $userId = $userModel->register($data);
+            $userId = $userModel->register($insert);
 
             $profileInfo = array();
             $profileInfo['user_id'] = $userId;
@@ -590,12 +599,32 @@ class UserController extends ApiYafControllerAbstract
         $response = array();
         $response['session_id'] = $sessId;
         $response['user_info'] = $userInfo;
-        $response['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
+        $response['user_info']['chat_token'] = $this->getRcloudToken($userId,$nickname,AVATAR_DEFAULT);
 
 
         $this->send($response);
 
 
+    }
+
+    public function chattokenAction(){
+
+        $this->required_fields = array_merge($this->required_fields, array('session_id'));
+
+        $data = $this->get_request_data();
+
+        $userId = $this->userAuth($data);
+
+        $profileModel = new ProfileModel();
+
+        $profile = $profileModel->getProfile($userId);
+
+
+        $chatToken = $this->getRcloudToken($userId, $profile['nickname'],$profile['avatar']);
+
+        $response['chat_token'] = $chatToken;
+
+        $this->send($response);
     }
 
 

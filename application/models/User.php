@@ -70,9 +70,25 @@ class UserModel extends PdoDb {
         $weibo_open_id = $data['weibo_open_id'];
         $wx_open_id = $data['wx_open_id'];
         $table = self::$table;
+
+        $param = array();
+
+        if($wx_open_id){
+
+            $where = '`wx_open_id` = :wx_open_id';
+            $param[':wx_open_id'] = $wx_open_id;
+        }
+
+        if($weibo_open_id){
+
+            $where = '`weibo_open_id` = :weibo_open_id';
+            $param[':weibo_open_id'] = $weibo_open_id;
+        }
+
         $sql = "SELECT `user_id` ,`username`, `mobile`, `created` FROM
-                {$table} WHERE `wx_open_id` = :wx_open_id OR `weibo_open_id` = :weibo_open_id ";
-        $param = array(':wx_open_id'=>$wx_open_id, ':password'=>$weibo_open_id);
+                {$table} WHERE {$where}";
+
+
         $info = $this->query($sql,$param);
 
         return isset($info[0]) ? $info[0] : null;

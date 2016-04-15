@@ -188,8 +188,10 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
         if(!$token){
 
+
             $rServer = new RcloudServerAPI(RCLOUD_APP_KEY,RCLOUD_APP_SECRET);
             $rs = $rServer->getToken($userId,$nickname,$avatar);
+            $rs = json_decode($rs, true);
 
             if($rs['code'] == 200){
 
