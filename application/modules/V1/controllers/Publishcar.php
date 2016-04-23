@@ -231,8 +231,9 @@ class PublishcarController extends ApiYafControllerAbstract
 
         $data = $this->get_request_data();
 
-        $data['page'] = $data['page'] ? $data['page'] : 1;
-        $carM->page = $data['page'];
+        $page = $data['page'] ? ($data['page']+1) : 1;
+
+        $carM->page = $page;
 
         $userId = $this->userAuth($data);
 

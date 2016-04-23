@@ -49,11 +49,13 @@ class FriendshipController extends ApiYafControllerAbstract {
 
         $userId = $this->userAuth($data);
 
+
         $friendShipM = new FriendShipModel();
 
-        $friendShip = $friendShipM->getMyFriendShip($userId, $data['user_id']);
+       // $friendShip = $friendShipM->getMyFriendShip($userId, $data['user_id']);
 
-        $friendShipM->deleteFriendShip($friendShip['friendship_id']);
+
+        $friendShipM->deleteFriendShip($data['user_id'] , $userId);
 
         $this->send($friendShipM);
 
@@ -62,15 +64,17 @@ class FriendshipController extends ApiYafControllerAbstract {
 
     public function listAction(){
 
-        $this->required_fields = array_merge($this->required_fields,array('session_id','page','action'));
+        $this->required_fields = array_merge($this->required_fields,array('session_id','page','action','user_id'));
 
         $data = $this->get_request_data();
 
         $userId = $this->userAuth($data);
 
+        $objectId = $data['user_id'];
+
         $friendShipM = new FriendShipModel();
 
-        $time = time();
+        //$time = time();
 
         $data['page'] = $data['page'] ? ($data['page']+1) : 1;
 
@@ -79,11 +83,12 @@ class FriendshipController extends ApiYafControllerAbstract {
         //action 1 : 为关注列表 2: 粉丝列表
         if($data['action'] == 1){
 
-            $friendShips = $friendShipM->getFriendShipToMe($userId, 0, $data['page']);
+            $friendShips = $friendShipM->getMyFriendShip($objectId, 0, $data['page']);
 
         }
         else{
-            $friendShips = $friendShipM->getMyFriendShip($userId, 0, $data['page']);
+
+            $friendShips = $friendShipM->getFriendShipToMe($objectId, 0, $data['page']);
 
         }
 

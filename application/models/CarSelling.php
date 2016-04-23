@@ -152,7 +152,7 @@ class CarSellingModel extends PdoDb
         $favId = $favCarM->get();
 
         $car['is_fav'] = $favId ? 1 : 2;
-        $car['car_time'] = '今天';
+        $car['car_time'] = Common::getBeforeTime($car['created']);
         //$car['visit_num'] = $car['visit_num'];
 
         $favCarM = null;
@@ -309,6 +309,7 @@ class CarSellingModel extends PdoDb
             WHERE
                 t2.user_id = '.$userId.' AND t1.car_type = '.PLATFORM_USER_SELLING_CAR.'
         ';
+
 
         $cars = $this->query($sql);
 

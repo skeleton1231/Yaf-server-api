@@ -79,6 +79,7 @@ class FriendShipModel extends PdoDb {
 
         $friendships = $this->query($sql);
 
+
         if($friendships){
 
             $friendships = $this->handleFriendShip($friendships);
@@ -231,16 +232,18 @@ class FriendShipModel extends PdoDb {
                   COUNT(friendship_id) AS fans_num
                   FROM `bibi_friendship` WHERE `friend_id` = '.$this->currentUser.'';
 
+
         $fans_num = $this->query($sql)[0]['fans_num'];
 
         return $fans_num;
 
     }
 
-    public function deleteFriendShip($friendShipId){
+    public function deleteFriendShip($friendId, $userId){
 
         $sql  = '
-                DELETE FROM `bibi_friendship` WHERE `friendship_id` = '.$friendShipId.'
+                DELETE FROM `bibi_friendship` WHERE `friend_id` = '.$friendId.'
+                AND `user_id` = '.$userId.'
         ';
 
         $this->execute($sql);

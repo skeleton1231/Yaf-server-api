@@ -183,8 +183,10 @@ class FeedModel extends PdoDb
                         t1.user_id = t3.user_id
                         WHERE
                         t2.user_id = '.$this->currentUser.'
+                        ORDER BY t1.`feed_id` DESC
                         LIMIT ' . $number . ' , ' . $pageSize . '
                     ';
+
 
                     $sqlFriendCnt = '
                         SELECT
@@ -201,6 +203,7 @@ class FeedModel extends PdoDb
                         t1.user_id = t3.user_id
                         WHERE
                         t2.user_id = '.$this->currentUser.'
+                        ORDER BY t1.`feed_id` DESC
                     ';
 
                     $total = $this->query($sqlFriendCnt)[0]['total'];
@@ -208,7 +211,7 @@ class FeedModel extends PdoDb
                     $result = @$this->query($sqlFriend);
                     $result = $this->implodeArrayByKey('feed_id', $result);
 
-                    $sql .= ' WHERE t1.feed_id in (' . $result . ')  ORDER BY `feed_id` DESC ';
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ')  ORDER BY t1.feed_id DESC ';
 
 
                     break;
@@ -267,7 +270,7 @@ class FeedModel extends PdoDb
                         FROM
                         `bibi_feeds` AS t1
                         WHERE t1.user_id = '.$this->currentUser.'
-                        ORDER BY created DESC
+                        ORDER BY t1.feed_id DESC
                         LIMIT ' . $number . ' , ' . $pageSize . '
                     ';
 
@@ -278,7 +281,7 @@ class FeedModel extends PdoDb
                         FROM
                         `bibi_feeds` AS t1
                         WHERE t1.user_id = '.$this->currentUser.'
-                        ORDER BY created  DESC
+                        ORDER BY t1.feed_id DESC
                     ';
 
                     $total = $this->query($sqlMineCnt)[0]['total'];
@@ -286,13 +289,14 @@ class FeedModel extends PdoDb
                     $result = @$this->query($sqlMine);
                     $result = $this->implodeArrayByKey('feed_id', $result);
 
-                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ';
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ORDER BY t1.`feed_id` DESC';
 
                     break;
             }
 
 
         }
+
 
         $feeds = $this->query($sql);
 
@@ -412,7 +416,7 @@ class FeedModel extends PdoDb
 
                 foreach ($item['comment_list'] as $k => $cl) {
 
-                    if ($k < 10) {
+                    if ($k < 3) {
 
                         $commentList[] = $cl;
                     } else {
