@@ -50,13 +50,26 @@ class TestController extends Yaf_Controller_Abstract {
         //exit;
         $jsonData = require APPPATH .'/configs/JsonData.php';
 
-        $sql = 'SELECT
-	              t1.user_id,t2.avatar,t2.nickname
-                FROM
-	            `bibi_user` AS t1
-                LEFT JOIN `bibi_user_profile` AS t2
-                on t1.user_id = t2.user_id
-                LIMIT 0, 10';
+
+        $sql = '
+                SELECT t1.brand_id, t2.user_id,t2.nickname,t2.avatar FROM `bibi_car_selling_list` AS t1 LEFT JOIN `bibi_user` AS t2 ON t1.user_id = t2.user_id
+                WHERE t1.`car_type` = 3
+                ';
+
+        echo $sql;exit;
+        $db = new PdoDb();
+
+        $data = $db->query($sql);
+
+        print_r($data);exit;
+//
+//        $sql = 'SELECT
+//	              t1.user_id,t2.avatar,t2.nickname
+//                FROM
+//	            `bibi_user` AS t1
+//                LEFT JOIN `bibi_user_profile` AS t2
+//                on t1.user_id = t2.user_id
+//                LIMIT 0, 10';
 
         $db = new PdoDb();
 

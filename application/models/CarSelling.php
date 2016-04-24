@@ -230,9 +230,10 @@ class CarSellingModel extends PdoDb
 
         foreach($cars as $k => $car){
 
+            $brand_id = $car['brand_id'];
             $item = $this->handlerCar($car);
             $items[$k]['car_info'] = $item;
-            $items[$k]['car_users'] = $this->getSameBrandUsers();
+            $items[$k]['car_users'] = $this->getSameBrandUsers($brand_id);
 
         }
 
@@ -266,12 +267,42 @@ class CarSellingModel extends PdoDb
 
     }
 
-    public function getSameBrandUsers(){
+    public function getSameBrandUsers($brand_id){
 
-        $userInfos = unserialize(RedisDb::getValue('test_car_users'));
+//        $userInfos = unserialize(RedisDb::getValue('test_car_users'));
+//
+//        return $userInfos ? $userInfos : array();
 
-        return $userInfos ? $userInfos : array();
+        $jsonData = require APPPATH .'/configs/JsonData.php';
 
+        $sql = '
+                SELECT
+	              t2.user_id,
+  	              t2.nickname,
+	              t2.avatar
+                FROM
+	              `bibi_car_selling_list` AS t1
+                INNER JOIN `bibi_user_profile` AS t2
+                ON t1.user_id = t2.user_id
+                WHERE
+	            t1.`car_type` = 3 AND t1.brand_id = '.$brand_id.'
+	            LIMIT 0, 10
+	            ';
+
+        $data = $this->query($sql);
+
+        foreach($data as $k => $d){
+
+            $userData = $jsonData['user_info'];
+            $userData['user_id'] = $d['user_id'];
+            $userData['profile']['nickname'] = $d['nickname'];
+            $userData['profile']['avatar']   = $d['avatar'];
+
+            $items[] = $userData;
+
+        }
+
+        return $items;
     }
 
 

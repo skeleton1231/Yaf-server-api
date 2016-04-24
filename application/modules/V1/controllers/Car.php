@@ -205,6 +205,7 @@ class CarController extends ApiYafControllerAbstract
         $this->optional_fields = array('keyword','order_id','brand_id','series_id');
         //$this->required_fields = array_merge($this->required_fields, array('session_id'));
 
+
         $data = $this->get_request_data();
 
         $data['order_id'] = $data['order_id'] ? $data['order_id'] : 0 ;
