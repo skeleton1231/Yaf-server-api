@@ -98,4 +98,50 @@ class TestController extends Yaf_Controller_Abstract {
 
        // $rest = Common::sendSMS($mobile,array('1234'),74511);
     }
+
+    public function forwardAction(){
+
+
+//        for($i =0; $i < 3; $i++){
+//
+//            RedisDb::saveForwardUser(1,$i);
+//        }
+
+        $results = RedisDb::getForwardUsers(1);
+
+        print_r($results);
+    }
+
+
+    public function sysMessageAction(){
+
+
+        $rc = new RcloudServerAPI(RCLOUD_APP_KEY, RCLOUD_APP_SECRET);
+
+//        $content = array(
+//            "content"=>"时间:2013-12-29 11:57:29;地址:316省道53KM+200M;详情:16362->驾驶中型以上载客载货汽车、校车、危险物品运输车辆以外的其他机动车在高速公路以外的道路上行驶超过规定时速20%以上未达50%的;扣分:6;缴费:100;是否处理:否;"
+//            );
+
+       // $content = json_encode($content);
+
+        $content = '{
+			"date":"2013-12-29 11:57:29",
+			"area":"316省道53KM+200M",
+			"act":"16362 : 驾驶中型以上载客载货汽车、校车、危险物品运输车辆以外的其他机动车在高速公路以外的道路上行驶超过规定时速20%以上未达50%的",
+			"code":"",
+			"fen":"6",
+			"money":"100",
+			"handled":"0"
+			}';
+
+        $content = json_decode($content,true);
+
+        $json = array('content'=>$content , 'extra'=>'');
+
+        $json = json_encode($json);
+
+        $response = $rc->messageSystemPublish(314 , array(342),"BBMsg",$json,'你有新的违章消息',array());
+
+        print_r($response);
+    }
 }

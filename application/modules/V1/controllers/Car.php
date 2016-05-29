@@ -31,6 +31,18 @@ class CarController extends ApiYafControllerAbstract
 
         $userId = $this->userAuth($data);
 
+
+        if (!json_decode($data['files_id']) || !json_decode($data['files_type'])){
+
+            $this->send_error(CAR_CREATE_FILES_ERROR);
+        }
+
+
+        if (!$data['vin_no'] && !$data['vin_file']) {
+
+            $this->send_error(CAR_DRIVE_INFO_ERROR);
+        }
+
         $cs = new CarSellingModel();
 
         $properties = $data;
@@ -66,13 +78,13 @@ class CarController extends ApiYafControllerAbstract
 
 
 
-        if (isset($properties['vin_file'])) {
-
-            $vinFile = new FileModel();
-            $vinFile = $vinFile->Get($properties['vin_file']);
-            $properties['vin_file'] = $vinFile;
-
-        }
+//        if (isset($properties['vin_file'])) {
+//
+//            $vinFile = new FileModel();
+//            $vinFile = $vinFile->Get($properties['vin_file']);
+//            $properties['vin_file'] = $vinFile;
+//
+//        }
 
         $properties['car_type'] = PLATFORM_USER_OWNER_CAR;
         $time = time();
@@ -145,15 +157,17 @@ class CarController extends ApiYafControllerAbstract
 
         $carId = $data['car_id'];
 
-        $carModel::$visit_user_id = $userId;
+        $carModel->currentUser = $userId;
 
         $carInfo = $carModel->GetCarInfoById($carId);
 
 
         $response['car_info'] = $carInfo;
 
+        $brandId = isset($carInfo['brand_info']['brand_id']) ? $carInfo['brand_info']['brand_id'] : 0;
 
-        $response['car_users'] = $carModel->getSameBrandUsers();
+
+        $response['car_users'] = $carModel->getSameBrandUsers($brandId);
 
         //同款车
         $response['related_price_car_list'] = $carModel->relatedPriceCars($carId,$carInfo['price']);
@@ -252,8 +266,7 @@ class CarController extends ApiYafControllerAbstract
         $sess = new SessionModel();
         $userId = $sess->Get($data);
 
-
-        $carM::$visit_user_id = $userId;
+        $carM->currentUser = $userId;
 
         $lists = $carM->getCarList();
 

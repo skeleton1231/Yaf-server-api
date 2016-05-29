@@ -236,18 +236,19 @@ $platforms = array(
 
 $file_path = '/Users/huanghaitao/bibi-files';
 
-$db = new PDO('mysql:host=127.0.0.1;dbname=bibi', "root", "itadmin");
+//$db = new PDO('mysql:host=127.0.0.1;dbname=bibi', "root", "itadmin");
 
-//$db = new PDO('mysql:host=120.25.62.110;dbname=bibi', "root", "bibi2015");
+$db = new PDO('mysql:host=120.25.62.110;dbname=bibi', "root", "bibi2015");
 
 $db->query('set names utf8');
 
 $curl = new \Curl\Curl();
 
-foreach ($platforms as $k => $platform) {
+//foreach ($platforms as $k => $platform) {
 
 
-    $sql = 'SELECT * FROM `bibi_car_selling_list` WHERE `platform_name` = "' . $k . '" ';
+    $sql = 'SELECT * FROM `bibi_car_selling_list` WHERE `car_type` = 2';
+
 
     $rs = $db->query($sql);
 
@@ -288,9 +289,7 @@ foreach ($platforms as $k => $platform) {
             }
         }
 
-        $id = preg_location_id($location);
-
-        $hashId = $row['platform_id'] . $id;
+        $hashId = $row['hash'];
 
         $str = $curl->get($location);
 
@@ -301,8 +300,9 @@ foreach ($platforms as $k => $platform) {
             continue;
         }
 
+        $site = $platforms[$row['platform_name']];
 
-        $images = $platform($html);
+        $images = $site($html);
 
         $files = array();
 
@@ -315,10 +315,14 @@ foreach ($platforms as $k => $platform) {
             $res=mkdir(iconv("UTF-8", "GBK", $dir),0777,true);
         }
 
-
         if($images){
 
             foreach ($images as $k => $image) {
+
+                if($k > 9){
+
+                    continue;
+                }
 
                 $image = explode('?', $image)[0];
 
@@ -330,9 +334,15 @@ foreach ($platforms as $k => $platform) {
 
                 $tempfile =  $dir . $key;
 
+                if($site == 'renrenche'){
+
+                    $image = 'https:' . $image;
+                }
+
                 $curl->download($image, $tempfile);
 
                 $size = filesize($tempfile);
+
 
                 if($size > 0){
 
@@ -345,6 +355,7 @@ foreach ($platforms as $k => $platform) {
                 }
 
             }
+
         }
 
 
@@ -352,7 +363,6 @@ foreach ($platforms as $k => $platform) {
 
         $sql = 'UPDATE `bibi_car_selling_list`
                         SET
-                        `hash` = "' . $hashId . '",
                         `platform_location`="' . $location . '",
                         `files` = \''.$fs.'\'
                         WHERE
@@ -361,7 +371,8 @@ foreach ($platforms as $k => $platform) {
 
         $db->exec($sql);
 
-        sleep(1);
-    }
+
+        sleep(120);
+    //}
 
 }

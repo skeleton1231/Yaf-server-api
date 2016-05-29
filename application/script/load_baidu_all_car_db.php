@@ -13,56 +13,27 @@ set_time_limit(0);
 
 $curl = new \Curl\Curl();
 
-//$testUrl = 'http://www.baidu.com/zhixin.php?url=Kf0000aSkqTZzM8CTLZQYryuyxkXYztl5JAV8abVE5WXsNBVmI1UopFwIOoaAjIHiEkIy-QKjVBTo_S2vp2A0fW-k-oaeJM2ehxTzVZOTavluna1zLbQmP_GNPprNATqoRj73aD.DR_a6zlAG2cQtAB7hpaO5tb_YR1xlOqxsde_MWYdtxYrxxqEqjzYst8FBSe9JxY5BoyFBPPZy_nYQ7XlEIm0.THY0IZF9uANGujYdPj0znjT0mvq1I7qzmy4o5H00TLNBTy-b5HDYPj6znjmYPWDYnHcLrjTYPjT0ugw4TARqnHD0uy-b5H00uyw-TvPGujYs0AP_pyPogLw4TARqn6KsUWYk0Zw-ThdGUh7_5H00XMfqTvN_u6KsTjYznWnsPW6vnHc0mywGujYzrjbsPWfLrHRvPfKGTdqLpgF-UAN1T1Ys0AN3Ijd9mvP-TLPRXgK-rhdsr1VsIh-brWDYPj6znjR4P1TYPjR3PWTYn1berv-1N-PfrW0erLKzUvwdmLwFujCvPWm1nWbzPjDervPGIZblrHnervuzUvYlnHfsnj0snj_epvN4IvqzuD-brWc4rHD1rHfkPj01r1_0mLFW5Hf4P1fk&ss=7559174';
-//
-//$ss = explode('&ss=',$testUrl)[1];
-//
-//
-//$response = file_get_contents($testUrl);
-//
-//$location = '';
-//
-//foreach($http_response_header as $hk => $hsh){
-//
-//    if(stristr($hsh, 'Location')){
-//
-//        $location = explode('Location: ',$hsh)[1];
-//
-//    }
-//}
-//
-//print_r($location);exit;
+$file_path = '/Users/huanghaitao/bibi-files';
 
 
-$db = new PDO('mysql:host=127.0.0.1;dbname=bibi', "root", "123456");
+$db = new PDO('mysql:host=127.0.0.1;dbname=bibi', "root", "itadmin");
 $db->query('set names utf8');
 
 $start =1;
-$page = 295;
-
-$sql = 'select `baidu_brand_id`  from `bibi_car_brand_list` where is_hot = 1 and `baidu_brand_id` != 0';
-
-$rs = $db->prepare($sql);
-$rs->execute();
-$baidu_brand_ids = $rs->fetchAll(PDO::FETCH_ASSOC);
-
-foreach($baidu_brand_ids as $k => $baidu_brand_id){
-
-    $bd[] = $baidu_brand_id['baidu_brand_id'];
-}
-
+$page = 200;
 
 for ($i = 1; $i <= $page; $i++) {
 
-    //$url = 'http://car.baidu.com/indexAjax/filterCars?subqid=1448617761087642400&srcid=1400000&resourceid=1400000&qid=1448269220984714269&pvid=1448269220984714269&tn=self&zt=self&srcid_from=1400000&reqtype=0&t=ihbqbb98&sessionID=1448269220984714269&fr=self&sid=-&pid=362&city=93&cat=ershouche&page='.$i.'&style=0&brand=0&series=0&price=0&age=0&mileage=0&use=0&country=0&gearbox=0&displacement=0&total='.$page.'';
-
-    $url = 'http://car.baidu.com/indexAjax/filterCars?subqid=1448617761087642400&srcid=1400000&resourceid=1400000&qid=1448616871205703465&pvid=1448616871205703465&tn=self&zt=self&srcid_from=1400000&reqtype=0&t=ihhhmf64&sessionID=1448616871205703465&fr=self&sid=-&pid=362&city=93&pn=1&cat=ershouche&page='.$i.'&style=0&brand=0&series=0&price=0&age=0&mileage=0&use=0&country=0&gearbox=0&displacement=0&total='.$page.'';
-
+    $url = 'http://car.baidu.com/indexAjax/filterCars?subqid=1448217545156069806&srcid=1400000&resourceid=1400000&qid=1448217545156069806&pvid=1448217545156069806&tn=self&zt=self&srcid_from=1400000&reqtype=0&t=ihavc72d&sessionID=1448217545156069806&fr=self&sid=-&pid=362&city=93&pn=1&cat=ershouche&page='.$i.'&style=0&brand=0&series=0&price=0&age=0&mileage=0&use=0&country=0&gearbox=0&displacement=0&total='.$page.'';
     $data = json_decode(json_encode($curl->get($url)), true);
 
     $cars = $data['data']['cars'];
 
-    if ($cars['list'])  {
+    if (!$cars['list']) {
+
+        continue;
+
+    } else {
 
         $filters = json_encode($data['data']['filters']);
 
@@ -79,17 +50,17 @@ for ($i = 1; $i <= $page; $i++) {
             $baidu_brand_id = $car['brand'];
             $baidu_series_id = $car['series'];
 
-            if(!in_array($baidu_brand_id , $bd)){
-
-                continue;
-            }
-
             //update brand_id series_id
 
-            $sql = "SELECT `brand_id`, `brand_name` FROM `bibi_car_brand_list` where `baidu_brand_id` = {$baidu_brand_id} ";
+            $sql = "SELECT `brand_id`, `brand_name`, `is_hot` FROM `bibi_car_brand_list` where `baidu_brand_id` = {$baidu_brand_id} ";
             $rs3 = $db->prepare($sql);
             $rs3->execute();
             $brand = $rs3->fetch(PDO::FETCH_ASSOC);
+
+            if($brand['is_hot'] != 1){
+
+                continue;
+            }
 
             $sql = "SELECT `brand_series_id` AS `series_id`, `brand_series_name` AS `series_name` FROM `bibi_car_brand_series` where `baidu_series_id` = {$baidu_series_id} ";
 
@@ -112,12 +83,43 @@ for ($i = 1; $i <= $page; $i++) {
 
             $location = '';
 
+
             $image = $car['image'];
 
             $thumbnail = $car['thumbnail'];
 
-            $sql = "INSERT INTO `bibi_car_selling_list`
+
+            $location = '';
+            $url = $car['url'];
+            @file_get_contents($url);
+
+            foreach ($http_response_header as $hk => $hsh) {
+
+                if (stristr($hsh, 'Location')) {
+
+                    $location = explode('Location: ', $hsh)[1];
+
+                }
+            }
+
+            $id = preg_location_id($location);
+
+
+            if($id){
+
+                $hashId = $ss . $id;
+
+                $sql = ' SELECT * FROM `bibi_car_selling_list` WHERE `hash` = '.$hashId.' ';
+
+                $rs3 = $db->prepare($sql);
+                $rs3->execute();
+                $item = $rs3->fetch(PDO::FETCH_ASSOC);
+
+                if(!$item){
+
+                    $sql = "INSERT INTO `bibi_car_selling_list`
                     (
+                      `hash`,
                       `brand_id`,
                       `brand_name`,
                       `series_id`,
@@ -146,6 +148,7 @@ for ($i = 1; $i <= $page; $i++) {
                     )
                     VALUES
                     (
+                      {$hashId},
                       {$brand_id},
                       '{$brand_name}',
                       {$series_id},
@@ -174,17 +177,42 @@ for ($i = 1; $i <= $page; $i++) {
                       )
                     ";
 
-            $db->exec($sql);
+
+                    $db->exec($sql);
+                }
+
+
+
+            }
+
 
         }
 
 
     }
 
-    sleep(1);
+    sleep(30);
 
 
 }
+
+
+function preg_location_id($location)
+{
+
+    $patterns = "/\d+/";
+    preg_match_all($patterns, $location, $arr);
+
+    $number = 0;
+    if(isset($arr[0])){
+
+        $number = max($arr[0]);
+
+    }
+
+    return $number;
+}
+
 
 
 

@@ -48,14 +48,22 @@ class RedisDb {
 
         $return = $instance->set($key , $value);
 
+        Common::globalLogRecord(''.$key.'', $return );
+
+
     }
 
     public static function getValue($key){
 
         $instance = self::getInstance();
 
-        return $instance->get($key);
+        $rs =  $instance->get($key);
 
+
+        Common::globalLogRecord(''.$key.'', $rs );
+
+
+        return $rs;
 
     }
 
@@ -64,5 +72,36 @@ class RedisDb {
         $instance = self::getInstance();
 
         $instance->del(array($key));
+    }
+
+    public static function saveForwardUser($feed_id, $user_ids){
+
+        $key = ''.$feed_id.':forwards';
+
+        $instance = self::getInstance();
+
+        foreach($user_ids as $k => $user_id){
+
+            $instance->lPush($key,  $user_id);
+
+        }
+
+    }
+
+    public static function getForwardUsers($feed_id){
+
+        $key = ''.$feed_id.':forwards';
+
+        $instance = self::getInstance();
+
+        $results = $instance->lrange($key,0,-1);
+
+        if(!$results){
+
+            return array();
+        }
+
+        return $results;
+
     }
 } 

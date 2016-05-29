@@ -65,6 +65,7 @@ define('CAR_INSURANCE_DUE_TIME_ERROR', 60020);
 define('CAR_EXPIRATION_TIME_ERROR', 60021);
 define('CAR_INTRO_ERROR', 60022);
 define('CAR_EXCHANGE_TIME_ERROR', 60023);
+define('CAR_CREATE_FILES_ERROR', 60024);
 
 
 
@@ -75,6 +76,7 @@ define('FAVORITE_CAR_ALREADY', 61001);
 //feed
 define('POST_IMAGE_ERROR', 62001);
 define('COMMENT_USER_ERROR',66001);
+define('FEED_NOT_EXIST' , 66002);
 
 //qiniu
 define('QINIU_UPLOAD_ERROR' , 70001);
@@ -119,11 +121,13 @@ define("ORDER_BY_PRICE_DESC", 2);
 define("ORDER_BY_BOARD_TIME_ASC", 3);
 define("ORDER_BY_MILEAGE_ASC",4);
 
+//debug
+//define("RCLOUD_APP_KEY",'qf3d5gbj3uwth');
+//define("RCLOUD_APP_SECRET",'oqWp38xqaYifT');
 
-define("RCLOUD_APP_KEY",'qf3d5gbj3uwth');
-define("RCLOUD_APP_SECRET",'oqWp38xqaYifT');
-
-
+//release
+define("RCLOUD_APP_KEY",'sfci50a7c23ei');
+define("RCLOUD_APP_SECRET",'rTdKRNXsuO');
 
 
 

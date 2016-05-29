@@ -36,6 +36,9 @@ class PdoDb
     public $condition = '';
 
     public $currentUser = 0;
+
+
+
     /**
      * @param bool   $debug    是否开启调试，错误信息输出
      * @param string $database 数据库类别
@@ -83,6 +86,7 @@ class PdoDb
     public function query($sql, $parameters = array(), $option = PDO::FETCH_ASSOC)
     {
         self::$pdo || self::instance();
+        Common::globalLogRecord('sql:' , $sql);
         $stmt = self::$pdo->prepare($sql);
         $stmt->execute($parameters);
 
@@ -142,6 +146,8 @@ class PdoDb
         $values = "'" . implode("','", $data) . "'";
         $sql = "INSERT INTO `{$tableName}`({$fields}) VALUES ({$values})";
 
+        Common::globalLogRecord('sql:', $sql);
+
         self::$pdo->exec($sql);
         if($this->debug)
         {
@@ -194,6 +200,9 @@ class PdoDb
         $data = implode(',', $tmp);
         $sql = "UPDATE `{$tableName}` SET {$data} WHERE `{$whereId[0]}`='{$whereValue[0]}'";
 
+        Common::globalLogRecord('sql:', $sql);
+
+
         $rows = self::$pdo->exec($sql);
         if($this->debug)
         {
@@ -237,16 +246,21 @@ class PdoDb
     {
         $error = $stmt ? $stmt->errorInfo() : self::$pdo->errorInfo();
         $msg = "SQLSTATE:{$error[0]}";
+
         if($error[1])
         {
             $msg .= " - ERRORCODE:{$error[1]}";
+
         }
         if($error[2])
         {
             $msg .= " - ERROR:{$error[2]}";
+
         }
         if($error[1] || $error[2])
         {
+            Common::globalLogRecord('sql-error:' , $msg);
+
             exit($msg);
         }
     }

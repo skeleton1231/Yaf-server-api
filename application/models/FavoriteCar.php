@@ -29,9 +29,9 @@ class FavoriteCarModel extends PdoDb{
     }
 
     public function get(){
-
+            
         $key = 'favorite_'.$this->user_id.'_'.$this->car_id.'';
-
+        
 
         $favId = RedisDb::getValue($key);
 

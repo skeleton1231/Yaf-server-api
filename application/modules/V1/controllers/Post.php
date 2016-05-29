@@ -49,18 +49,20 @@ class PostController extends ApiYafControllerAbstract {
 
         if($feedId){
 
-            $postM = new PostModel();
-            $postM->post_id = $feedId;
-            $postM->user_id = $userId;
-            $postM->post_content = $feedM->post_content;
-            $postM->post_files = $feedM->post_files;
-            $postM->lat = $feedM->lat;
-            $postM->lng = $feedM->lng;
-            $postM->created = $feedM->created;
-            $postM->updated = $feedM->updated;
+//            $postM = new PostModel();
+//            $postM->post_id = $feedId;
+//            $postM->user_id = $userId;
+//            $postM->post_content = $feedM->post_content;
+//            $postM->post_files = $feedM->post_files;
+//            $postM->lat = $feedM->lat;
+//            $postM->lng = $feedM->lng;
+//            $postM->created = $feedM->created;
+//            $postM->updated = $feedM->updated;
+//
+//            $postM->saveProperties();
+//            $postM->CreateM();
 
-            $postM->saveProperties();
-            $postM->CreateM();
+            $feedM->updateFeedSourceId($feedId, $feedId);
 
         }
 
@@ -98,10 +100,20 @@ class PostController extends ApiYafControllerAbstract {
 
             foreach($response['feed_list'] as $key => $list){
 
-                $response['feed_list'][$key]['post_files'] = array();
-                $response['feed_list'][$key]['post_files'][] = $list['post_files'][0];
+                if(isset($list['post_files'][0])){
+
+                    $response['feed_list'][$key]['post_files'] = array();
+                    $response['feed_list'][$key]['post_files'][] = $list['post_files'][0];
+                }
+
+
+                if($response['feed_list'][$key]['forward_id'] > 0){
+
+                    $response['feed_list'][$key] = $feedM->forwardHandler($response['feed_list'][$key]);
+                }
             }
         }
+
 
         $this->send($response);
 
@@ -136,6 +148,12 @@ class PostController extends ApiYafControllerAbstract {
             $myFeeds[$k]['post_content'] = strlen($myFeeds[$k]['post_content']) > 30
                                           ? mb_substr($myFeeds[$k]['post_content'], 0 , 30) . '...'
                                           : $myFeeds[$k]['post_content'];
+
+
+            if($myFeeds[$k]['forward_id'] > 0){
+
+                $myFeeds[$k] = $feedM->forwardHandler($myFeeds[$k]);
+            }
         }
 
 
@@ -165,6 +183,12 @@ class PostController extends ApiYafControllerAbstract {
 
         $feed = $feedM->getFeeds($data['feed_id']);
 
+
+        if($feed['forward_id'] > 0){
+
+           $feed = $feedM->forwardHandler($feed);
+        }
+
         $comments = $feed['comment_list'];
 
         $feed['comment_list'] = array();
@@ -181,7 +205,7 @@ class PostController extends ApiYafControllerAbstract {
         $commentList= array();
 
         $num = 10;
-        $n = 0;
+        //$n = 0;
         $commentTotal = $feed['comment_num'];
 
         $getNum = $num*$page;
@@ -231,5 +255,74 @@ class PostController extends ApiYafControllerAbstract {
 
         $this->send();
 
+    }
+
+    public function forwardAction(){
+
+        $this->required_fields = array_merge(
+            $this->required_fields,
+            array('session_id', 'forward_content','forward_id')
+        );
+
+        $data = $this->get_request_data();
+
+
+        $userId = $this->userAuth($data);
+
+        $feedM = new FeedModel();
+
+        $forwardId = $data['forward_id'];
+
+        $forwardFeed = $feedM->getFeeds($forwardId);
+
+        if(!$forwardFeed){
+
+            $this->send_error(FEED_NOT_EXIST);
+        }
+
+        $sourceId = $forwardFeed['source_id'];
+
+        $time = time();
+
+        $data['lat'] = isset($data['lat']) ? $data['lat'] : 0.00;
+        $data['lng'] = isset($data['lng']) ? $data['lng'] : 0.00;
+
+        $feedM->user_id = $userId;
+        $feedM->post_content = $data['forward_content'];
+        //$feedM->post_files = array();
+        $feedM->lat = $data['lat'];
+        $feedM->lng = $data['lng'];
+        $feedM->created = $time;
+        $feedM->updated = $time;
+        $feedM->source_id = $sourceId;
+        $feedM->forward_id = $forwardId;
+        $feedM->feed_type = 2;
+
+        $feedM->saveProperties();
+
+        $feedM::$table = 'bibi_feeds';
+
+        $feedId = $feedM->CreateM();
+
+        $forwardUsers = RedisDb::getForwardUsers($forwardId);
+
+        $forwardUserId = $forwardFeed['post_user_info']['user_id'];
+
+        array_push($forwardUsers,$forwardUserId);
+
+        RedisDb::saveForwardUser($feedId, $forwardUsers);
+
+        $feedM->updateForwardNum($forwardId);
+
+        $userM = new UserModel();
+        $userM->updateGeoById($userId, $data['lat'], $data['lng']);
+
+        $feedInfo = $feedM->getFeeds($feedId);
+
+        $feedInfo = $feedM->forwardHandler($feedInfo);
+
+        $response = $feedInfo;
+
+        $this->send($response);
     }
 }

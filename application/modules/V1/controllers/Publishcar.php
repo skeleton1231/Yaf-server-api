@@ -35,22 +35,22 @@ class PublishcarController extends ApiYafControllerAbstract
 
     public $vin_fields = array('vin_no', 'vin_file');
 
-    public function publishProgress($data,$userId,$cs){
+    public function publishProgress($data,$userId,$cs,$car_type=PLATFORM_USER_SELLING_CAR,$act='insert'){
 
-        if ($data['action']) {
+//        if ($data['action']) {
+//
+//            $this->submitCheck($data, $this->car_info_fields);
+//
+//        }
 
-            $this->submitCheck($data, $this->car_info_fields);
-
-        }
-
-        if (!$data['vin_no'] && !$data['drive_file'] && $data['action']) {
+        if (!$data['vin_no'] && !$data['vin_file'] && $act == 'insert') {
 
             $this->send_error(CAR_DRIVE_INFO_ERROR);
         }
 
 
         $properties = $data;
-        $properties['car_type'] = PLATFORM_USER_SELLING_CAR;
+        $properties['car_type'] = $car_type;
         unset($properties['device_identifier']);
         unset($properties['session_id']);
         unset($properties['files_id']);
@@ -83,33 +83,41 @@ class PublishcarController extends ApiYafControllerAbstract
         $properties['car_name'] = trim($properties['car_name']);
 
 
-        if (isset($properties['vin_file'])) {
+//        if (isset($properties['vin_file'])) {
+//
+//            $vinFile = new FileModel();
+//            $vinFile = $vinFile->Get($properties['vin_file']);
+//            $properties['vin_file'] = $vinFile;
+//
+//        }
 
-            $vinFile = new FileModel();
-            $vinFile = $vinFile->Get($properties['vin_file']);
-            $properties['vin_file'] = $vinFile;
+//        if (isset($properties['vin_no'])) {
+//
+//            $vinNo = $properties['vin_no'];
+//        }
 
-        }
-
-        if (isset($properties['vin_no'])) {
-
-            $vinNo = $properties['vin_no'];
-        }
-
-        if (!$vinNo && !$vinFile && $data['action']) {
-
-            $this->send_error(CAR_DRIVE_INFO_ERROR);
-        }
+//        if (!$vinNo && !$vinFile && $act == 'insert') {
+//
+//            $this->send_error(CAR_DRIVE_INFO_ERROR);
+//        }
 
 
         $filesInfo = $cs->dealFilesWithString($data['files_id'], $data['files_type']);
 
         $time = time();
-        $properties['created'] = $time;
-        $properties['updated'] = $time;
+        if($act == 'insert'){
+
+            $properties['created'] = $time;
+            $properties['updated'] = $time;
+        }
+        else{
+
+            $properties['updated'] = $time;
+        }
+
         $properties['files'] = $filesInfo ? serialize($filesInfo) : '';
 
-        $properties['verify_status'] = $data['action'] == 0 ? 6 : 1;
+        $properties['verify_status'] = $car_type == PLATFORM_USER_SELLING_CAR ? CAR_VERIFYING : CAR_NOT_AUTH;
         unset($properties['action']);
 
         return $properties;
@@ -120,9 +128,9 @@ class PublishcarController extends ApiYafControllerAbstract
 
         $this->required_fields = array_merge(
             $this->required_fields,
-            array('session_id', 'action', 'files_id', 'files_type','car_id'),
-            array_keys($this->car_info_fields),
-            $this->vin_fields
+            array('session_id','files_id', 'files_type','car_id','car_type')
+            //array_keys($this->car_info_fields),
+            //$this->vin_fields
         );
 
         $data = $this->get_request_data();
@@ -131,9 +139,12 @@ class PublishcarController extends ApiYafControllerAbstract
 
         $cs = new CarSellingModel();
 
-        $properties = $this->publishProgress($data, $userId, $cs);
+        $properties = $this->publishProgress($data, $userId, $cs, $data['car_type'],'update');
 
         unset($properties['car_id']);
+        unset($properties['created']);
+        unset($properties['verify_status']);
+
         $cs->properties = $properties;
 
         $rs = $cs->updateByPrimaryKey($cs::$table,array('hash'=>$data['car_id']),$properties);
@@ -239,7 +250,7 @@ class PublishcarController extends ApiYafControllerAbstract
 
         $objId = $this->getAccessId($data, $userId);
 
-        $carM::$visit_user_id = $objId;
+        $carM->currentUser = $objId;
 
         $list = $carM->getUserPublishCar($objId);
 

@@ -11,7 +11,7 @@ class CarSellingModel extends PdoDb
 
     //public static $table = 'bibi_car_selling_list';
     public $brand_info;
-    public static $visit_user_id = 0;
+    //public static $visit_user_id = 0;
 
 
     public function __construct()
@@ -99,19 +99,23 @@ class CarSellingModel extends PdoDb
         $images = unserialize($car['files']);
         $items = array();
 
-        foreach ($images as $k => $image) {
+        if($images){
 
-            if ($image['hash']) {
+            foreach ($images as $k => $image) {
 
-                $item = array();
-                $item['file_id'] = $image['hash'];
-                $item['file_url'] = IMAGE_DOMAIN . $image['key'];
-                $item['file_type'] = $image['type'] ? $image['type'] : 0;
-                $items[] = $item;
+                if ($image['hash']) {
+
+                    $item = array();
+                    $item['file_id'] = $image['hash'];
+                    $item['file_url'] = IMAGE_DOMAIN . $image['key'];
+                    $item['file_type'] = $image['type'] ? $image['type'] : 0;
+                    $items[] = $item;
+
+                }
 
             }
-
         }
+
 
 
         unset($car['id']);
@@ -146,8 +150,9 @@ class CarSellingModel extends PdoDb
         unset($car['nickname']);
 
         //print_r($car);exit;
+
         $favCarM = new FavoriteCarModel();
-        $favCarM->user_id = self::$visit_user_id;
+        $favCarM->user_id = $this->currentUser;
         $favCarM->car_id  = $car['car_id'];
         $favId = $favCarM->get();
 
@@ -277,7 +282,7 @@ class CarSellingModel extends PdoDb
 
         $sql = '
                 SELECT
-	              t2.user_id,
+	              DISTINCT(t2.user_id),
   	              t2.nickname,
 	              t2.avatar
                 FROM
@@ -290,6 +295,8 @@ class CarSellingModel extends PdoDb
 	            ';
 
         $data = $this->query($sql);
+
+        $items = array();
 
         foreach($data as $k => $d){
 
@@ -352,7 +359,7 @@ class CarSellingModel extends PdoDb
             $item = $this->handlerCar($car);
 
             $items[$k]['car_info'] = $item;
-            $items[$k]['car_users'] = $this->getSameBrandUsers();
+            $items[$k]['car_users'] = $this->getSameBrandUsers($car['brand_id']);
         }
 
 
@@ -448,6 +455,7 @@ class CarSellingModel extends PdoDb
                 LEFT JOIN `bibi_visit_car` AS t4
                 ON t1.hash = t4.car_id
                 WHERE t4.user_id = '.$userId.'
+                ORDER BY t4.`created` DESC
         ';
 
         $number = ($this->page-1)*$pageSize;
@@ -475,7 +483,7 @@ class CarSellingModel extends PdoDb
 
             $item = $this->handlerCar($car);
             $items[$k]['car_info'] = $item;
-            $items[$k]['car_users'] = $this->getSameBrandUsers();
+            $items[$k]['car_users'] = $this->getSameBrandUsers($car['brand_id']);
         }
 
         $total = @$this->query($sqlCnt)[0]['total'];

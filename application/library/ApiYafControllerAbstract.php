@@ -35,12 +35,12 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
             if(!in_array($key, $jsonFields)){
 
-                $data[$key] = addslashes($value);
+                $data[$key] = addslashes(trim($value));
 
             }
             else{
 
-                $data[$key] = $value;
+                $data[$key] = trim($value);
             }
 
         }
@@ -75,7 +75,11 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
     private function validate_auth($device_identifier){
 
+        Common::globalLogRecord('di:', $device_identifier);
+
        $di = RedisDb::getValue('di_'.$device_identifier.'');
+
+        Common::globalLogRecord('di:', $di);
 
        if(!$di){
 
@@ -182,26 +186,38 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
     public function getRcloudToken($userId,$nickname,$avatar){
 
-        $key = 'chat_token_' . $userId;
+//        $key = 'chat_token_' . $userId;
+//
+//        $token = RedisDb::getValue($key);
+//
+//        if(!$token){
+//
+//
+//            $rServer = new RcloudServerAPI(RCLOUD_APP_KEY,RCLOUD_APP_SECRET);
+//            $rs = $rServer->getToken($userId,$nickname,$avatar);
+//            $rs = json_decode($rs, true);
+//
+//            if($rs['code'] == 200){
+//
+//                $token = $rs['token'];
+//                RedisDb::setValue($key, $token);
+//            }
+//            else{
+//                return '';
+//            }
+//
+//        }
 
-        $token = RedisDb::getValue($key);
+        $rServer = new RcloudServerAPI(RCLOUD_APP_KEY,RCLOUD_APP_SECRET);
+        $rs = $rServer->getToken($userId,$nickname,$avatar);
+        $rs = json_decode($rs, true);
 
-        if(!$token){
+        if($rs['code'] == 200){
 
-
-            $rServer = new RcloudServerAPI(RCLOUD_APP_KEY,RCLOUD_APP_SECRET);
-            $rs = $rServer->getToken($userId,$nickname,$avatar);
-            $rs = json_decode($rs, true);
-
-            if($rs['code'] == 200){
-
-                $token = $rs['token'];
-                RedisDb::setValue($key, $token);
-            }
-            else{
-                return '';
-            }
-
+            $token = $rs['token'];
+        }
+        else{
+            return '';
         }
 
 

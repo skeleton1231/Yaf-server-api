@@ -548,8 +548,19 @@ class UserController extends ApiYafControllerAbstract
             $userId = $info[0]['user_id'];
 
             $update['password'] = $data['password'];
-            $update['wx_open_id'] = $data['wx_open_id'];
-            $update['weibo_open_id'] = $data['weibo_open_id'];
+
+            if($data['wx_open_id']){
+
+                $update['wx_open_id'] = $data['wx_open_id'];
+            }
+
+            if( $data['weibo_open_id']){
+
+                $update['weibo_open_id'] = $data['weibo_open_id'];
+
+            }
+
+
             $update['updated'] = $time;
 
             $userModel->update(array('user_id'=>$userId),$update);

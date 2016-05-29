@@ -23,7 +23,7 @@ class VisitcarController extends ApiYafControllerAbstract {
 
         $userId = $this->userAuth($data);
 
-        $carM::$visit_user_id = $userId;
+        $carM->currentUser = $userId;
 
         $list = $carM->getUserVisitCar($userId);
 

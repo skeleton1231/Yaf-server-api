@@ -29,7 +29,7 @@ class FavoritecarController extends ApiYafControllerAbstract{
 
         $carM = new CarSellingModel();
         $carMTable = $carM::$table;
-        $carM::$visit_user_id = $userId;
+        $carM->currentUser = $userId;
         $car = $carM->GetCarInfoById($data['car_id']);
         $favNum = $car['fav_num'] + 1;
 
@@ -116,7 +116,7 @@ class FavoritecarController extends ApiYafControllerAbstract{
 
         $userId = $this->userAuth($data);
 
-        $carM::$visit_user_id = $userId;
+        $carM->currentUser = $userId;
 
         $list = $carM->getUserFavoriteCar($userId);
 

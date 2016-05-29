@@ -53,4 +53,23 @@ class ProfileModel extends PdoDb{
         return $profile;
     }
 
+    public function getUserInfos($users){
+
+        if($users){
+
+            $str = '(' . implode(',' , $users) . ')';
+
+            $sql = 'SELECT `user_id`, `nickname`, `avatar` FROM `bibi_user_profile` WHERE `user_id` in '.$str.'';
+
+            $results = $this->query($sql);
+
+            return $results;
+        }
+        else{
+
+            return array();
+        }
+
+    }
+
 }

@@ -24,6 +24,9 @@ class FeedModel extends PdoDb
     public $lat = 0.00;
     public $lng = 0.00;
     public $is_delete = 1;
+    public $source_id = 0;
+    public $forward_id = 0;
+    public $forward_num = 0;
 
 
     public function __construct()
@@ -50,6 +53,9 @@ class FeedModel extends PdoDb
         $this->properties['lat'] = $this->lat;
         $this->properties['lng'] = $this->lng;
         $this->properties['is_delete'] = $this->is_delete;
+        $this->properties['source_id'] = $this->source_id;
+        $this->properties['forward_id'] = $this->forward_id;
+        $this->properties['forward_num'] = $this->forward_num;
 
     }
 
@@ -60,7 +66,7 @@ class FeedModel extends PdoDb
 
         $sql = '
                  SELECT
-                 t1.feed_id,t1.feed_type,t1.created,t1.post_content,t1.post_files,t1.comment_num,t1.like_num,
+                 t1.feed_id,t1.feed_type,t1.created,t1.post_content,t1.post_files,t1.comment_num,t1.like_num,t1.source_id,t1.forward_id,t1.forward_num,
                  t2.user_id, t2.avatar, t2.nickname,
                  t3.comment_id,t3.content as comment_content,t3.created as comment_created,t3.reply_id as comment_reply_id,
                  t4.user_id AS comment_from_user_id, t4.avatar AS comment_from_avatar, t4.nickname AS comment_from_nickname,
@@ -297,7 +303,6 @@ class FeedModel extends PdoDb
 
         }
 
-
         $feeds = $this->query($sql);
 
         $feeds = $this->handleFeed($feeds,$action);
@@ -347,6 +352,10 @@ class FeedModel extends PdoDb
             $items[$feed['feed_id']]['comment_num'] = $feed['comment_num'];
             $items[$feed['feed_id']]['like_num'] = $feed['like_num'];
             $items[$feed['feed_id']]['created'] = $feed['created'];
+            $items[$feed['feed_id']]['forward_id'] = $feed['forward_id'];
+            $items[$feed['feed_id']]['forward_num'] = $feed['forward_num'];
+            $items[$feed['feed_id']]['source_id'] = $feed['source_id'];
+
 
 
             if ($feed['post_files']) {
@@ -364,9 +373,14 @@ class FeedModel extends PdoDb
                     $postFiles[] = $item;
                 }
 
+                $items[$feed['feed_id']]['post_files'] = $postFiles;
+
+            }
+            else{
+
+                $items[$feed['feed_id']]['post_files'] = array();
             }
 
-            $items[$feed['feed_id']]['post_files'] = $postFiles;
 
 
             $items[$feed['feed_id']]['comment_list'] =
@@ -407,6 +421,8 @@ class FeedModel extends PdoDb
         foreach ($items as $key => $item) {
 
             $item['car_info'] = $this->getFeedRelateCar($item);
+
+            $item['user_favourite_car'] = $this->getFeedUserCar($item);
 
             $commentTotal = count($item['comment_list']);
 
@@ -538,18 +554,43 @@ class FeedModel extends PdoDb
         $cars = $carM->getUserPublishCar($userId);
 
 
-        if ($cars) {
+        if (isset($cars['car_list'][0]['car_info'])) {
 
 //            $num = count($cars['car_list']);
 //
 //            $rand = rand(0, $num - 1);
 
-            return @$cars['car_list'][0]['car_info'];
+            return $cars['car_list'][0]['car_info'];
         } else {
 
             return new \stdClass();
         }
 
+    }
+
+
+    public function getFeedUserCar($feed){
+
+        $userId = $feed['post_user_info']['user_id'];
+
+        $carM = new CarSellingModel();
+
+        $carM->page = 1;
+
+        $cars = $carM->getUserFavoriteCar($userId);
+
+
+        if (isset($cars['car_list'][0]['car_info'])) {
+
+//            $num = count($cars['car_list']);
+//
+//            $rand = rand(0, $num - 1);
+
+            return $cars['car_list'][0]['car_info'];
+        } else {
+
+            return new \stdClass();
+        }
     }
 
     public function serializePostFiles($postFiles)
@@ -606,6 +647,22 @@ class FeedModel extends PdoDb
 
     }
 
+    public function updateForwardNum($feedId){
+
+        $sql = '
+            UPDATE
+            `bibi_feeds`
+            SET
+            forward_num = forward_num + 1
+            WHERE
+            `feed_id` = '.$feedId.'
+            ;
+        ';
+
+        $this->exec($sql);
+
+    }
+
     public function deleteFeed($feedId){
 
         $sql = ' DELETE FROM `bibi_feeds` WHERE `feed_id` = '.$feedId.' AND `user_id` = '.$this->currentUser.' ';
@@ -615,6 +672,40 @@ class FeedModel extends PdoDb
         $this->execute($sql);
     }
 
+    public function updateFeedSourceId($feedId, $sourceId){
 
+        $sql = '
+            UPDATE
+            `bibi_feeds`
+            SET
+            `source_id` = '.$sourceId.'
+            WHERE
+            `feed_id` = '.$feedId.'
+            ;
+        ';
+
+        $this->exec($sql);
+    }
+
+    public function forwardHandler($feed){
+
+        $sourceId = $feed['source_id'];
+        $forwardId = $feed['forward_id'];
+        $profileModel = new ProfileModel();
+
+        $sourceFeed = $this->getFeeds($sourceId);
+
+        $feed['source_feed_info'] = $sourceFeed;
+
+        $users = RedisDb::getForwardUsers($feed['feed_id']);
+
+        $forwardUsers = $profileModel->getUserInfos($users);
+
+        $feed['forward_users'] = $forwardUsers;
+
+        $profileModel = null;
+
+        return $feed;
+    }
 
 }
