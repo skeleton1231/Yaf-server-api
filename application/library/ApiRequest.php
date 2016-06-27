@@ -11,7 +11,7 @@ class ApiRequest{
 
     public static $version = '/v1';
 
-    public static $domain = 'http://127.0.0.1';
+    public static $domain = 'http://120.25.62.110';
 
     public static $appRegisterUrl = "/app/register";
 
@@ -421,7 +421,7 @@ class ApiRequest{
                 AND `files` <> ''
                 AND `brand_id` != 0
                 AND `series_id` != 0
-                LIMIT {$rand}, 1
+                LIMIT 1
                 ";
 
         $car = $pdo->query($sql)[0];
@@ -432,7 +432,7 @@ class ApiRequest{
 
         foreach($files as $k => $file){
 
-            if($k < 11){
+            if($k < 5){
 
                 $this->files_id[] = $file['key'];
 
@@ -498,6 +498,10 @@ class ApiRequest{
         $this->car_intro = '希望和你做成交易';
 
         $this->action = 1;
+
+        $this->device_identifier = '9ff3130b62981fc4551b6ca9d165cee5';
+
+        $this->session_id = 'session5759777c7e3a4';
 
         $this->request($postFields);
 

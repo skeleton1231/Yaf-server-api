@@ -91,7 +91,8 @@ class CommentModel extends PdoDb {
         }
         elseif($userId){
 
-            $sql .= ' t1.to_id = '.$userId.' AND t1.from_id != t1.to_id ';
+            $sql .= ' t1.to_id = '.$userId.' AND t1.from_id != t1.to_id  ORDER BY t1.created DESC
+';
 
             $sqlCnt .= ' t1.to_id = '.$userId.' AND t1.from_id != t1.to_id ';
 

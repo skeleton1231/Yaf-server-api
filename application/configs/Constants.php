@@ -22,7 +22,7 @@ define('NOT_FOUND', 40004);
 define('MODULE_NOT_ALLOWED', 40005);
 define('METHOD_NOT_ALLOWED', 40006);
 define('APP_NOT_AUTHORIZED', 40007);
-
+define('SYSTEM_FAIL', 40008);
 
 
 //app 注册
@@ -78,6 +78,9 @@ define('POST_IMAGE_ERROR', 62001);
 define('COMMENT_USER_ERROR',66001);
 define('FEED_NOT_EXIST' , 66002);
 
+define('FEED_HAS_LIKED',67000);
+define('FEED_LIKE_HAS_CANCLED',67001);
+
 //qiniu
 define('QINIU_UPLOAD_ERROR' , 70001);
 
@@ -110,9 +113,9 @@ define('CAR_NOT_AUTH' , 12);
 define('QI_NIU_AK','b2uNBag0oxn1Kh1-3ZaX2I8PUl_o2r19RWerT3yI');
 define('QI_NIU_SK','5RgnuN64dSEJoitJwUvMkMGypaifc9PqSOvjYd2f');
 
-define('IMAGE_DOMAIN' , 'http://7xopqk.com1.z0.glb.clouddn.com/');
+define('IMAGE_DOMAIN' , 'http://img.bibicar.cn/');
 
-define('AVATAR_DEFAULT', 'http://7xopqk.com1.z0.glb.clouddn.com/avatar_default.jpg');
+define('AVATAR_DEFAULT', 'http://img.bibicar.cn/avatar_default.jpg');
 
 
 define("ORDER_BY_DEFAULT", 0);

@@ -48,6 +48,7 @@ class LikeModel extends PdoDb {
                 t3.user_id = '.$this->currentUser.'
                 AND
                 t3.user_id != t1.user_id
+                ORDER BY t1.created DESC 
         ';
 
         $sqlCnt = '
@@ -149,8 +150,6 @@ class LikeModel extends PdoDb {
 
             $list = array();
 
-//            $friendShipM = new FriendShipModel();
-//
             foreach($likes as $like){
 
                 $item[] = $like['user_info'];
@@ -194,9 +193,11 @@ class LikeModel extends PdoDb {
 
         $sql = 'DELETE FROM `bibi_likes` WHERE `feed_id`='.$feedId.' AND `user_id`='.$userId.'';
 
-        $this->execute($sql);
+        $rs = $this->execute($sql);
 
         RedisDb::delValue($key);
+
+        return $rs;
     }
 
 }

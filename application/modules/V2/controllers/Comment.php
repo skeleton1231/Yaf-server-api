@@ -64,11 +64,14 @@ class CommentController extends ApiYafControllerAbstract {
 
         $comment = $commentM->getComment($commentId , $data['feed_id']);
 
-        $mh = new MessageHelper;
+        if($userId != $toId){
 
-        $nickname = $comment['from_user_info']['profile']['nickname'];
-        $content = ''.$nickname.'评论了你';
-        $mh->commentNotify($toId, $content);
+            $mh = new MessageHelper;
+
+            $nickname = $comment['from_user_info']['profile']['nickname'];
+            $content = ''.$nickname.'评论了你';
+            $mh->commentNotify($toId, $content);
+        }
 
         $this->send($comment);
 

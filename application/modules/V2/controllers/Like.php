@@ -51,13 +51,16 @@ class LikeController extends ApiYafControllerAbstract {
 
                 $like = $likeM->getLike($userId, $data['feed_id']);
 
-                $mh = new MessageHelper;
+                if($userId != $toId){
 
-                $userM = new ProfileModel();
-                $profile = $userM->getProfile($userId);
-                $content = ''.$profile["nickname"].'赞了你';
+                    $mh = new MessageHelper;
 
-                $mh->likeNotify($toId, $content);
+                    $userM = new ProfileModel();
+                    $profile = $userM->getProfile($userId);
+                    $content = ''.$profile["nickname"].'赞了你';
+
+                    $mh->likeNotify($toId, $content);
+                }
 
                 $this->send($like['user_info']);
             }

@@ -118,7 +118,7 @@ class FeedModel extends PdoDb
                         FROM
                         `bibi_feeds` AS t1
                         ORDER BY
-                        like_num DESC, comment_num DESC, feed_id DESC
+                        like_num DESC
                         LIMIT ' . $number . ' , ' . $pageSize . '
                     ';
 
@@ -129,7 +129,7 @@ class FeedModel extends PdoDb
                         FROM
                         `bibi_feeds` AS t1
                         ORDER BY
-                        like_num DESC, comment_num DESC, feed_id DESC
+                        like_num DESC
                     ';
 
 
@@ -138,7 +138,7 @@ class FeedModel extends PdoDb
                     $result = @$this->query($sqlHot);
                     $result = $this->implodeArrayByKey('feed_id', $result);
 
-                    $sql .= ' WHERE t1.feed_id in (' . $result . ') '; //ORDER BY t3.comment_id DESC
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ORDER BY t1.`like_num` DESC , t1.`created` DESC'; //ORDER BY t3.comment_id DESC
 
                     break;
 
@@ -445,7 +445,7 @@ class FeedModel extends PdoDb
             }
 
 
-            $item['comment_num'] = $commentTotal;
+            //$item['comment_num'] = $item['comment_num'];
 
             $likeList = array();
             $likeTotal = count($item['like_list']);
@@ -463,7 +463,7 @@ class FeedModel extends PdoDb
 
             $item['like_list'] = $likeList;
 
-            $item['like_num'] = $likeTotal;
+            //$item['like_num'] = $likeTotal;
 
             $isLike = RedisDb::getValue('like_'.$item['feed_id'].'_'.$this->currentUser.'');
 
@@ -577,20 +577,21 @@ class FeedModel extends PdoDb
 
         $carM->page = 1;
 
-        $cars = $carM->getUserFavoriteCar($userId);
+        $car = $carM->getUserCar($userId);
 
+        return $car;
 
-        if (isset($cars['car_list'][0]['car_info'])) {
-
-//            $num = count($cars['car_list']);
+//        if (isset($cars['car_list']['car_info'])) {
 //
-//            $rand = rand(0, $num - 1);
-
-            return $cars['car_list'][0]['car_info'];
-        } else {
-
-            return new \stdClass();
-        }
+////            $num = count($cars['car_list']);
+////
+////            $rand = rand(0, $num - 1);
+//
+//            return $cars['car_list'][0]['car_info'];
+//        } else {
+//
+//            return new \stdClass();
+//        }
     }
 
     public function serializePostFiles($postFiles)
@@ -614,16 +615,17 @@ class FeedModel extends PdoDb
 
     }
 
-    public function updateCommentNum($feedId){
+    public function updateCommentNum($feedId, $action='add'){
+
+        $condition = $action == 'add' ? 'comment_num = comment_num + 1' : 'comment_num = comment_num - 1';
 
         $sql = '
             UPDATE
             `bibi_feeds`
             SET
-            comment_num = comment_num + 1
+            '.$condition.'
             WHERE
-            `feed_id` = '.$feedId.'
-            ;
+            `feed_id` = '.$feedId.';
         ';
 
         $this->exec($sql);
@@ -631,13 +633,15 @@ class FeedModel extends PdoDb
     }
 
 
-    public function updateLikeNum($feedId){
+    public function updateLikeNum($feedId, $action='add'){
+
+        $condition = $action == 'add' ? 'like_num = like_num + 1' : 'like_num = like_num - 1';
 
         $sql = '
             UPDATE
             `bibi_feeds`
             SET
-            like_num = like_num + 1
+            '.$condition.'
             WHERE
             `feed_id` = '.$feedId.'
             ;
@@ -667,9 +671,8 @@ class FeedModel extends PdoDb
 
         $sql = ' DELETE FROM `bibi_feeds` WHERE `feed_id` = '.$feedId.' AND `user_id` = '.$this->currentUser.' ';
 
-        echo $sql;exit;
-
         $this->execute($sql);
+
     }
 
     public function updateFeedSourceId($feedId, $sourceId){

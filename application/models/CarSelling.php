@@ -40,7 +40,7 @@ class CarSellingModel extends PdoDb
 
 
         $car = @$this->query($sql)[0];
-
+        
         if (!$car) {
 
             return array();
@@ -115,8 +115,6 @@ class CarSellingModel extends PdoDb
 
             }
         }
-
-
 
         unset($car['id']);
         $car['car_id'] = $car['hash'];
@@ -577,6 +575,39 @@ class CarSellingModel extends PdoDb
 
     }
 
+    public function getUserCars($userId){
+
+        $sql = '
+            SELECT
+            t1.*,
+            t3.avatar,t3.nickname
+            FROM `' . self::$table . '`
+            AS t1
+            LEFT JOIN `bibi_user` AS t2
+            ON t1.user_id = t2.user_id
+            LEFT JOIN `bibi_user_profile` AS t3
+            ON t2.user_id = t3.user_id
+            WHERE t1.user_id = "' . $userId . '"
+            AND t1.car_type = 3
+        ';
+
+        $cars = $this->query($sql);
+
+        $items = array();
+
+        if($cars){
+
+            foreach($cars as $k => $car){
+
+                $item = $this->handlerCar($car);
+                $items[$k] = $item;
+            }
+        }
+
+        return $items;
+
+    }
+
 
     public function getUserCar($userId){
 
@@ -595,6 +626,14 @@ class CarSellingModel extends PdoDb
         }
 
         return $carInfo;
+
+    }
+
+    public function deleteCarById($userId , $carId){
+
+        $sql = 'DELETE FROM `bibi_car_selling_list` WHERE `user_id` = '.$userId.' AND `hash`="'.$carId.'"';
+
+        $this->execute($sql);
 
     }
 

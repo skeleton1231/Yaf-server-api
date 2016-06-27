@@ -113,18 +113,16 @@ class TestController extends Yaf_Controller_Abstract {
     }
 
 
-    public function sysMessageAction(){
+    public function sysMessageAction($type=1){
 
 
         $rc = new RcloudServerAPI(RCLOUD_APP_KEY, RCLOUD_APP_SECRET);
 
-//        $content = array(
-//            "content"=>"时间:2013-12-29 11:57:29;地址:316省道53KM+200M;详情:16362->驾驶中型以上载客载货汽车、校车、危险物品运输车辆以外的其他机动车在高速公路以外的道路上行驶超过规定时速20%以上未达50%的;扣分:6;缴费:100;是否处理:否;"
-//            );
+        $userId = 314;
 
-       // $content = json_encode($content);
+        if($type == 1){
 
-        $content = '{
+            $content = '{
 			"date":"2013-12-29 11:57:29",
 			"area":"316省道53KM+200M",
 			"act":"16362 : 驾驶中型以上载客载货汽车、校车、危险物品运输车辆以外的其他机动车在高速公路以外的道路上行驶超过规定时速20%以上未达50%的",
@@ -134,14 +132,77 @@ class TestController extends Yaf_Controller_Abstract {
 			"handled":"0"
 			}';
 
-        $content = json_decode($content,true);
+            $content = json_decode($content,true);
 
-        $json = array('content'=>$content , 'extra'=>'');
+            $json = array('content'=>$content , 'extra'=>'');
 
-        $json = json_encode($json);
+            $json = json_encode($json);
 
-        $response = $rc->messageSystemPublish(314 , array(342),"BBMsg",$json,'你有新的违章消息',array());
+            $rc->messagePublish(1 , array($userId),"BBMsg",$json,'你有新的违章消息');
 
-        print_r($response);
+        }
+        elseif($type == 2){
+
+            $carModel = new CarSellingModel();
+            $carInfo = $carModel->GetCarInfoById('576bb220c300c');
+
+            $imgUrl = $carInfo['files'][0]['file_url'];
+            $content['title'] = '二手车推荐';
+            $content['content'] = $carInfo['car_name'];
+            $content['imageUri'] = $imgUrl;
+            $content['url'] = 'bibicar://gotoCar?car_id=5762e10a94a11';
+            $content = json_encode($content);
+
+            $rs = $rc->messagePublish(1, array($userId),"RC:ImgTextMsg",$content,'你有新的二手车推荐');
+
+            print_r($rs);
+        }
+        elseif($type == 3){
+
+            $content['content'] = 'xxxxx';
+            $content = json_encode($content);
+            $rc->messagePublish(1, array($userId),"RC:TxtMsg",$content,'你有新的一条消息');
+
+
+        }
+        elseif($type == 4){
+
+            $content['content'] = 'xxx评论了你';
+            $content = json_encode($content);
+            $rc->messagePublish(2, array($userId),"RC:TxtMsg",$content,'xxx评论了你');
+        }
+        elseif($type == 5){
+
+            $content['content'] = 'xxx赞了你';
+            $content = json_encode($content);
+            $rc->messagePublish(3, array($userId),"RC:TxtMsg",$content,'xxx赞了你');
+        }
+
+    }
+
+    public function loadUserAction(){
+
+        $users = array(
+            "旅先生",
+            "Tony-P",
+            "松鼠",
+            "尚尚",
+            "宋小鹿",
+            "Jazz-P",
+            "糖先生",
+            "张大宁",
+            "MR·胡",
+            "吴简",
+            "PP-34",
+            "James-P",
+            "Noble-李尔",
+            "Kevin",
+            "萝卜-夢",
+            "Sam-P",
+            "车先锋"
+        );
+
+        
+
     }
 }

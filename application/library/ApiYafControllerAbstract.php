@@ -137,6 +137,9 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
      */
     public function send($data = array(),$type='') {
 
+
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Credentials: true');
         header('Content-type: application/json');
         $response = Common::getSuccessRes($data,$type='');
 
@@ -149,6 +152,9 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
      * @param int $errorStatus 状态码
      */
     public function send_error($errorCode, $errorStatus = STATUS_FAIL) {
+
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Credentials: true');
         header('Content-type: application/json');
         $response = Common::getFailRes($errorCode, $errorStatus);
         echo $response;
