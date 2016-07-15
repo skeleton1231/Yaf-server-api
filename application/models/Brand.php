@@ -141,6 +141,11 @@ class BrandModel extends PdoDb{
                 $info = $model[0];
                 $info['series_id'] = $seriesId;
 
+                $name = explode(' ', $info['model_name']);
+
+                $info['model_name'] = $name[0] . ' ' . $name[1] . ' ' . $name[2];
+
+
                 RedisDb::setValue($key, serialize($info));
 
                 return $info;
@@ -153,7 +158,13 @@ class BrandModel extends PdoDb{
         }
         else{
 
-            return unserialize($model);
+            $model = unserialize($model);
+
+            $name = explode(' ', $model['model_name']);
+
+            $model['model_name'] = $name[0] . ' ' . $name[1] . ' ' . $name[2];
+
+            return $model;
         }
 
     }

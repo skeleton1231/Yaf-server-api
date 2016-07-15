@@ -9,7 +9,7 @@
 
 class ApiRequest{
 
-    public static $version = '/v1';
+    public static $version = '/v2';
 
     public static $domain = 'http://120.25.62.110';
 
@@ -261,14 +261,14 @@ class ApiRequest{
 
         $this->url  = $this->getUserRegisterUrl();
 
-        $faker = $this->getFakerInstance();
+        //$faker = $this->getFakerInstance();
 
         //$this->mobile = $faker->phoneNumber;
-        $this->nickname = $faker->lastName;
+        //$this->nickname = $faker->lastName;
 
         $data = $this->request($postFields);
 
-        $this->session_id = $data->session_id;
+        //$this->session_id = $data->session_id;
 
     }
 

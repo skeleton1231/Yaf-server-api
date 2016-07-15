@@ -325,7 +325,8 @@ class CarSellingModel extends PdoDb
                 LEFT JOIN `bibi_user_profile` AS t3
                 ON t2.user_id = t3.user_id
             WHERE
-                t2.user_id = '.$userId.' AND t1.car_type = '.PLATFORM_USER_SELLING_CAR.'
+                t2.user_id = '.$userId.' AND 
+                (t1.car_type = '.PLATFORM_USER_SELLING_CAR.' OR t1.car_type = '.PLATFORM_USER_NEW_CAR.')
             ORDER BY
                 t1.updated DESC
         ';
@@ -343,7 +344,9 @@ class CarSellingModel extends PdoDb
                 LEFT JOIN `bibi_user_profile` AS t3
                 ON t2.user_id = t3.user_id
             WHERE
-                t2.user_id = '.$userId.' AND t1.car_type = '.PLATFORM_USER_SELLING_CAR.'
+                t2.user_id = '.$userId.' AND 
+                (t1.car_type = '.PLATFORM_USER_SELLING_CAR.' OR t1.car_type = '.PLATFORM_USER_NEW_CAR.')
+
         ';
 
 

@@ -9,6 +9,18 @@
 class PublishcarController extends ApiYafControllerAbstract
 {
 
+    public $new_car_info_fields = array(
+
+        'brand_id' => CAR_BRAND_SERIES_MODEL_ERROR,
+        'series_id' => CAR_BRAND_SERIES_MODEL_ERROR,
+        'model_id' => CAR_BRAND_SERIES_MODEL_ERROR,
+        'price' => CAR_PRICE_ERROR,
+        'city_id' => CAR_CITY_ERROR,
+        'car_color' => CAR_COLOR_ERROR,
+        'car_no' => CAR_NO_ERROR,
+        'car_intro' => CAR_INTRO_ERROR,
+    );
+
 
     public $car_info_fields = array(
 
@@ -16,7 +28,7 @@ class PublishcarController extends ApiYafControllerAbstract
         'series_id' => CAR_BRAND_SERIES_MODEL_ERROR,
         'model_id' => CAR_BRAND_SERIES_MODEL_ERROR,
         'price' => CAR_PRICE_ERROR,
-        'board_time' => CAR_BOARD_TIME_ERROR,
+        //'board_time' => CAR_BOARD_TIME_ERROR,
         'mileage' => CAR_MILEAGE_ERROR,
         'car_status' => CAR_STATUS_ERROR,
         'city_id' => CAR_CITY_ERROR,
@@ -25,9 +37,9 @@ class PublishcarController extends ApiYafControllerAbstract
         'contact_name' => CAR_CONTACT_NAME_ERROR,
         'contact_address' => CAR_CONTACT_ADDRESS_ERROR,
         'maintain' => CAR_MAINTAIN_ERROR,
-        'is_transfer' => CAR_IS_TRANSFER_ERROR,
-        'insurance_due_time' => CAR_INSURANCE_DUE_TIME_ERROR,
-        'check_expiration_time' => CAR_EXPIRATION_TIME_ERROR,
+        //'is_transfer' => CAR_IS_TRANSFER_ERROR,
+        //'insurance_due_time' => CAR_INSURANCE_DUE_TIME_ERROR,
+        //'check_expiration_time' => CAR_EXPIRATION_TIME_ERROR,
         'car_intro' => CAR_INTRO_ERROR,
         'exchange_time' => CAR_EXCHANGE_TIME_ERROR,
 
@@ -43,7 +55,7 @@ class PublishcarController extends ApiYafControllerAbstract
 //
 //        }
 
-        if (!$data['vin_no'] && !$data['vin_file'] && $act == 'insert') {
+        if (!$data['vin_no'] && !$data['vin_file'] && $act == 'insert' && $car_type==PLATFORM_USER_SELLING_CAR) {
 
             $this->send_error(CAR_DRIVE_INFO_ERROR);
         }
@@ -82,26 +94,6 @@ class PublishcarController extends ApiYafControllerAbstract
         $properties['car_name'] = $brandM['brand_name'] . ' ' . $seriesM['series_name'] . ' ' . $modelM['model_name'];
         $properties['car_name'] = trim($properties['car_name']);
 
-
-//        if (isset($properties['vin_file'])) {
-//
-//            $vinFile = new FileModel();
-//            $vinFile = $vinFile->Get($properties['vin_file']);
-//            $properties['vin_file'] = $vinFile;
-//
-//        }
-
-//        if (isset($properties['vin_no'])) {
-//
-//            $vinNo = $properties['vin_no'];
-//        }
-
-//        if (!$vinNo && !$vinFile && $act == 'insert') {
-//
-//            $this->send_error(CAR_DRIVE_INFO_ERROR);
-//        }
-
-
         $filesInfo = $cs->dealFilesWithString($data['files_id'], $data['files_type']);
 
         $time = time();
@@ -117,7 +109,7 @@ class PublishcarController extends ApiYafControllerAbstract
 
         $properties['files'] = $filesInfo ? serialize($filesInfo) : '';
 
-        $properties['verify_status'] = $car_type == PLATFORM_USER_SELLING_CAR ? CAR_VERIFYING : CAR_NOT_AUTH;
+        $properties['verify_status'] = $car_type == (PLATFORM_USER_SELLING_CAR || PLATFORM_USER_NEW_CAR) ? CAR_VERIFYING : CAR_NOT_AUTH;
         unset($properties['action']);
 
         return $properties;
@@ -168,8 +160,6 @@ class PublishcarController extends ApiYafControllerAbstract
 
         }
 
-
-
     }
 
     public function createAction()
@@ -217,6 +207,49 @@ class PublishcarController extends ApiYafControllerAbstract
 
     }
 
+
+    public function newCarAction(){
+
+        $this->required_fields = array_merge(
+            $this->required_fields,
+            array('session_id', 'action', 'files_id', 'files_type'),
+            array_keys($this->new_car_info_fields)
+        );
+
+        $data = $this->get_request_data();
+
+        $userId = $this->userAuth($data);
+
+        $cs = new CarSellingModel();
+
+        $properties = $this->publishProgress($data, $userId, $cs,PLATFORM_USER_NEW_CAR);
+
+        $properties['hash'] = uniqid();
+
+        unset($properties['car_id']);
+
+        $cs->properties = $properties;
+
+        $carId = $cs->CreateM();
+
+        if ($carId) {
+
+            $ifr = new ItemFilesRelationModel();
+            $ifr->CreateBatch($carId, $data['files_id'], ITEM_TYPE_CAR, $data['files_type']);
+
+            $carInfo = $cs->GetCarInfoById($properties['hash']);
+
+            $response['car_info'] = $carInfo;
+
+            $this->send($response);
+
+        } else {
+
+            $this->send_error(CAR_ADDED_ERROR);
+
+        }
+    }
+
     private function submitCheck($data, $car_info_fields)
     {
 
@@ -260,4 +293,5 @@ class PublishcarController extends ApiYafControllerAbstract
 
         $this->send($response);
     }
+
 }

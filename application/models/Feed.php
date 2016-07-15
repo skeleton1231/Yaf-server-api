@@ -27,6 +27,7 @@ class FeedModel extends PdoDb
     public $source_id = 0;
     public $forward_id = 0;
     public $forward_num = 0;
+    public $loginUser = 0;
 
 
     public function __construct()
@@ -59,7 +60,7 @@ class FeedModel extends PdoDb
 
     }
 
-    public function getFeeds($feedId = 0, $type = 0, $page = 1)
+    public function getFeeds($feedId = 0, $type = 0, $userId = 0 ,$page = 1)
     {
 
         $action = 'list';
@@ -305,7 +306,7 @@ class FeedModel extends PdoDb
 
         $feeds = $this->query($sql);
 
-        $feeds = $this->handleFeed($feeds,$action);
+        $feeds = $this->handleFeed($feeds,$action,$userId);
 
 
         if(!$feedId){
@@ -327,7 +328,7 @@ class FeedModel extends PdoDb
 
     }
 
-    public function handleFeed($feeds, $action='list')
+    public function handleFeed($feeds, $action='list',$userId = 0)
     {
 
         $items = array();
@@ -464,11 +465,14 @@ class FeedModel extends PdoDb
             $item['like_list'] = $likeList;
 
             //$item['like_num'] = $likeTotal;
+            $likeKey= 'like_'.$item['feed_id'].'_'.$userId;
 
-            $isLike = RedisDb::getValue('like_'.$item['feed_id'].'_'.$this->currentUser.'');
+            Common::globalLogRecord('like key', $likeKey);
+
+
+            $isLike = RedisDb::getValue($likeKey);
 
             $item['is_like']  = $isLike ? $isLike : 2;
-
 
             $list[] = $item;
         }
@@ -709,6 +713,14 @@ class FeedModel extends PdoDb
         $profileModel = null;
 
         return $feed;
+    }
+
+    public function getPublishedFeedTotal($userId){
+
+        $model = new Model('bibi_feeds');
+        $total = $model->where(array('user_id'=>$userId))->count();
+
+        return $total;
     }
 
 }

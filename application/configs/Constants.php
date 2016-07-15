@@ -96,6 +96,9 @@ define('PLATFORM_USER_SELLING_CAR', 1);
 define('OTHER_SELLING_CAR', 2);
 define('PLATFORM_USER_OWNER_CAR', 3);
 define('PLATFORM_SELLING_CAR', 4);
+define('PLATFORM_USER_NEW_CAR', 0);
+
+
 
 
 //car status 1:审核中 2:审核通过 3:审核失败 4:已卖出 5:已下架 11:已认证 12:未认证
@@ -129,6 +132,7 @@ define("ORDER_BY_MILEAGE_ASC",4);
 //define("RCLOUD_APP_SECRET",'oqWp38xqaYifT');
 
 //release
+
 define("RCLOUD_APP_KEY",'sfci50a7c23ei');
 define("RCLOUD_APP_SECRET",'rTdKRNXsuO');
 

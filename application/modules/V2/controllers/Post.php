@@ -94,7 +94,7 @@ class PostController extends ApiYafControllerAbstract {
 
         $feedM->currentUser = $userId;
 
-        $response = $feedM->getFeeds(0,$data['post_type'],$data['page']);
+        $response = $feedM->getFeeds(0,$data['post_type'],$userId,$data['page']);
 
         if($response['feed_list']){
 
@@ -137,8 +137,9 @@ class PostController extends ApiYafControllerAbstract {
         $objId = $this->getAccessId($data, $userId);
 
         $feedM->currentUser = $objId;
+        $feedM->loginUser   = $userId;
 
-        $response = $feedM->getFeeds(0,$data['post_type'],$data['page']);
+        $response = $feedM->getFeeds(0,$data['post_type'],$userId, $data['page']);
 
         $myFeeds = $response['feed_list'];
 

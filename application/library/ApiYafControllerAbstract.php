@@ -172,6 +172,7 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
 
             $this->send_error(USER_AUTH_FAIL);
         }
+        
 
         return $result;
     }
@@ -191,29 +192,7 @@ class ApiYafControllerAbstract extends Yaf_Controller_Abstract {
     }
 
     public function getRcloudToken($userId,$nickname,$avatar){
-
-//        $key = 'chat_token_' . $userId;
-//
-//        $token = RedisDb::getValue($key);
-//
-//        if(!$token){
-//
-//
-//            $rServer = new RcloudServerAPI(RCLOUD_APP_KEY,RCLOUD_APP_SECRET);
-//            $rs = $rServer->getToken($userId,$nickname,$avatar);
-//            $rs = json_decode($rs, true);
-//
-//            if($rs['code'] == 200){
-//
-//                $token = $rs['token'];
-//                RedisDb::setValue($key, $token);
-//            }
-//            else{
-//                return '';
-//            }
-//
-//        }
-
+        
         $rServer = new RcloudServerAPI(RCLOUD_APP_KEY,RCLOUD_APP_SECRET);
         $rs = $rServer->getToken($userId,$nickname,$avatar);
         $rs = json_decode($rs, true);

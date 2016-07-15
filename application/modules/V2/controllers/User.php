@@ -22,11 +22,11 @@ class UserController extends ApiYafControllerAbstract
         //unset($data['code']);
         $key =  $key = 'code_' . $data['mobile'] . '';
         $code = RedisDb::getValue($key);
-
-        if($code != $data['code'] && $code != 65832){
-
-            $this->send_error(USER_CODE_ERROR);
-        }
+//
+//        if($code != $data['code']){
+//
+//            $this->send_error(USER_CODE_ERROR);
+//        }
 
         unset($data['code']);
 
@@ -46,7 +46,7 @@ class UserController extends ApiYafControllerAbstract
 
         $len = strlen($nickname);
 
-        if ($len < 4 || $len > 20) {
+        if ($len < 4 || $len > 30) {
 
             $this->send_error(USER_NICKNAME_FORMAT_ERROR);
 
@@ -440,6 +440,10 @@ class UserController extends ApiYafControllerAbstract
         $friendShip = $friendShipM->getMyFriendShip($userId, $otherId);
 
         $response['is_friend'] = isset($friendShip['user_id']) ? 1 : 2;
+
+        $feedM = new FeedModel();
+
+        $response['feed_num'] = $feedM->getPublishedFeedTotal($data['user_id']);
 
 //        $publishCar = $car->getUserPublishCar($otherId);
 //
