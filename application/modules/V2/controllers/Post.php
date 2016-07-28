@@ -117,9 +117,10 @@ class PostController extends ApiYafControllerAbstract {
         $banners = array(
 
             array(
-                'imgUrl'=>'http://pic3.nipic.com/20090709/2893198_075124038_2.jpg',
-                'appUrl'=>'https://www.baidu.com/',
+                'imgUrl'=>'http://img.bibicar.cn/vrcar.jpg',
+                'appUrl'=>'http://vr.bibicar.cn/VRLIST',
             )
+
         );
 
         $response['banners'] = $banners;
