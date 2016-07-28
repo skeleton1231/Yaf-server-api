@@ -643,39 +643,41 @@ class UserController extends ApiYafControllerAbstract
     }
 
     public function searchAction(){
-
-
+       
+        
         $this->required_fields = array_merge($this->required_fields, array('session_id','nickname','page'));
 
         $data = $this->get_request_data();
 
         $userId = $this->userAuth($data);
+        
 
         $nickname = $data['nickname'];
 
         $page = $data['page'];
+        
+         $userModel = new Model('bibi_user_profile');
+         $userModel = new ProfileModel();
+    /*    
+        $sqlCnt = 'SELECT
+                  COUNT(*) AS count FROM `bibi_user_profile` AS t2
+                  LEFT JOIN `bibi_user` AS t1 ON t1.user_id = t2.user_id
+                  WHERE t2.`nickname` LIKE "%'.$nickname.'%"';
 
-        $userModel = new Model('bibi_user_profile');
-
-//        $sqlCnt = 'SELECT
-//                  COUNT(*) AS count FROM `bibi_user` AS t1
-//                  LEFT JOIN `bibi_user_profile` AS t2 ON t1.user_id = t2.user_id
-//                  WHERE t2.`nickname` LIKE "%'.$nickname.'%"';
-//
-//        $count = $userModel->query($sqlCnt)[0]['count'];
-
+        $count = $userModel->query($sqlCnt)[0]['count'];
+    */ 
         $pageSize = 10;
         $number = ($page - 1) * $pageSize;
 
         $sql = 'SELECT 
-                  t2.user_id,t2.nickname,t2.avatar FROM `bibi_user` AS t1 
-                  LEFT JOIN `bibi_user_profile` AS t2 ON t1.user_id = t2.user_id
+                  t2.user_id,t2.nickname,t2.avatar FROM `bibi_user_profile` AS t2 
+                  LEFT JOIN `bibi_user` AS t1 ON t1.user_id = t2.user_id
                   WHERE t2.`nickname` LIKE "%'.$nickname.'%" LIMIT ' . $number . ' , ' . $pageSize . '';
-
+       
         $users = $userModel->query($sql);
-
+       
         $response['list'] = $users;
-
+       
         $this->send($response);
 
     }
