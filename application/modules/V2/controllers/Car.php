@@ -150,7 +150,7 @@ class CarController extends ApiYafControllerAbstract
 
     public function indexAction()
     {
-
+        
         $this->required_fields = array_merge($this->required_fields, array('session_id', 'car_id'));
 
         $data = $this->get_request_data();
@@ -237,12 +237,12 @@ class CarController extends ApiYafControllerAbstract
 
     public function listAction(){
 
-
+        
         $jsonData = require APPPATH .'/configs/JsonData.php';
 
         $this->optional_fields = array('keyword','order_id','brand_id','series_id');
         //$this->required_fields = array_merge($this->required_fields, array('session_id'));
-
+        
 
         $data = $this->get_request_data();
 
@@ -255,7 +255,7 @@ class CarController extends ApiYafControllerAbstract
         $carM = new CarSellingModel();
         $where = 'WHERE t1.files <> "" AND t1.brand_id <> 0 AND t1.series_id <> 0 AND t1.car_type <> 3 ';
 
-        if($data['keyword']){
+      if($data['keyword']){
             $carM->keyword = $data['keyword'];
             $where .= ' AND t1.car_name LIKE "%'.$carM->keyword.'%" ';
         }
@@ -270,13 +270,69 @@ class CarController extends ApiYafControllerAbstract
             $where .= ' AND t1.series_id = '.$data['series_id'].' ';
         }
 
-        if($data['source'] == 1){
+      /*  if($data['source'] == 1){
 
             $where .= ' AND t1.car_type = 1';
         }
+     */
+        if($data['min_price']){    
+             $where .=' AND t1.price >='.$data['min_price'].' ';
+        }
+
+         if($data['max_price']){    
+             $where .=' AND t1.price <='.$data['min_price'].' ';
+        }
+        
+        if($data['min_mileage']){
+             
+             $where .=' AND t1.mileage >='.$data['min_mileage'].' ';
+        }
+         if($data['max_mileage']){
+             
+             $where .=' AND t1.mileage <='.$data['max_mileage'].' ';
+        }
+        if($data['min_board_time']){
+            $year=date("Y");
+            $max=$year-$data['min_board_time'];
+            $where .=' AND t1.board_time <='.$max.' ';
+        } 
+         if($data['max_board_time']){
+            $year=date("Y");
+            $min=$year-$data['max_board_time'];
+            $where .=' AND t1.board_time >='.$max.' ';
+        } 
+
+        if($data['old']){
+            if($data['old']==0){
+               $data['car_type']=0;
+               $where.=' AND t1.car_type='.$data['car_type'].' ';
+            }else{
+               if($data['source']){
+                $data['car_type']=$data['source'];
+                $where.=' AND t1.car_type='.$data['car_type'].' ';
+               }else{
+                //$data['car_type']='1,2';
+                $car1=1;
+                $car2=2;
+                $where.=' AND t1.car_type='.$car1.' ';
+                $where.=' OR t1.car_type='.$car2.' ';
+
+               }
+               
+            }
+        }else{
+            if($data['source']){
+               $data['car_type']=$data['source'];
+               $where.=' AND t1.car_type='.$data['car_type'].' ';
+            }
+        }
+
 
 
         $carM->where = $where;
+        
+
+         
 
         if(isset($jsonData['order_info'][$data['order_id']])) {
 
@@ -323,7 +379,7 @@ class CarController extends ApiYafControllerAbstract
         $bm = new BrandModel();
         $response['brand_info'] = $bm->getBrandModel($data['brand_id']);
         $response['series_info'] = $bm->getSeriesModel($data['brand_id'],$data['series_id']);
-
+        
         $this->send($response);
 
     }
@@ -363,6 +419,9 @@ class CarController extends ApiYafControllerAbstract
 
         $this->send($response);
     }
+
+
+   
 
 
 
