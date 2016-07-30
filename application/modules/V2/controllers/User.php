@@ -651,7 +651,6 @@ class UserController extends ApiYafControllerAbstract
 
         $userId = $this->userAuth($data);
         
-
         $nickname = $data['nickname'];
 
         $page = $data['page'];

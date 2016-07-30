@@ -31,6 +31,16 @@ class LikeController extends ApiYafControllerAbstract {
 
         $like = $likeM->getLike($userId, $data['feed_id']);
 
+        //相关的人
+        $feedrelatedM = new FeedrelatedModel();
+        $data['feed_id']=$data['feed_id'];
+        $data['user_id']=$userId;
+        $data['likes'] ='1';
+        $data['create_time']=time();
+        $feedrelatedM->savefeed($data);
+
+
+
         if(!$like){
 
             $likeM = new LikeModel();

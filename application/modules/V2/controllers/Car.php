@@ -12,8 +12,7 @@ class CarController extends ApiYafControllerAbstract
 
     public function createAction()
     {
-
-        $this->required_fields = array_merge(
+    $this->required_fields = array_merge(
             $this->required_fields,
             array(
                 'session_id',
@@ -275,33 +274,39 @@ class CarController extends ApiYafControllerAbstract
             $where .= ' AND t1.car_type = 1';
         }
      */
+    
         if($data['min_price']){    
              $where .=' AND t1.price >='.$data['min_price'].' ';
         }
 
          if($data['max_price']){    
-             $where .=' AND t1.price <='.$data['min_price'].' ';
+             $where .=' AND t1.price <='.$data['max_price'].' ';
         }
+
         
         if($data['min_mileage']){
-             
-             $where .=' AND t1.mileage >='.$data['min_mileage'].' ';
+             $min_mileage=$data['min_mileage']*10000;
+             $where .=' AND t1.mileage >='.$min_mileage.' ';
         }
          if($data['max_mileage']){
-             
-             $where .=' AND t1.mileage <='.$data['max_mileage'].' ';
+             $max_mileage=$data['max_mileage']*10000;
+             $where .=' AND t1.mileage <='.$max_mileage.' ';
         }
+        
+        
+         $year=date("Y");
         if($data['min_board_time']){
-            $year=date("Y");
+           
             $max=$year-$data['min_board_time'];
             $where .=' AND t1.board_time <='.$max.' ';
         } 
          if($data['max_board_time']){
-            $year=date("Y");
+          
             $min=$year-$data['max_board_time'];
-            $where .=' AND t1.board_time >='.$max.' ';
+            $where .=' AND t1.board_time >='.$min.' ';
         } 
-
+        
+       
         if($data['old']){
             if($data['old']==0){
                $data['car_type']=0;
@@ -327,7 +332,7 @@ class CarController extends ApiYafControllerAbstract
             }
         }
 
-
+         
 
         $carM->where = $where;
         
@@ -418,6 +423,46 @@ class CarController extends ApiYafControllerAbstract
         $response['list'] = $car->getUserCars($objId);
 
         $this->send($response);
+    }
+
+
+    public function checkcarAction(){
+
+        $hphm='粤BJ47T3';   //车牌号码
+        $classno="156920";    //车架号
+        $engineno="920578";    //发动机号
+        $registno=""; //证书编号
+        $city_id="152";   //违章查询地城市ID
+        $car_type="02";    //车辆车类型（"02"：小型汽车）
+        $car_info="hphm=".$hphm."&classno=".$classno."&engineno=".$engineno."&registno=".$registno."&city_id=".$city_id."&city_type=".$car_type;
+
+        //print_r($car_info);exit;
+        $car_info=urlencode($car_info);
+       // print_r($car_info);exit;
+        $car_info="hphm%3d%e7%b2%a4BJ47T3%26classno%3d156920%26engineno%3d920578%26%23174%3bistno%3d%26city_id%3d152%26city_type%3d02";
+        list($usec, $sec) = explode(" ", microtime());
+        $timestamp=((float)$usec + (float)$sec);
+        $app_id="2011";
+        $app_key="b1e312f56de613b049fa308384d7d925";
+        $sign=md5($app_id+$car_info+$timestamp+$app_key);
+        $url="http://www.cheshouye.com/api/weizhang/query_task?car_info=".$car_info."&sign=".$sign."&timestamp=".$timestamp."&app_id=".$app_id;
+        
+
+             //初始化
+        $curl = curl_init();
+        //设置抓取的url
+        curl_setopt($curl, CURLOPT_URL, $url);
+        //设置头文件的信息作为数据流输出
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        //设置获取的信息以文件流的形式返回，而不是直接输出。
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        //执行命令
+        $data = curl_exec($curl);
+        //关闭URL请求
+        curl_close($curl);
+        //显示获得的数据
+        print_r($data);
+    
     }
 
 

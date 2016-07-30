@@ -193,7 +193,14 @@ class PostController extends ApiYafControllerAbstract {
         $feedM->currentUser = $userId;
 
         $feed = $feedM->getFeeds($data['feed_id']);
-
+        
+        //相关的人
+        $feedrelatedM = new FeedrelatedModel();
+        $data['feed_id']=$data['feed_id'];
+        $data['user_id']=$userId;
+        $data['view'] ='1';
+        $data['create_time']=time();
+        $feedrelatedM->savefeed($data);
 
         if($feed['forward_id'] > 0){
 
