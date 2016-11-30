@@ -55,14 +55,12 @@ class ScriptController extends ApiYafControllerAbstract
 
     public function userRegisterAction(){
 
-
-        echo 4444;exit;
-
+    
         $ar = new ApiRequest();
 
         for($i=1; $i<= 10; $i++){
-
-            $ar->appRegister();
+    
+           $ar->appRegister();
 
             $ar->userSendCode();
 
@@ -70,11 +68,11 @@ class ScriptController extends ApiYafControllerAbstract
 
             $ar->userUpdateAll();
 
-            $ar->carCreate();
+         //   $ar->carCreate();
 
-            $ar->publishCarCreate();
+         //   $ar->publishCarCreate();
 
-            sleep(1);
+            
         }
 
 

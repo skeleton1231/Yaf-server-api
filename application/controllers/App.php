@@ -26,9 +26,11 @@ class AppController extends ApiYafControllerAbstract {
         $this->required_fields = array('device_id','device_resolution','device_sys_version','device_type');
 
         $data = $this->get_request_data();
-
+         
         $data['device_identifier'] = $this->generateIdentifier($data);
-
+      
+        unset($data['app/register']);
+        
         //查找是否有该DEVICE_IDENTIFIER
         $appModel = new \AppModel;
 

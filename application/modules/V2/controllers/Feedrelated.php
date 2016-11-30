@@ -20,6 +20,8 @@ class FeedrelatedController extends ApiYafControllerAbstract {
    }
     public function listAction(){
 
+
+        
         $this->required_fields = array_merge($this->required_fields,array('session_id','feed_id','page'));
 
         $data = $this->get_request_data();
@@ -27,11 +29,16 @@ class FeedrelatedController extends ApiYafControllerAbstract {
 
         $sess = new SessionModel();
         $userId = $sess->Get($data);
-
+        
+      //  $data['feed_id']=159;
         $feedrelatedM = new FeedrelatedModel();
         $feedrelatedM->currentUser = $userId;
-        $lists =$feedrelatedM->getFeeds($data);
+        $feeds =$feedrelatedM->getFeeds($data);
+
         $this->send($feeds);
+        
+
+
 
     }
 

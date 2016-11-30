@@ -20,15 +20,16 @@
 class WeiZhang{
     private $appkey = '4b734dfc8847b1d4760e87f24005f3d1'; //申请的全国违章查询APPKEY
 
+    //private $appkey  = '0bd9e052636633c1bb0deb2b18259ead';
     private $cityUrl = 'http://v.juhe.cn/wz/citys';
 
     private $wzUrl = 'http://v.juhe.cn/wz/query';
 
-    public function __construct($appkey){
-        $this->appkey = $appkey;
+  /*  public function __construct($appkey){
+        //$this->appkey = $appkey;
     }
-
-    /**
+   */
+     /**
      * 获取违章支持的城市列表
      * @return array
      */
@@ -37,7 +38,7 @@ class WeiZhang{
         $content = $this->juhecurl($this->cityUrl,$params);
         return $this->_returnArray($content);
     }
-
+ 
     /**
      * 查询车辆违章
      * @param  string $city     [城市代码]
@@ -57,7 +58,7 @@ class WeiZhang{
         $content = $this->juhecurl($this->wzUrl,$params,1);
         return $this->_returnArray($content);
     }
-
+ 
     /**
      * 将JSON内容转为数据，并返回
      * @param string $content [内容]
@@ -66,7 +67,7 @@ class WeiZhang{
     public function _returnArray($content){
         return json_decode($content,true);
     }
-
+ 
     /**
      * 请求接口返回内容
      * @param  string $url [请求的URL地址]
@@ -77,7 +78,7 @@ class WeiZhang{
     public function juhecurl($url,$params=false,$ispost=0){
         $httpInfo = array();
         $ch = curl_init();
-
+ 
         curl_setopt( $ch, CURLOPT_HTTP_VERSION , CURL_HTTP_VERSION_1_1 );
         curl_setopt( $ch, CURLOPT_USERAGENT , 'JuheData' );
         curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT , 60 );

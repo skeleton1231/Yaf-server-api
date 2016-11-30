@@ -57,6 +57,25 @@ class MessageHelper{
         return $rs;
     }
 
+    public function systemNotify($toId,$content){
+       
+        $data['content'] = $content;
+        $data = json_encode($data);
+        $rs = $this->handler->messagePublish(self::SYSTEM_TYPE, array($toId),"RC:TxtMsg",$data,'你有新的消息');
+        return $rs;
+    }
+
+    public function refreshNotify($toId,$content){
+       
+        $json = array('content'=>$content , 'extra'=>'fresh');
+
+        $json = json_encode($json);
+
+        $rs = $this->handler->messagePublish(self::SYSTEM_TYPE , array($toId),"RC:TxtMsg",$json,'你有新的消息');
+
+        return $rs;
+    }
+
     public function wzNotify($toId, $info){
 
 //        $info = '{

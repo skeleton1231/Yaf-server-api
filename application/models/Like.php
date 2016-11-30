@@ -32,8 +32,9 @@ class LikeModel extends PdoDb {
 
         $sql = '
                 SELECT
-                t1.like_id,
-                t2.user_id AS like_user_id, t2.avatar AS like_avatar, t2.nickname AS like_nickname
+                t1.like_id,t1.created,t1.feed_id,
+                t2.user_id AS like_user_id, t2.avatar AS like_avatar, t2.nickname AS like_nickname,
+                t3.post_files,t3.feed_type,t3.image_url
                 FROM
                 `bibi_likes` AS t1
                 LEFT JOIN
@@ -81,6 +82,25 @@ class LikeModel extends PdoDb {
 
         $likes = $this->handleLike($likes);
 
+        foreach($likes as $key =>$value){
+
+             if ($value['post_files'] && $value["feed_type"]==1) {
+
+                $images = unserialize($value['post_files']);
+
+                $postFiles = array();
+
+                foreach ($images as $k => $image) {
+                    $likes[$key]['file_id'] = $image['hash'];
+                    $likes[$key]['file_url'] = IMAGE_DOMAIN . $image['key'];
+                }
+
+            }
+            
+
+
+        }
+
         $count = count($likes);
 
         $list = array();
@@ -99,14 +119,19 @@ class LikeModel extends PdoDb {
 
         $sql = '
                 SELECT
-                t1.like_id,
-                t2.user_id AS like_user_id, t2.avatar AS like_avatar, t2.nickname AS like_nickname
+                t1.like_id,t1.created,t1.feed_id,
+                t2.user_id AS like_user_id, t2.avatar AS like_avatar, t2.nickname AS like_nickname,
+                t3.post_files,t3.feed_type
                 FROM
                 `bibi_likes` AS t1
                 LEFT JOIN
                 `bibi_user_profile` AS t2
                 ON
                 t1.user_id = t2.user_id
+                LEFT JOIN
+                `bibi_feeds` AS t3
+                ON
+                t1.feed_id = t3.feed_id
                 WHERE
                 t1.feed_id = '.$feedId.'
         ';
@@ -126,6 +151,10 @@ class LikeModel extends PdoDb {
                 `bibi_user_profile` AS t2
                 ON
                 t1.user_id = t2.user_id
+                LEFT JOIN
+                `bibi_feeds` AS t3
+                ON
+                t1.feed_id = t3.feed_id
                 WHERE
                 t1.feed_id = '.$feedId.'
             ';
@@ -143,6 +172,25 @@ class LikeModel extends PdoDb {
         $likes = $this->query($sql);
 
         $likes = $this->handleLike($likes);
+
+        foreach($likes as $key =>$value){
+
+             if ($value['post_files'] && $value["feed_type"]== 1) {
+
+                $images = unserialize($value['post_files']);
+
+                $postFiles = array();
+
+                foreach ($images as $k => $image) {
+                    $likes[$key]['file_id'] = $image['hash'];
+                    $likes[$key]['file_url'] = IMAGE_DOMAIN . $image['key'];
+                }
+
+            }
+            
+
+
+        }
 
         if(!$userId){
 

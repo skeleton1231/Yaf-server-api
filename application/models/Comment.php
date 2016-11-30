@@ -34,6 +34,7 @@ class CommentModel extends PdoDb {
         $this->properties['from_id']    = $this->from_id;
         $this->properties['to_id']      = $this->to_id;
         $this->properties['reply_id']   = $this->reply_id;
+        $this->properties['father_id']  = $this->father_id;
         $this->properties['file_url']   = $this->file_url;
         $this->properties['file_type']  = $this->file_type;
         $this->properties['created']    = $this->created;
@@ -46,7 +47,8 @@ class CommentModel extends PdoDb {
             t1.feed_id,
             t1.comment_id,t1.content as comment_content,t1.created as comment_created,t1.reply_id as comment_reply_id,
             t2.user_id AS comment_from_user_id, t2.avatar AS comment_from_avatar, t2.nickname AS comment_from_nickname,
-            t3.user_id AS comment_to_user_id, t3.avatar AS comment_to_avatar, t3.nickname AS comment_to_nickname
+            t3.user_id AS comment_to_user_id, t3.avatar AS comment_to_avatar, t3.nickname AS comment_to_nickname,
+            t4.post_files,t4.feed_type
             FROM
             `bibi_comments` AS t1
             LEFT JOIN
@@ -173,7 +175,7 @@ class CommentModel extends PdoDb {
 
 
     public function deleteComment(){
-
+       
         $sql = '
                 DELETE FROM `bibi_comments`
                 WHERE
@@ -186,4 +188,83 @@ class CommentModel extends PdoDb {
 
         $this->execute($sql);
     }
+
+    public function getCommenttome($commentId=0, $feedId=0, $page=1,$userId = 0){
+
+        $sql = '
+            SELECT
+            t1.feed_id,
+            t1.comment_id,t1.content as comment_content,t1.created as comment_created,t1.reply_id as comment_reply_id,
+            t2.user_id AS comment_from_user_id, t2.avatar AS comment_from_avatar, t2.nickname AS comment_from_nickname,
+            t3.user_id AS comment_to_user_id, t3.avatar AS comment_to_avatar, t3.nickname AS comment_to_nickname,
+            t4.post_files,t4.feed_type,t4.image_url
+            FROM
+            `bibi_comments` AS t1
+            LEFT JOIN
+            `bibi_user_profile` AS t2
+            ON
+            t1.from_id = t2.user_id
+            LEFT JOIN
+            `bibi_user_profile` AS t3
+            ON
+            t1.to_id = t3.user_id
+            INNER JOIN
+            `bibi_feeds` AS t4
+            ON
+            t1.feed_id = t4.feed_id
+            WHERE
+        ';
+
+        $sqlCnt = '
+             SELECT
+            COUNT(t1.comment_id) AS total
+            FROM
+            `bibi_comments` AS t1
+            LEFT JOIN
+            `bibi_user_profile` AS t2
+            ON
+            t1.from_id = t2.user_id
+            LEFT JOIN
+            `bibi_user_profile` AS t3
+            ON
+            t1.to_id = t3.user_id
+            LEFT JOIN
+            `bibi_feeds` AS t4
+            ON
+            t1.feed_id = t4.feed_id
+            WHERE
+
+        ';
+
+        $sql .= ' t1.to_id = '.$userId.' AND t1.from_id != t1.to_id  ORDER BY t1.created DESC';
+
+        $sqlCnt .= ' t1.to_id = '.$userId.' AND t1.from_id != t1.to_id ';
+
+        $total = $this->query($sqlCnt)[0]['total'];
+
+        $pageSize = 10;
+        $number = ($page - 1) * $pageSize;
+
+        $sql .= '  LIMIT ' . $number . ' , ' . $pageSize . ' ';
+
+        $comments = $this->query($sql);
+        $comments = $this->handleComment($comments);
+        if(!$commentId){
+            $count = count($comments);
+            $list['comment_list'] = $comments;
+            $list['has_more'] = (($number + $count) < $total) ? 1 : 2;
+            $list['total'] = $total;
+
+            return $list;
+        }
+        else{
+
+            return isset($comments[0]) ? $comments[0] : array() ;
+        }
+
+    }
+
+
+
+
 }

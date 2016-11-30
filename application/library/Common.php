@@ -1,6 +1,7 @@
 <?php
 
-
+use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
 class Common {
 
     public static function encodeToUtf8($string) {
@@ -98,6 +99,36 @@ class Common {
 
         }else{
             $before_time = floor($time_period/2592000).'个月前';
+        }
+        return $before_time;
+    }
+    
+    //临时改发布时间
+     public static function getBeforeTimes($last_time, $now_time=0){
+        if ($now_time == 0) {
+            $now_time = time();
+        }
+
+        $time_period = $now_time - $last_time;
+
+        if ($time_period < 60) {
+
+            $before_time = abs($time_period).'秒前';
+
+        }elseif ($time_period >=60 && $time_period<3600) {
+
+            $before_time = floor($time_period/60).'分钟前';
+
+        }elseif ($time_period >=3600 && $time_period<86400) {
+
+            $before_time = floor($time_period/3600).'小时前';
+
+        }elseif ($time_period >=86400 && $time_period<2592000) {
+
+            $before_time = floor($time_period/86400).'天前';
+
+        }else{
+            $before_time = floor(($now_time-(floor($time_period/2592000)*2592000))/86400000).'天前';
         }
         return $before_time;
     }
@@ -758,6 +789,36 @@ class Common {
             Common::globalLogRecord("Sending TemplateSMS success, the dateCreated is " . $result->TemplateSMS->dateCreated . ", the smsMessageSid is " . $result->TemplateSMS->smsMessageSid . "!", "sms");
             return true;
         }
+    }
+
+    //七牛获取文件类型
+     public static function checktype($key){
+  
+          $accessKey = QI_NIU_AK;
+          $secretKey = QI_NIU_SK;
+          // 构建鉴权对象
+          $auth = new Auth($accessKey, $secretKey);
+          //初始化BucketManager
+          $bucketMgr = new BucketManager($auth);
+          //你要测试的空间， 并且这个key在你空间中存在
+          $bucket = 'bibi';
+          $key =$key;
+          //获取文件的状态信息
+          list($ret, $err) = $bucketMgr->stat($bucket, $key);
+          $str=explode("/",$ret['mimeType']);
+          return $str[1];
+        
+    }
+
+   //同步推正
+    public static function shiwan($device_identifier){
+         
+          $sql = 'SELECT `device_id` FROM `bibi_device_info` WHERE `device_identifier` = "'.$device_identifier.'"';
+          $pdo = new PdoDb();
+          $id= $pdo->query($sql);
+          if($id){
+            return $id[0]['device_id'];
+          }
     }
 
 

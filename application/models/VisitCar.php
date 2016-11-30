@@ -23,7 +23,7 @@ class VisitCarModel extends PdoDb {
     }
 
     public function get(){
-
+        print_r("dsadslka");
         $key = 'visit_'.$this->user_id.'_'.$this->car_id.'';
 
 

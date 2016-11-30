@@ -34,7 +34,7 @@ class FriendShipModel extends PdoDb {
 
         $sql = '
             SELECT
-            t1.friendship_id,
+            t1.friendship_id,t1.created,
             t2.user_id AS friendship_user_id,
             t2.avatar  AS friendship_avatar,
             t2.nickname AS friendship_nickname
@@ -72,7 +72,7 @@ class FriendShipModel extends PdoDb {
             $pageSize = 10;
             $number = ($page - 1) * $pageSize;
 
-            $sql .= '  LIMIT ' . $number . ' , ' . $pageSize . ' ';
+            $sql .= ' ORDER BY t1.created DESC   LIMIT ' . $number . ' , ' . $pageSize . '';
 
             $total = $this->query($sqlCnt)[0]['total'];
         }
@@ -120,7 +120,7 @@ class FriendShipModel extends PdoDb {
 
         $sql = '
             SELECT
-            t1.friendship_id,
+            t1.friendship_id,t1.created,
             t2.user_id AS friendship_user_id,
             t2.avatar  AS friendship_avatar,
             t2.nickname AS friendship_nickname
@@ -151,7 +151,7 @@ class FriendShipModel extends PdoDb {
         $pageSize = 10;
         $number = ($page - 1) * $pageSize;
 
-        $sql .= '  LIMIT ' . $number . ' , ' . $pageSize . ' ';
+        $sql .= ' ORDER BY t1.created DESC   LIMIT ' . $number . ' , ' . $pageSize . '';
 
         $total = $this->query($sqlCnt)[0]['total'];
 

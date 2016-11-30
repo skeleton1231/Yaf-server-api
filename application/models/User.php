@@ -24,6 +24,13 @@ class UserModel extends PdoDb {
 
     }
 
+    public function changepass($data){
+        $where=array('mobile'=>$data['mobile']);
+        unset($data['mobile']);
+        $id =$this->updateByPrimaryKey(self::$table,$where,$data);
+        return $id;
+    }
+
     public function getInfoByMobile($mobile){
 
         $table = self::$table;

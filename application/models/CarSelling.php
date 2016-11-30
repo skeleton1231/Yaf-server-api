@@ -52,7 +52,7 @@ class CarSellingModel extends PdoDb
 
     }
 
-    public function handlerCar($car){
+    public function handlerCar($car,$userId=0){
 
 
         $brandM = new BrandModel();
@@ -60,6 +60,7 @@ class CarSellingModel extends PdoDb
         $car['brand_info']  = $brandM->getBrandModel($car['brand_id']);
         $car['series_info'] = $brandM->getSeriesModel($car['brand_id'],$car['series_id']);
         $car['model_info']  = $brandM->getModelModel($car['series_id'], $car['model_id']);
+        $car['model_detail']= $brandM->getModelDetail($car['model_id']);
 
         unset($car['brand_id']);
         unset($car['series_id']);
@@ -71,6 +72,8 @@ class CarSellingModel extends PdoDb
         unset($car['baidu_series_id']);
         unset($car['image']);
         unset($car['thumbnail']);
+        
+
 
         if($car['user_id']){
 
@@ -107,7 +110,7 @@ class CarSellingModel extends PdoDb
 
                     $item = array();
                     $item['file_id'] = $image['hash'];
-                    $item['file_url'] = IMAGE_DOMAIN . $image['key'];
+                    $item['file_url'] = IMAGE_DOMAIN . $image['key']."?imageMogr2/auto-orient/thumbnail/1000x/strip";
                     $item['file_type'] = $image['type'] ? $image['type'] : 0;
                     $items[] = $item;
 
@@ -148,15 +151,22 @@ class CarSellingModel extends PdoDb
         unset($car['nickname']);
 
         //print_r($car);exit;
+        //可优化查询
 
-        $favCarM = new FavoriteCarModel();
-        $favCarM->user_id = $this->currentUser;
-        $favCarM->car_id  = $car['car_id'];
-        $favId = $favCarM->get();
+
+        $favkey = 'favorite_'.$userId.'_'.$car['car_id'].'';
+        $favId = RedisDb::getValue($favkey);
 
         $car['is_fav'] = $favId ? 1 : 2;
-        $car['car_time'] = Common::getBeforeTime($car['created']);
+        $car['car_time'] = Common::getBeforeTimes($car['created']);
         //$car['visit_num'] = $car['visit_num'];
+        //
+
+        $likeKey='favoritecarlike_'.$car['car_id'].'_'.$userId.'';
+        Common::globalLogRecord('like key', $likeKey);
+        $isLike = RedisDb::getValue($likeKey);
+
+        $car['is_like']  = $isLike ? 1 : 2;
 
         $favCarM = null;
 
@@ -313,7 +323,12 @@ class CarSellingModel extends PdoDb
 
     public function getUserPublishCar($userId){
 
-        $pageSize = 10;
+        if($userId ==389){
+             $pageSize = 250;
+        }else{
+             $pageSize = 25;
+        }
+        
 
         $sql = '
             SELECT
@@ -327,13 +342,20 @@ class CarSellingModel extends PdoDb
             WHERE
                 t2.user_id = '.$userId.' AND 
                 (t1.car_type = '.PLATFORM_USER_SELLING_CAR.' OR t1.car_type = '.PLATFORM_USER_NEW_CAR.')
-            ORDER BY
-                t1.updated DESC
+
         ';
+
+        if(@$this->brand_id){
+            $sql.= ' AND t1.brand_id = '.$this->brand_id;
+        }
+        if(@$this->series_id){
+            $sql.= ' AND t1.series_id ='.$this->series_id;
+        }
+    
 
         $number = ($this->page-1)*$pageSize;
 
-        $sql .= ' LIMIT '.$number.' , '.$pageSize.' ';
+        $sql .= ' ORDER BY  t1.updated DESC LIMIT '.$number.' , '.$pageSize.' ';
 
         $sqlCnt = '
             SELECT
@@ -348,6 +370,12 @@ class CarSellingModel extends PdoDb
                 (t1.car_type = '.PLATFORM_USER_SELLING_CAR.' OR t1.car_type = '.PLATFORM_USER_NEW_CAR.')
 
         ';
+        if(@$this->brand_id){
+            $sqlCnt.= ' AND t1.brand_id ='.$this->brand_id;
+        }
+        if(@$this->series_id){
+            $sqlCnt.= ' AND t1.series_id ='.$this->series_id;
+        }
 
 
         $cars = $this->query($sql);
@@ -398,7 +426,7 @@ class CarSellingModel extends PdoDb
             ORDER BY t4.created DESC
         ';
 
-        $number = ($this->page-1)*$pageSize;
+        $number = ($this->page - 1)*$pageSize;
 
         $sql .= ' LIMIT '.$number.' , '.$pageSize.' ';
 
@@ -519,6 +547,7 @@ class CarSellingModel extends PdoDb
                  t1.files <> "" AND t1.car_type != 3 AND t1.hash != "'.$carId.'" AND
                  t1.brand_id > 0 AND t1.series_id > 0 AND
                 t1.price BETWEEN '.$minPrice.' AND '.$maxPrice.'
+                AND (t1.verify_status = 2 OR t1.verify_status = 11 OR t1.verify_status =4)
 				ORDER BY t1.car_type ASC, t1.price ASC
                 LIMIT 0 , 20
                 ';
@@ -556,6 +585,7 @@ class CarSellingModel extends PdoDb
                 WHERE
                 t1.files <> "" AND t1.car_type != 3  AND t1.hash != "'.$carId.'" AND
                 t1.brand_id = '.$brand_id.' AND t1.series_id = '.$series_id.'
+                AND (t1.verify_status = 2 OR t1.verify_status = 11 OR t1.verify_status =4)
                 ORDER BY t1.car_type ASC, t1.price ASC
                 LIMIT 0 , 20
                 ';
@@ -595,14 +625,55 @@ class CarSellingModel extends PdoDb
         ';
 
         $cars = $this->query($sql);
-
+        $userId=$this->currentUser;
         $items = array();
 
         if($cars){
 
             foreach($cars as $k => $car){
+                $item = $this->handlerCar($car,$userId);
+                 //爱车点赞的人
+                 $FavcarlikeM = new FavcarlikeModel();
+                 $likes = $FavcarlikeM->getLike(0,$item['car_id'],1);
+                $item['fav_userlist']=$likes;
+            
+                $items[$k] = $item;
+            }
+        }
 
-                $item = $this->handlerCar($car);
+        return $items;
+
+    }
+
+     public function getUserCarshascheck($userId){
+
+        $sql = '
+            SELECT
+            t1.*,
+            t3.avatar,t3.nickname
+            FROM `' . self::$table . '`
+            AS t1
+            LEFT JOIN `bibi_user` AS t2
+            ON t1.user_id = t2.user_id
+            LEFT JOIN `bibi_user_profile` AS t3
+            ON t2.user_id = t3.user_id
+            WHERE t1.user_id = "' . $userId . '"
+            AND t1.car_type = 3 AND t1.verify_status = 11
+        ';
+
+        $cars = $this->query($sql);
+        $userId=$this->currentUser;
+        $items = array();
+
+        if($cars){
+
+            foreach($cars as $k => $car){
+                $item = $this->handlerCar($car,$userId);
+                 //爱车点赞的人
+                 $FavcarlikeM = new FavcarlikeModel();
+                 $likes = $FavcarlikeM->getLike(0,$item['car_id'],1);
+                $item['fav_userlist']=$likes;
+            
                 $items[$k] = $item;
             }
         }
@@ -618,16 +689,38 @@ class CarSellingModel extends PdoDb
 
 
         $carId = @$this->query($sql)[0]['car_id'];
-
+        
         if($carId){
 
             $carInfo = $this->GetCarInfoById($carId);
+
         }
         else{
 
             $carInfo = new stdClass();
         }
+        
+        return $carInfo;
 
+    }
+
+    public function getUsertoCar($userId){
+
+        $sql = ' SELECT `hash` AS car_id FROM `bibi_car_selling_list` WHERE `user_id` = '.$userId.' AND `car_type` = 3 ' ;
+
+
+        $carId = @$this->query($sql)[0]['car_id'];
+        
+        if($carId){
+
+            $carInfo = $this->GetCarInfoById($carId);
+
+        }
+        else{
+
+            $carInfo = array();
+        }
+        
         return $carInfo;
 
     }
@@ -640,6 +733,65 @@ class CarSellingModel extends PdoDb
 
     }
 
+    public function getSameSeriesUsers($series_id){
+            
+            $jsonData = require APPPATH .'/configs/JsonData.php';
+            $sql = '
+                    SELECT
+                      DISTINCT(t2.user_id),
+                      t2.nickname,
+                      t2.avatar
+                    FROM
+                      `bibi_car_selling_list` AS t1
+                    INNER JOIN `bibi_user_profile` AS t2
+                    ON t1.user_id = t2.user_id
+                    WHERE
+                    t1.`car_type` = 3 AND t1.series_id = '.$series_id.'
+                    LIMIT 0, 10
+                    ';
+
+            $data = $this->query($sql);
+
+            $items = array();
+
+            foreach($data as $k => $d){
+
+                $userData = $jsonData['user_info'];
+                $userData['user_id'] = $d['user_id'];
+                $userData['profile']['nickname'] = $d['nickname'];
+                $userData['profile']['avatar']   = $d['avatar'];
+
+                $items[] = $userData;
+
+            }
+            
+            return $items;
+
+    }
+
+    public function getSameDreamCarUser($data){
+         $items = array();
+          if($data['series_id']){
+             $items['car_users'] =$this->getSameSeriesUsers($data['series_id']) ;
+         }else{
+             $items['car_users'] =$this->getSameBrandUsers($data['brand_id']) ;
+         }
+         return $items;
+    }
+   
+   
+
+   public function insertContactSeller($data){
+          $sql = '
+                INSERT INTO `bibi_contact_seller_list`( `user_id`, `seller_id`, `created`) VALUES ('.$data["user_id"].','.$data["seller_id"].','.$data["created"].')
+                    ';
+          $data = $this->query($sql);
+          return $data;
+    }
+   
+   
+       
+        
 
 
 

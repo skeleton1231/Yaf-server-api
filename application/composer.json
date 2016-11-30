@@ -3,9 +3,7 @@
         "php-curl-class/php-curl-class": "^4.8",
     	"predis/predis": "*",
         "qiniu/php-sdk": "*",
-	    "elasticsearch/elasticsearch": "~2.0",
-	    "sunra/php-simple-html-dom-parser": "v1.5.0",
-        "fzaninotto/faker": "^1.5",
-        "faisalman/simple-excel-php" : "0.3.*"
+	"elasticsearch/elasticsearch": "~2.0",
+	 "sunra/php-simple-html-dom-parser": "v1.5.0"
     }
 }

@@ -39,16 +39,17 @@ class FeedrelatedModel extends Model {
 
 
     public function getFeeds($data){
+       
         $feedM=new FeedrelatedModel;
         $options['feed_id']=$data['feed_id'];
        // $options['page']   =$data['page'];
-        $lists=$feedM->select($options);
-
+        $sql='select feed_id,user_id from bibi_feed_related where feed_id='. $options['feed_id'];
+        $lists=$feedM->query($sql);
+        $arr=array();
         foreach($lists as $key =>$value){
-           
-            $profileM=new profileModel;
+            $profileM=new ProfileModel;
             $options=array();
-            $profile=$profileM->getProfile( $value['user_id']);
+            $profile=$profileM->getProfile($value['user_id']);
             $lists[$key]['avatar']=$profile['avatar'];
             $lists[$key]['nickname']=$profile['nickname'];
         }

@@ -323,7 +323,7 @@ $curl = new \Curl\Curl();
 
                     continue;
                 }
-
+                
                 $image = explode('?', $image)[0];
 
                 $file_ext = explode(".", $image);

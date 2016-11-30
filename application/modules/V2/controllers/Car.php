@@ -12,7 +12,8 @@ class CarController extends ApiYafControllerAbstract
 
     public function createAction()
     {
-    $this->required_fields = array_merge(
+
+        $this->required_fields = array_merge(
             $this->required_fields,
             array(
                 'session_id',
@@ -149,7 +150,7 @@ class CarController extends ApiYafControllerAbstract
 
     public function indexAction()
     {
-        
+
         $this->required_fields = array_merge($this->required_fields, array('session_id', 'car_id'));
 
         $data = $this->get_request_data();
@@ -236,12 +237,12 @@ class CarController extends ApiYafControllerAbstract
 
     public function listAction(){
 
-        
+
         $jsonData = require APPPATH .'/configs/JsonData.php';
 
         $this->optional_fields = array('keyword','order_id','brand_id','series_id');
         //$this->required_fields = array_merge($this->required_fields, array('session_id'));
-        
+
 
         $data = $this->get_request_data();
 
@@ -254,7 +255,7 @@ class CarController extends ApiYafControllerAbstract
         $carM = new CarSellingModel();
         $where = 'WHERE t1.files <> "" AND t1.brand_id <> 0 AND t1.series_id <> 0 AND t1.car_type <> 3 ';
 
-      if($data['keyword']){
+        if($data['keyword']){
             $carM->keyword = $data['keyword'];
             $where .= ' AND t1.car_name LIKE "%'.$carM->keyword.'%" ';
         }
@@ -269,75 +270,13 @@ class CarController extends ApiYafControllerAbstract
             $where .= ' AND t1.series_id = '.$data['series_id'].' ';
         }
 
-      /*  if($data['source'] == 1){
+        if($data['source'] == 1){
 
             $where .= ' AND t1.car_type = 1';
         }
-     */
-    
-        if($data['min_price']){    
-             $where .=' AND t1.price >='.$data['min_price'].' ';
-        }
 
-         if($data['max_price']){    
-             $where .=' AND t1.price <='.$data['max_price'].' ';
-        }
-
-        
-        if($data['min_mileage']){
-             $min_mileage=$data['min_mileage']*10000;
-             $where .=' AND t1.mileage >='.$min_mileage.' ';
-        }
-         if($data['max_mileage']){
-             $max_mileage=$data['max_mileage']*10000;
-             $where .=' AND t1.mileage <='.$max_mileage.' ';
-        }
-        
-        
-         $year=date("Y");
-        if($data['min_board_time']){
-           
-            $max=$year-$data['min_board_time'];
-            $where .=' AND t1.board_time <='.$max.' ';
-        } 
-         if($data['max_board_time']){
-          
-            $min=$year-$data['max_board_time'];
-            $where .=' AND t1.board_time >='.$min.' ';
-        } 
-        
-       
-        if($data['old']){
-            if($data['old']==0){
-               $data['car_type']=0;
-               $where.=' AND t1.car_type='.$data['car_type'].' ';
-            }else{
-               if($data['source']){
-                $data['car_type']=$data['source'];
-                $where.=' AND t1.car_type='.$data['car_type'].' ';
-               }else{
-                //$data['car_type']='1,2';
-                $car1=1;
-                $car2=2;
-                $where.=' AND t1.car_type='.$car1.' ';
-                $where.=' OR t1.car_type='.$car2.' ';
-
-               }
-               
-            }
-        }else{
-            if($data['source']){
-               $data['car_type']=$data['source'];
-               $where.=' AND t1.car_type='.$data['car_type'].' ';
-            }
-        }
-
-         
 
         $carM->where = $where;
-        
-
-         
 
         if(isset($jsonData['order_info'][$data['order_id']])) {
 
@@ -384,7 +323,7 @@ class CarController extends ApiYafControllerAbstract
         $bm = new BrandModel();
         $response['brand_info'] = $bm->getBrandModel($data['brand_id']);
         $response['series_info'] = $bm->getSeriesModel($data['brand_id'],$data['series_id']);
-        
+
         $this->send($response);
 
     }
@@ -424,49 +363,6 @@ class CarController extends ApiYafControllerAbstract
 
         $this->send($response);
     }
-
-
-    public function checkcarAction(){
-
-        $hphm='粤BJ47T3';   //车牌号码
-        $classno="156920";    //车架号
-        $engineno="920578";    //发动机号
-        $registno=""; //证书编号
-        $city_id="152";   //违章查询地城市ID
-        $car_type="02";    //车辆车类型（"02"：小型汽车）
-        $car_info="hphm=".$hphm."&classno=".$classno."&engineno=".$engineno."&registno=".$registno."&city_id=".$city_id."&city_type=".$car_type;
-
-        //print_r($car_info);exit;
-        $car_info=urlencode($car_info);
-       // print_r($car_info);exit;
-        $car_info="hphm%3d%e7%b2%a4BJ47T3%26classno%3d156920%26engineno%3d920578%26%23174%3bistno%3d%26city_id%3d152%26city_type%3d02";
-        list($usec, $sec) = explode(" ", microtime());
-        $timestamp=((float)$usec + (float)$sec);
-        $app_id="2011";
-        $app_key="b1e312f56de613b049fa308384d7d925";
-        $sign=md5($app_id+$car_info+$timestamp+$app_key);
-        $url="http://www.cheshouye.com/api/weizhang/query_task?car_info=".$car_info."&sign=".$sign."&timestamp=".$timestamp."&app_id=".$app_id;
-        
-
-             //初始化
-        $curl = curl_init();
-        //设置抓取的url
-        curl_setopt($curl, CURLOPT_URL, $url);
-        //设置头文件的信息作为数据流输出
-        curl_setopt($curl, CURLOPT_HEADER, 1);
-        //设置获取的信息以文件流的形式返回，而不是直接输出。
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        //执行命令
-        $data = curl_exec($curl);
-        //关闭URL请求
-        curl_close($curl);
-        //显示获得的数据
-        print_r($data);
-    
-    }
-
-
-   
 
 
 

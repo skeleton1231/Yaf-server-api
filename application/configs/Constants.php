@@ -84,6 +84,8 @@ define('FEED_LIKE_HAS_CANCLED',67001);
 //qiniu
 define('QINIU_UPLOAD_ERROR' , 70001);
 
+//apply loan
+define('APPLY_LOAN_ERROR' , 72000);
 
 
 //item
@@ -101,7 +103,8 @@ define('PLATFORM_USER_NEW_CAR', 0);
 
 
 
-//car status 1:审核中 2:审核通过 3:审核失败 4:已卖出 5:已下架 11:已认证 12:未认证
+//car status 1:审核中 2:审核通过 3:审核失败 4:已卖出 5:已下架 11:已认证 12:未认证 13：认证失败
+//0:草稿 1:审核中 2:审核通过 3:审核失败 4:已卖出 5:已下架 
 define('CAR_VERIFYING', 1);
 define('CAR_VERIFIED' , 2);
 define('CAR_VERIFY_FAIL',3);

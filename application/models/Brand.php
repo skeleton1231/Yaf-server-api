@@ -54,11 +54,6 @@ class BrandModel extends PdoDb{
 
     public function getBrandModel($brandId){
 
-        $key = 'brandModel.'.$brandId.'';
-
-        $brandM = RedisDb::getValue($key);
-
-        if(!$brandM){
 
             $sql = 'SELECT `brand_id`, `brand_name`, `abbre`, `brand_url` FROM `bibi_car_brand_list` WHERE `brand_id` = "'.$brandId.'" ';
 
@@ -66,20 +61,11 @@ class BrandModel extends PdoDb{
 
             if(isset($brandM[0])){
 
-                RedisDb::setValue($key, serialize($brandM[0]));
-
                 return $brandM[0];
             }
             else{
-
                 return new stdClass;
             }
-
-        }
-        else{
-
-            return unserialize($brandM);
-        }
 
 
 
@@ -87,12 +73,6 @@ class BrandModel extends PdoDb{
 
     public function getSeriesModel($brandId, $seriesId){
 
-
-        $key = 'seriesModel.'.$seriesId.'';
-
-        $series = RedisDb::getValue($key);
-
-        if(!$series){
 
             $sql = 'SELECT `brand_series_id` AS `series_id`, `brand_series_name` AS `series_name`  FROM `bibi_car_brand_series` WHERE `brand_id` = ' . $brandId . ' AND `brand_series_id` = '.$seriesId.' ';
 
@@ -102,9 +82,6 @@ class BrandModel extends PdoDb{
 
                 $info = $series[0];
                 $info['brand_id'] = $brandId;
-
-                RedisDb::setValue($key, serialize($info));
-
                 return $info;
 
             }
@@ -113,12 +90,6 @@ class BrandModel extends PdoDb{
                 return new stdClass();
             }
 
-        }
-        else{
-
-            return unserialize($series);
-
-        }
 
 
     }
@@ -126,13 +97,8 @@ class BrandModel extends PdoDb{
     public function getModelModel($seriesId, $modelId)
     {
 
-        $key = 'modelModel.'.$modelId.'';
 
-        $model = RedisDb::getValue($key);
-
-        if(!$model){
-
-            $sql = 'SELECT `model_id` , `model_name` FROM `bibi_car_series_model` WHERE  `series_id` = '.$seriesId.' AND `model_id`='.$modelId.' ';
+            $sql = 'SELECT `model_id` ,`model_year` , `model_name` FROM `bibi_car_series_model` WHERE  `series_id` = '.$seriesId.' AND `model_id`='.$modelId.' ';
 
             $model = $this->query($sql);
 
@@ -141,12 +107,9 @@ class BrandModel extends PdoDb{
                 $info = $model[0];
                 $info['series_id'] = $seriesId;
 
-                $name = explode(' ', $info['model_name']);
+               // $name = explode(' ', $info['model_name']);
 
-                $info['model_name'] = $name[0] . ' ' . $name[1] . ' ' . $name[2];
-
-
-                RedisDb::setValue($key, serialize($info));
+               // $info['model_name'] = $name[0] . ' ' . $name[1] . ' ' . $name[2];
 
                 return $info;
             }
@@ -155,17 +118,34 @@ class BrandModel extends PdoDb{
                 return new stdClass();
             }
 
-        }
-        else{
 
-            $model = unserialize($model);
 
-            $name = explode(' ', $model['model_name']);
+    }
 
-            $model['model_name'] = $name[0] . ' ' . $name[1] . ' ' . $name[2];
+    public function getModelDetail($modelId)
+    {
 
-            return $model;
-        }
+
+            $sql = 'SELECT * FROM `bibi_car_model_detail` WHERE  `model_id`='.$modelId.' ';
+
+            $model = $this->query($sql);
+
+            if(isset($model[0])){
+
+                $info = $model[0];
+
+               // $name = explode(' ', $info['model_name']);
+
+               // $info['model_name'] = $name[0] . ' ' . $name[1] . ' ' . $name[2];
+
+                return $info;
+            }
+            else{
+
+                return new stdClass();
+            }
+
+
 
     }
 

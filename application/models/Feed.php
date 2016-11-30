@@ -105,10 +105,9 @@ class FeedModel extends PdoDb
 
             $pageSize = 10;
             $number = ($page - 1) * $pageSize;
-
-
+         
             switch ($type) {
-
+                
                 //like_num DESC, comment_num DESC, feed_id DESC
 
                 case 1:
@@ -118,6 +117,7 @@ class FeedModel extends PdoDb
                         t1.feed_id
                         FROM
                         `bibi_feeds` AS t1
+                        WHERE t1.feed_type=1
                         ORDER BY
                         like_num DESC
                         LIMIT ' . $number . ' , ' . $pageSize . '
@@ -129,6 +129,7 @@ class FeedModel extends PdoDb
                         COUNT(t1.feed_id) AS total
                         FROM
                         `bibi_feeds` AS t1
+                         WHERE t1.feed_type=1
                         ORDER BY
                         like_num DESC
                     ';
@@ -143,37 +144,7 @@ class FeedModel extends PdoDb
 
                     break;
 
-                case 3:
-                    //最新消息
-                    $sqlLatest = '
-                        SELECT
-                        t1.feed_id
-                        FROM
-                        `bibi_feeds` AS t1
-                        ORDER BY created DESC
-                        LIMIT ' . $number . ' , ' . $pageSize . '
-                    ';
-
-
-
-                    $sqlLatestCnt = '
-                        SELECT
-                        COUNT(t1.feed_id) AS total
-                        FROM
-                        `bibi_feeds` AS t1
-                        ORDER BY created  DESC
-                    ';
-
-                    $total = $this->query($sqlLatestCnt)[0]['total'];
-
-                    $result = @$this->query($sqlLatest);
-                    $result = $this->implodeArrayByKey('feed_id', $result);
-
-                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ORDER BY `feed_id` DESC ';
-
-                    break;
-
-                case 2:
+                   case 2:
                     //关注
                     $sqlFriend = '
                         SELECT
@@ -190,6 +161,7 @@ class FeedModel extends PdoDb
                         t1.user_id = t3.user_id
                         WHERE
                         t2.user_id = '.$this->currentUser.'
+                        AND t1.feed_type=1
                         ORDER BY t1.`feed_id` DESC
                         LIMIT ' . $number . ' , ' . $pageSize . '
                     ';
@@ -210,6 +182,7 @@ class FeedModel extends PdoDb
                         t1.user_id = t3.user_id
                         WHERE
                         t2.user_id = '.$this->currentUser.'
+                        AND t1.feed_type=1
                         ORDER BY t1.`feed_id` DESC
                     ';
 
@@ -222,6 +195,40 @@ class FeedModel extends PdoDb
 
 
                     break;
+
+                case 3:
+                    //最新消息
+                    $sqlLatest = '
+                        SELECT
+                        t1.feed_id
+                        FROM
+                        `bibi_feeds` AS t1
+                         WHERE t1.feed_type=1
+                        ORDER BY created DESC
+                        LIMIT ' . $number . ' , ' . $pageSize . '
+                    ';
+
+
+
+                    $sqlLatestCnt = '
+                        SELECT
+                        COUNT(t1.feed_id) AS total
+                        FROM
+                        `bibi_feeds` AS t1
+                        WHERE t1.feed_type=1
+                        ORDER BY created  DESC
+                    ';
+
+                    $total = $this->query($sqlLatestCnt)[0]['total'];
+
+                    $result = @$this->query($sqlLatest);
+                    $result = $this->implodeArrayByKey('feed_id', $result);
+
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ORDER BY `feed_id` DESC ';
+
+                    break;
+
+             
 
 
                 case 6:
@@ -277,6 +284,7 @@ class FeedModel extends PdoDb
                         FROM
                         `bibi_feeds` AS t1
                         WHERE t1.user_id = '.$this->currentUser.'
+                         AND t1.feed_type=1
                         ORDER BY t1.feed_id DESC
                         LIMIT ' . $number . ' , ' . $pageSize . '
                     ';
@@ -288,15 +296,63 @@ class FeedModel extends PdoDb
                         FROM
                         `bibi_feeds` AS t1
                         WHERE t1.user_id = '.$this->currentUser.'
+                         AND t1.feed_type=1
                         ORDER BY t1.feed_id DESC
                     ';
+                  
 
                     $total = $this->query($sqlMineCnt)[0]['total'];
 
                     $result = @$this->query($sqlMine);
                     $result = $this->implodeArrayByKey('feed_id', $result);
-
+                   
                     $sql .= ' WHERE t1.feed_id in (' . $result . ') ORDER BY t1.`feed_id` DESC';
+
+                    break;
+
+
+                 case 7:
+                    //话题讨论
+                    $post_content =$this->currenttheme;
+                    
+                    //附近
+                    $sqlNearBy = '
+                        SELECT
+                        t1.feed_id
+                        FROM
+                        `bibi_feeds` AS t1
+                        LEFT JOIN
+                        `bibi_user` AS t2
+                        ON
+                        t1.user_id = t2.user_id
+                        WHERE
+                        t1.post_content LIKE "'.$post_content.'%"
+                        AND t1.feed_type=1
+                        ORDER BY t1.feed_id DESC
+                        LIMIT ' . $number . ' , ' . $pageSize .'
+                    ';
+
+                    $sqlNearByCnt = '
+                        SELECT
+                        COUNT(t1.feed_id) AS total
+                        FROM
+                        `bibi_feeds` AS t1
+                        LEFT JOIN
+                        `bibi_user` AS t2
+                        ON
+                        t1.user_id = t2.user_id
+                        WHERE
+                        t1.post_content LIKE "'.$post_content.'%"
+                        AND t1.feed_type=1
+                        ORDER BY t1.feed_id DESC
+                    ';
+
+                    $total = $this->query($sqlNearByCnt)[0]['total'];
+
+                    $result = @$this->query($sqlNearBy);
+                    $result = $this->implodeArrayByKey('feed_id', $result);
+
+                    $sql .= ' WHERE t1.feed_id in (' . $result . ') ORDER BY t1.`created` DESC';
 
                     break;
             }
@@ -305,10 +361,9 @@ class FeedModel extends PdoDb
         }
 
         $feeds = $this->query($sql);
-
+        
         $feeds = $this->handleFeed($feeds,$action,$userId);
-
-
+        
         if(!$feedId){
 
             $count = count($feeds);
@@ -330,7 +385,7 @@ class FeedModel extends PdoDb
 
     public function handleFeed($feeds, $action='list',$userId = 0)
     {
-
+        
         $items = array();
 
         foreach ($feeds as $k => $feed) {
@@ -357,9 +412,7 @@ class FeedModel extends PdoDb
             $items[$feed['feed_id']]['forward_num'] = $feed['forward_num'];
             $items[$feed['feed_id']]['source_id'] = $feed['source_id'];
 
-
-
-            if ($feed['post_files']) {
+            if ($feed['post_files'] && $feed["feed_type"]==1) {
 
                 $images = unserialize($feed['post_files']);
 
@@ -417,6 +470,7 @@ class FeedModel extends PdoDb
 
         }
 
+        
         $list = array();
 
         foreach ($items as $key => $item) {
@@ -444,8 +498,7 @@ class FeedModel extends PdoDb
 
                 $item['comment_list'] = $commentList;
             }
-
-
+          
             //$item['comment_num'] = $item['comment_num'];
 
             $likeList = array();
@@ -453,7 +506,7 @@ class FeedModel extends PdoDb
 
             foreach ($item['like_list'] as $k => $ll) {
 
-                if ($k < 4) {
+                if ($k < 7) {
 
                     $likeList[] = $ll;
                 } else {
@@ -476,7 +529,6 @@ class FeedModel extends PdoDb
 
             $list[] = $item;
         }
-
         return $list;
     }
 
@@ -488,7 +540,8 @@ class FeedModel extends PdoDb
 
             $comment['comment_id'] = $feed['comment_id'];
             $comment['feed_id']    = $feed['feed_id'];
-
+            $comment['feed_type']  = @$feed['feed_type'];
+            $comment['image_url']  = @$feed['image_url'];
             $comment['content'] = $feed['comment_content'];
 
             $comment['reply_id'] = 0;
@@ -496,6 +549,24 @@ class FeedModel extends PdoDb
             if($feed['comment_reply_id']) {
                 $comment['reply_id'] = $feed['comment_reply_id'];
             }
+            
+            if($feed['post_files'] & $feed["feed_type"]==1){
+
+                $images = unserialize($feed['post_files']);
+
+                $postFiles = array();
+
+                foreach ($images as $k => $image) {
+
+                    $item = array();
+                    $item['file_id'] = $image['hash'];
+                    $item['file_url'] = IMAGE_DOMAIN . $image['key'];
+                    $item['file_type'] = $image['type'] ? $image['type'] : 0;
+                    $postFiles[] = $item;
+                }
+                $comment['post_files'] = $postFiles;
+            }
+
 
             $comment['created'] = $feed['comment_created'];
 
@@ -533,6 +604,11 @@ class FeedModel extends PdoDb
 
             $like = array();
             $like['like_id'] = $feed['like_id'];
+            $like['feed_id'] = $feed['feed_id'];
+            $like['feed_type']=@$feed['feed_type'];
+            $like['image_url'] =@$feed['image_url'];
+            $like['created'] = $feed['created'];
+            $like['post_files'] = $feed['post_files'];
             $like['user_info']['user_id'] = $feed['like_user_id'];
             $like['user_info']['profile']['avatar'] = $feed['like_avatar'];
             $like['user_info']['profile']['nickname'] = $feed['like_nickname'];
@@ -544,6 +620,7 @@ class FeedModel extends PdoDb
             return array();
         }
     }
+
 
     public function getFeedRelateCar($feed)
     {
@@ -610,7 +687,14 @@ class FeedModel extends PdoDb
             $file = array();
             $file['hash'] = $postFile;
             $file['key'] = $postFile;
-            $file['type'] = 1;
+            
+            $info=Common::checktype( $file['key']);
+            if($info =='gif'){
+             $file['type'] = 2;
+            }else{
+              $file['type'] = 1;
+            }
+            
 
             $files[] = $file;
         }
@@ -722,5 +806,96 @@ class FeedModel extends PdoDb
 
         return $total;
     }
+
+    public function getfeedstotime($userId,$page){
+          
+        $pageSize = 5;
+        $number = ($page - 1) * $pageSize;
+          $sql = 'SELECT
+                 feed_id,feed_type,created,post_content,post_files,comment_num,like_num,is_delete
+                 FROM `bibi_feeds` WHERE user_id = '.$userId.'
+                        ORDER BY feed_id DESC
+                        LIMIT ' . $number . ' , ' . $pageSize . '
+                ';
+
+             $feeds = $this->query($sql);
+
+             //print_r($feeds);exit;
+           $list=$this->handlefeedtotime($feeds);
+           return $list;
+
+
+    }
+
+    public function handlefeedtotime($feeds){
+    
+           
+           $list=array();
+           foreach ($feeds as $key =>$value){
+            $time=date('Y-M',$value['created']);
+            $list[$time][$key]['feed_id']= $value['feed_id'];
+            $list[$time][$key]['feed_type']=$value['feed_type'];
+            $list[$time][$key]['created']=$value['created'];
+            //$list[$time][$key]['post_content']=$value['post_content'];
+            $list[$time][$key]['post_files']=$value['post_files'];
+            $list[$time][$key]['comment_num']=$value['comment_num'];
+            $list[$time][$key]['like_num']=$value['like_num'];
+            $list[$time][$key]['is_delete']=$value['is_delete'];
+
+            if ($value['post_files'] && $value['feed_type']==1) {
+
+                $images = unserialize($value['post_files']);
+
+                $postFiles = array();
+
+                foreach ($images as $k => $image) {
+
+                    $item = array();
+                    $item['file_id'] = $image['hash'];
+                    $item['file_url'] = IMAGE_DOMAIN . $image['key'];
+                    $item['file_type'] = $image['type'] ? $image['type'] : 0;
+                    $postFiles[] = $item;
+                }
+
+                $list[$time][$key]['post_files'] = $postFiles;
+
+            }
+            else{
+
+                 $list[$time][$key]['post_files'] = $postFiles;
+            }
+
+
+           }
+            $arr=array();
+            foreach($list as $a =>$value){
+
+                $num=0;
+                foreach($value as $j=>$val){
+                    $num=$num+1;
+                    $arr[$a][$num-1]=$val;
+                }
+                
+            }
+            $arrb=array();
+            $arrc=array();
+            $numlist=0;
+            foreach($arr as $b =>$val){
+               $arrb[$numlist]=array();
+               foreach($val as $d =>$vale){
+                $arrc=$vale;
+               $arrb[$numlist][$d]=$arrc;
+               }
+            $numlist=$numlist+1;
+        
+            }
+       
+       //print_r($arrb);exit;
+       return $arrb;
+     
+
+
+    }
+
 
 }

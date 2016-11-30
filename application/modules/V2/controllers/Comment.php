@@ -29,14 +29,6 @@ class CommentController extends ApiYafControllerAbstract {
 
         $replyId = @$data['reply_id'] ? $data['reply_id'] : 0;
 
-        //相关的人
-        $feedrelatedM = new FeedrelatedModel();
-        $data['feed_id']=$data['feed_id'];
-        $data['user_id']=$userId;
-        $data['comment'] ='1';
-        $data['create_time']=time();
-        $feedrelatedM->savefeed($data);
-
 
         if($replyId){
 

@@ -117,10 +117,9 @@ class PostController extends ApiYafControllerAbstract {
         $banners = array(
 
             array(
-                'imgUrl'=>'http://img.bibicar.cn/vrcar.jpg',
-                'appUrl'=>'http://vr.bibicar.cn/VRLIST',
+                'imgUrl'=>'http://pic3.nipic.com/20090709/2893198_075124038_2.jpg',
+                'appUrl'=>'https://www.baidu.com/',
             )
-
         );
 
         $response['banners'] = $banners;
@@ -193,14 +192,7 @@ class PostController extends ApiYafControllerAbstract {
         $feedM->currentUser = $userId;
 
         $feed = $feedM->getFeeds($data['feed_id']);
-        
-        //相关的人
-        $feedrelatedM = new FeedrelatedModel();
-        $data['feed_id']=$data['feed_id'];
-        $data['user_id']=$userId;
-        $data['view'] ='1';
-        $data['create_time']=time();
-        $feedrelatedM->savefeed($data);
+
 
         if($feed['forward_id'] > 0){
 

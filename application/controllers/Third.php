@@ -14,6 +14,7 @@ class ThirdController extends ApiYafControllerAbstract {
 
         Common::globalLogRecord('qiniu request' , $_body);
 
+        echo 3333;
     }
 }
 
