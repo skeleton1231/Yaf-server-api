@@ -23,7 +23,6 @@ class FavoritecarController extends ApiYafControllerAbstract{
         $favCar = $favCarM->get();
 
         if($favCar){
-
             $this->send_error(FAVORITE_CAR_ALREADY);
         }
 
@@ -38,16 +37,14 @@ class FavoritecarController extends ApiYafControllerAbstract{
 
             $this->send_error(CAR_NOT_EXIST);
         }
-
+        $favCarM = new FavoriteCarModel();
         $properties = array();
         $properties['user_id'] = $userId;
         $properties['car_id']  = $data['car_id'];
         $created = time();
         $properties['created'] = $created;
 
-
         $favCarM->properties = $properties;
-
         $id = $favCarM->CreateM();
 
         if(!$id){
@@ -63,7 +60,7 @@ class FavoritecarController extends ApiYafControllerAbstract{
 
             $key = 'favorite_'.$userId.'_'.$data['car_id'].'';
 
-            RedisDb::setValue($key, $id);
+            RedisDb::setValue($key,1);
 
             $this->send($response);
         }

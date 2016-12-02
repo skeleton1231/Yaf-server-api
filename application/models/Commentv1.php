@@ -206,15 +206,18 @@ class Commentv1Model extends PdoDb {
                 $carM = new CarSellingModel();
                 $carM->page = 1;
                 $car = $carM->getUsertoCar($value["comment_from_user_id"]);
-               
+                if($car){
+                   foreach($car as $val){
+                    $comments[$key]['brand_info']=$val;
+                } 
+                }
                 
-
-                if($car && $car['brand_info']){
+          /*      if($car && $car['brand_info']){
                      $comments[$key]['brand_info']=$car['brand_info'];
                  }else{
                      $comments[$key]['brand_info']=new stdClass();
                  } 
-                
+              */  
 
                
                 unset($comments[$key]["comment_from_user_id"]);

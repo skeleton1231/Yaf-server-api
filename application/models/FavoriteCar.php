@@ -23,9 +23,6 @@ class FavoriteCarModel extends PdoDb{
 
     public function getList(){
 
-
-
-
     }
 
     public function get(){
@@ -34,7 +31,7 @@ class FavoriteCarModel extends PdoDb{
         
 
         $favId = RedisDb::getValue($key);
-
+        Common::globalLogRecord('favorite key', $key);
 
         if(!$favId){
 

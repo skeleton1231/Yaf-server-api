@@ -171,6 +171,33 @@ class ScriptController extends ApiYafControllerAbstract
 
     }
 
+    public function updatesortAction(){
+
+        $sql="SELECT to_id, COUNT(*) as num FROM bibi_comments GROUP BY to_id";
+
+        $db=new PdoDb;
+
+        $result=$db->query($sql);
+        
+        foreach($result as $key =>$value){
+                $num=$value['num']*5;
+                $condition = 'sort = sort +'.$num ;
+
+                $sql = '
+                    UPDATE
+                    `bibi_user_profile`
+                    SET
+                    '.$condition.'
+                    WHERE
+                    `user_id` = '.$value['to_id'].';
+                ';
+
+                $db->exec($sql);
+        }
+
+       
+    }
+
 
 
 }

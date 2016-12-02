@@ -441,9 +441,9 @@ class ArticleController extends ApiYafControllerAbstract
                         //sort 热度加分
                         $userpro=new UserSortModel();
                         $active="articlecomment";
-                        $type_id=$commentId;
+                        $type_id=$data['comment_id'];
                         $fromId=$userId;
-                        $toId=$toId;
+                        $toId=0;
                         $result=$userpro->updateSortByKey($active,$type_id,$fromId,$toId);
                         
                         $CommentLikeM = new CommentLikeModel();
@@ -552,9 +552,9 @@ class ArticleController extends ApiYafControllerAbstract
             //sort 热度加分
             $userpro=new UserSortModel();
             $active="articlecomment";
-            $type_id=$commentId;
+            $type_id=$id;
             $fromId=$userId;
-            $toId=$toId;
+            $toId=0;
             $result=$userpro->updateSortByKey($active,$type_id,$fromId,$toId);
         }
         

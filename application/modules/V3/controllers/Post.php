@@ -49,6 +49,14 @@ class PostController extends ApiYafControllerAbstract {
 
         if($feedId){
 
+             //sort 热度加分
+            $userpro=new UserSortModel();
+            $active="feedcread";
+            $type_id=$feedId;
+            $fromId=$userId;
+            $toId=0;
+            $result=$userpro->updateSortByKey($active,$type_id,$fromId,$toId);
+
 //            $postM = new PostModel();
 //            $postM->post_id = $feedId;
 //            $postM->user_id = $userId;

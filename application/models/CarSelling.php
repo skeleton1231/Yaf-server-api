@@ -21,7 +21,7 @@ class CarSellingModel extends PdoDb
         self::$table = 'bibi_car_selling_list';
     }
 
-    public function GetCarInfoById($hash)
+    public function GetCarInfoById($hash,$userId=0)
     {
 
 
@@ -46,9 +46,34 @@ class CarSellingModel extends PdoDb
             return array();
         }
 
-        $car = $this->handlerCar($car);
+        $car = $this->handlerCar($car,$userId);
 
         return $car;
+
+    }
+
+    public function GetCarBrandInfoById($hash,$userId=0)
+    {
+
+
+        $sql = '
+            SELECT
+            brand_id
+            FROM `' . self::$table . '`
+            WHERE hash = "' . $hash . '"
+        ';
+        $car = @$this->query($sql)[0];
+        
+        if (!$car) {
+
+            return array();
+        }
+
+        $brandM = new BrandModel();
+        $list=array();
+        $list['brand_info']  = $brandM->getBrandModel($car['brand_id']);
+
+        return $list;
 
     }
 
@@ -155,7 +180,9 @@ class CarSellingModel extends PdoDb
 
 
         $favkey = 'favorite_'.$userId.'_'.$car['car_id'].'';
+        Common::globalLogRecord('favorite key', $favkey);
         $favId = RedisDb::getValue($favkey);
+
 
         $car['is_fav'] = $favId ? 1 : 2;
         $car['car_time'] = Common::getBeforeTimes($car['created']);
@@ -244,7 +271,7 @@ class CarSellingModel extends PdoDb
         foreach($cars as $k => $car){
 
             $brand_id = $car['brand_id'];
-            $item = $this->handlerCar($car);
+            $item = $this->handlerCar($car,$userId);
             $items[$k]['car_info'] = $item;
             $items[$k]['car_users'] = $this->getSameBrandUsers($brand_id);
 
@@ -712,13 +739,13 @@ class CarSellingModel extends PdoDb
         $carId = @$this->query($sql)[0]['car_id'];
         
         if($carId){
-
-            $carInfo = $this->GetCarInfoById($carId);
+            //$carInfo = $this->GetCarInfoById($carId);
+            $carInfo = $this->GetCarBrandInfoById($carId);
 
         }
         else{
 
-            $carInfo = array();
+            $carInfo = new stdClass();
         }
         
         return $carInfo;

@@ -475,9 +475,10 @@ class FeedModel extends PdoDb
 
         foreach ($items as $key => $item) {
 
-            $item['car_info'] = $this->getFeedRelateCar($item);
-
-            $item['user_favourite_car'] = $this->getFeedUserCar($item);
+            $item['car_info'] =  new stdClass();//$this->getFeedRelateCar($item);
+            
+            $item['user_favourite_car'] =  $this->getFeedUserCar($item);
+            //$item['user_favourite_car']['id'] =1;
 
             $commentTotal = count($item['comment_list']);
 
@@ -658,7 +659,7 @@ class FeedModel extends PdoDb
 
         $carM->page = 1;
 
-        $car = $carM->getUserCar($userId);
+        $car = $carM->getUsertoCar($userId);
 
         return $car;
 

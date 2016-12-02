@@ -188,7 +188,7 @@ class CarController extends ApiYafControllerAbstract
 
         $carModel->currentUser = $userId;
 
-        $carInfo = $carModel->GetCarInfoById($carId);
+        $carInfo = $carModel->GetCarInfoById($carId,$userId);
 
 
         $response['car_info'] = $carInfo;
@@ -384,7 +384,7 @@ class CarController extends ApiYafControllerAbstract
 
         $carM->currentUser = $userId;
 
-        $lists = $carM->getCarList();
+        $lists = $carM->getCarList($userId);
 
         if($lists['car_list']){
 
