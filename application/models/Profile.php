@@ -77,7 +77,7 @@ class ProfileModel extends PdoDb{
 
     public function gethotgirl($page=1,$userId=0){
 
-        $pageSize = 24;
+        $pageSize = 33;
         $number = ($page-1) * $pageSize;
 
         if($page < 5){

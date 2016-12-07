@@ -63,7 +63,7 @@ class Common {
      * @return type
      */
     public static function microtime_format($tag, $time) {
-        list ( $usec, $sec ) = explode ( ".", $time );
+       @ list ( $usec, $sec ) = explode ( ".", $time );
         $date = date ( $tag, $usec );
 
         $num = strlen($sec);

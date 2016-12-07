@@ -209,7 +209,7 @@ class Commentv1Model extends PdoDb {
                 if($car){
                    foreach($car as $val){
                     $comments[$key]['brand_info']=$val;
-                } 
+                  } 
                 }
                 
           /*      if($car && $car['brand_info']){
@@ -366,16 +366,25 @@ class Commentv1Model extends PdoDb {
             $list["father_info"]["from_user"]["nickname"]=$comments_father["comment_from_nickname"];
            
            
-            $carM = new CarSellingModel();
+            // $carM = new CarSellingModel();
+            // $carM->page = 1;
+            // $car = $carM->getUsertoCar($comments_father["comment_from_user_id"]);
+
+            // if(@$car['brand_info']){
+            //      $list["father_info"]['brand_info']=$car['brand_info'];
+            //  }else{
+                
+            //      $list["father_info"]['brand_info']=new stdClass();
+            //  }
+
+          $carM = new CarSellingModel();
             $carM->page = 1;
             $car = $carM->getUsertoCar($comments_father["comment_from_user_id"]);
-
-            if(@$car['brand_info']){
-                 $list["father_info"]['brand_info']=$car['brand_info'];
-             }else{
-                
-                 $list["father_info"]['brand_info']=new stdClass();
-             }
+            if($car){
+               foreach($car as $val){
+                $comments[$key]['brand_info']=$val;
+              } 
+            }
             
             
             //是否点赞

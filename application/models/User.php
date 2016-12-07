@@ -168,6 +168,27 @@ class UserModel extends PdoDb {
     }
 
 
+    public function isregister($mobile,$fromuser){
+           
+        $table = self::$table;
+        $sql = "SELECT mobile,user_id,created FROM {$table} WHERE `mobile` = :mobile";
+        $param = array(':mobile'=>$mobile);
+        $info = $this->query($sql,$param);
+
+        if(isset($info[0])){
+            $profileM    = new ProfileModel();
+            $friendShipM = new FriendShipModel();
+            $profile = $profileM->getProfile($info[0]['user_id']);
+            $isfriend = $friendShipM->isFriend($fromuser,$info[0]['user_id']);
+            $isfriend ? $info[0]["is_friend"] = 1 : $info[0]["is_friend"]=2;
+            $info[0]['profile'] = $profile;
+        }
+        return isset($info[0]) ? $info[0] : array();
+
+        
+    }
+
+
 //    public static function userAuth($device_identifier , $user_id, $session_id){
 //
 //        $id = RedisDb::getValue('auth_'.$device_identifier.'_'.$session_id.'');

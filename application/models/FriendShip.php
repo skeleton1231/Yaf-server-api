@@ -199,6 +199,21 @@ class FriendShipModel extends PdoDb {
 //        return $isFriend ? $isFriend : 0;
 //
 //    }
+//    
+     public function isFriend($fromId, $userId){
+
+       $sql = '
+            SELECT
+            friendship_id
+            FROM
+            `bibi_friendship` 
+            WHERE user_id = '.$fromId.' AND friend_id=
+        '.$userId;
+        $friendship= $this->query($sql);
+        return $friendship;
+   }
+  
+
 
 
 

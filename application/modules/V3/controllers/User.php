@@ -829,6 +829,102 @@ class UserController extends ApiYafControllerAbstract
 
     }
 
+    /**
+     * @apiDefine Data
+     *
+     * @apiParam (data) {string}  [device_identifier=ce32eaab37220890a063845bf6b6dc1a]  设备唯一标示.
+     * @apiParam (data) {string}  [session_id=session5845346a59a31]     用户session_id.
+     * @apiParam (data) {json}    [mobile_list=18]     车型id默认值是18.
+     * 
+     * 
+     */
+
+    /**
+     * @api {POST} /v3/user/checkreport 通讯录邀请好友
+     * @apiName 通讯录邀请好友
+     * @apiGroup User
+     * @apiDescription 通讯录邀请好友
+     * @apiPermission anyone
+     * @apiSampleRequest http://www.bibicar.cn:8090
+     *
+     * @apiParam {string} [device_identifier] 设备唯一标识
+     * @apiParam {string} [session_id] session_id
+     * @apiParam {json}   [mobile_list] 通讯录列表
+     * 
+     * @apiParam {json} data object
+     * @apiUse Data
+     * @apiParamExample {json} 请求样例
+     *   POST /v3/user/checkreport
+     *   {
+     *     "data": {
+     *       "device_identifier":"",
+     *       "session_id":"",
+     *       "mobile_list":"",
+     *     }
+     *   }
+     *
+     */
+
+
+    public function checkreportAction(){
+        
+       
+        $this->required_fields = array_merge($this->required_fields, array('session_id'));
+        $data = $this->get_request_data();
+        $arrt=json_decode(str_replace('\\', '', $data['mobile_list']));
+        $mobile=$this->object_array($arrt);
+        $userId = $this->userAuth($data);
+        $user = new \UserModel;
+  
+        $arr=array();
+       // $arr['register']    =array();
+      //  $arr['no_register'] =array();
+        foreach($mobile as $key => $value){
+           // echo $value['phone'];
+              @ $attr=$value['phone'];
+                $phone=str_replace("+86 ",'',$attr);
+                $phone=str_replace("-",'',$phone);
+               
+                $info=$user->isregister($phone,$userId);
+
+                @$arr['list'][$key]['phone']=$value['phone'];
+                 $arr['list'][$key]['name'] =$value['name'];
+                 if($info){
+                    $arr['list'][$key]['userinfo']=array();
+                    $arr['list'][$key]['userinfo']=$info;
+                    $arr['list'][$key]['userinfo']['avatar']=$arr['list'][$key]['userinfo']['profile']['avatar'];
+                    $arr['list'][$key]['userinfo']['nickname']=$arr['list'][$key]['userinfo']['profile']['nickname'];
+                    
+                    unset($arr['list'][$key]['userinfo']['profile']);
+                 }else{
+                     $arr['list'][$key]['userinfo']= new stdClass();;
+                 }
+                 
+                
+            
+        }
+        //$arr['register']=array_merge($arr['register']);
+       // $arr['no_register']=array_merge($arr['no_register']);
+
+        
+        $response=$arr;
+        
+        $this->send($response);
+        
+
+    }
+  
+
+   function object_array($array) {  
+    if(is_object($array)) {  
+        $array = (array)$array;  
+     } if(is_array($array)) {  
+         foreach($array as $key=>$value) {  
+             $array[$key] =$this->object_array($value);  
+             }  
+     }  
+     return $array;  
+}  
 
 
     

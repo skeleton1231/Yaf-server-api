@@ -272,7 +272,7 @@ class Feedv1Model extends PdoDb
                         `bibi_feeds` AS t1
                         WHERE t1.feed_type <> 1
                         ORDER BY
-                        like_num DESC,feed_id
+                        created DESC,feed_id
                         LIMIT ' .$number. ' , ' . $pageSize . '
                     ';
                     $sqlHotCnt = '
@@ -282,7 +282,7 @@ class Feedv1Model extends PdoDb
                         `bibi_feeds` AS t1
                         WHERE t1.feed_type <> 1
                         ORDER BY
-                        like_num DESC,feed_id
+                        created DESC,feed_id
                     ';
 
 
@@ -292,7 +292,7 @@ class Feedv1Model extends PdoDb
                    
                     $result = $this->implodeArrayByKey('feed_id', $result);
 
-                    $sql .= ' WHERE t1.feed_id in (' .$result. ') ORDER BY t1.`like_num` DESC , t1.`created` DESC'; //ORDER BY t3.comment_id DESC
+                    $sql .= ' WHERE t1.feed_id in (' .$result. ') ORDER BY t1.`created` DESC '; //, t1.`like_num` DESC ORDER BY t3.comment_id DESC
 
                     break;
 

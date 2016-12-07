@@ -33,6 +33,13 @@ class FriendshipController extends ApiYafControllerAbstract {
             $friendShipM->saveProperties();
             $friendShipM->CreateM();
 
+            /*
+            $mh = new MessageHelper;
+            $userM = new ProfileModel();
+            $profile = $userM->getProfile($userId);
+            $content = ''.$profile["nickname"].'关注了你';
+            $mh->systemNotify($data['user_id'], $content);
+           */
         }
 
         $friendShip = $friendShipM->getMyFriendShip($userId, $data['user_id']);
