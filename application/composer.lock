@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "a88835249e56bfdf4f3c433eb1013dd8",
     "content-hash": "ec6a472f3ad7dc221589a80c6e2f48b0",
     "packages": [
         {
@@ -59,7 +58,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2015-09-23 18:47:51"
+            "time": "2015-09-23T18:47:51+00:00"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -110,7 +109,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-05-20 03:37:09"
+            "time": "2015-05-20T03:37:09+00:00"
         },
         {
             "name": "guzzlehttp/streams",
@@ -160,7 +159,7 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-10-12 19:18:40"
+            "time": "2014-10-12T19:18:40+00:00"
         },
         {
             "name": "php-curl-class/php-curl-class",
@@ -216,7 +215,7 @@
                 "web service",
                 "xml"
             ],
-            "time": "2015-10-21 05:06:31"
+            "time": "2015-10-21T05:06:31+00:00"
         },
         {
             "name": "predis/predis",
@@ -266,7 +265,7 @@
                 "predis",
                 "redis"
             ],
-            "time": "2015-07-30 18:34:15"
+            "time": "2015-07-30T18:34:15+00:00"
         },
         {
             "name": "psr/log",
@@ -304,7 +303,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2012-12-21T11:40:51+00:00"
         },
         {
             "name": "qiniu/php-sdk",
@@ -355,7 +354,7 @@
                 "sdk",
                 "storage"
             ],
-            "time": "2015-07-24 01:24:17"
+            "time": "2015-07-24T01:24:17+00:00"
         },
         {
             "name": "react/promise",
@@ -399,26 +398,30 @@
                 }
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "time": "2015-07-03 13:48:55"
+            "time": "2015-07-03T13:48:55+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.3.4",
+            "version": "2.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "11a2545c44a5915f883e2e5ec12e14ed345e3ab2"
+                "reference": "2acf168de78487db620ab4bc524135a13cfe6745"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/11a2545c44a5915f883e2e5ec12e14ed345e3ab2",
-                "reference": "11a2545c44a5915f883e2e5ec12e14ed345e3ab2",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/2acf168de78487db620ab4bc524135a13cfe6745",
+                "reference": "2acf168de78487db620ab4bc524135a13cfe6745",
                 "shasum": ""
             },
             "require": {
+                "ext-simplexml": "*",
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
                 "php": ">=5.1.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
             },
             "bin": [
                 "scripts/phpcs",
@@ -427,7 +430,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -473,7 +476,12 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2015-09-09 00:18:50"
+            "support": {
+                "issues": "https://github.com/squizlabs/PHP_CodeSniffer/issues",
+                "source": "https://github.com/squizlabs/PHP_CodeSniffer",
+                "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
+            },
+            "time": "2018-11-07T22:31:41+00:00"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -516,7 +524,7 @@
                 "html",
                 "parser"
             ],
-            "time": "2013-05-04 14:32:03"
+            "time": "2013-05-04T14:32:03+00:00"
         }
     ],
     "packages-dev": [],
@@ -526,5 +534,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
